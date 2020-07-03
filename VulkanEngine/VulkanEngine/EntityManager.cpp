@@ -65,7 +65,7 @@ void EntityManager::LoadMeshes()
 
 void EntityManager::LoadMaterials()
 {
-    //TODO: Load materials and add them to the list of materials
+    
 }
 
 #pragma endregion

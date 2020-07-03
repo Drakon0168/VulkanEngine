@@ -1,6 +1,12 @@
 #include "pch.h"
 
 #include "VulkanManager.h"
+#include "DebugManager.h"
+#include "EntityManager.h"
+#include "GameManager.h"
+#include "InputManager.h"
+#include "PhysicsManager.h"
+#include "WindowManager.h"
 
 //Memory leak detection
 #define _CRTDBG_MAP_ALLOC
@@ -19,6 +25,15 @@ int main()
 		_CrtDumpMemoryLeaks();
 		return EXIT_FAILURE;
 	}
+
+	//Cleanup singletons
+	delete VulkanManager::GetInstance();
+	delete DebugManager::GetInstance();
+	delete EntityManager::GetInstance();
+	delete GameManager::GetInstance();
+	//delete InputManager::GetInstance();
+	//delete PhysicsManager::GetInstance();
+	delete WindowManager::GetInstance();
 
 	//Check for memory leaks
 	_CrtDumpMemoryLeaks();

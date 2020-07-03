@@ -28,6 +28,9 @@
     <Filter Include="Source Files\Components">
       <UniqueIdentifier>{c13b3ab4-15a3-4f72-bd2d-8bc6c3a6318d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Shaders">
+      <UniqueIdentifier>{7b1ab22d-992b-430f-b765-090b384ac123}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="VulkanEngine.cpp">
@@ -173,5 +176,18 @@
     <ClInclude Include="Buffer.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\shaders\BasicShader.vert">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="..\shaders\BasicShader.frag">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\compile.bat">
+      <Filter>Source Files\Shaders</Filter>
+    </CustomBuild>
   </ItemGroup>
 </Project>
