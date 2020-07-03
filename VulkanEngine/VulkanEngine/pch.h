@@ -28,4 +28,14 @@
 #include <array>
 #include <optional>
 
+//Engine Classes
+#include "Time.h"
+
+//Structs
+#include "QueueFamilyIndices.h"
+#include "SwapChainSupportDetails.h"
+#include "UniformBufferObject.h"
+#include "TransformData.h"
+#include "Vertex.h"
+
 #endif //PCH_H

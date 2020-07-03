@@ -1,13 +1,26 @@
 #include "pch.h"
 
+#include "VulkanManager.h"
+
+//Memory leak detection
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 #include <crtdbg.h>
 
 int main()
 {
-    std::cout << "Hello World!\n";
+	try {
+		VulkanManager::GetInstance()->Run();
+	}
+	catch (const std::exception& e) {
+		std::cerr << e.what() << std::endl;
 
-    //Check for memory Leaks
-    _CrtDumpMemoryLeaks();
+		//Check for memory leaks
+		_CrtDumpMemoryLeaks();
+		return EXIT_FAILURE;
+	}
+
+	//Check for memory leaks
+	_CrtDumpMemoryLeaks();
+	return EXIT_SUCCESS;
 }

@@ -1,0 +1,199 @@
+#include "pch.h"
+#include "EntityManager.h"
+
+#include "VulkanManager.h"
+#include "SwapChain.h"
+
+#pragma region Singleton
+
+EntityManager* EntityManager::instance = nullptr;
+
+EntityManager* EntityManager::GetInstance()
+{
+    if (instance == nullptr) {
+        instance = new EntityManager();
+    }
+
+    return instance;
+}
+
+#pragma endregion
+
+#pragma region Accessors
+
+std::vector<std::shared_ptr<Material>> EntityManager::GetMaterials()
+{
+    return materials;
+}
+
+std::vector<std::shared_ptr<Mesh>> EntityManager::GetMeshes()
+{
+    return meshes;
+}
+
+VkDescriptorPool EntityManager::GetDescriptorPool()
+{
+    return descriptorPool;
+}
+
+#pragma endregion
+
+#pragma region Initialization
+
+void EntityManager::Init()
+{
+    LoadMaterials();
+
+    LoadMeshes();
+
+    //Setup entity list
+    //  Add Materials and Mesh Lists
+    for (std::shared_ptr<Material> material : materials) {
+        entities.insert(std::pair <std::shared_ptr<Material>, std::vector<std::shared_ptr<Mesh>>>(material, std::vector<std::shared_ptr<Mesh>>()));
+    }
+
+    //  Populate Mesh Lists
+    for (std::shared_ptr<Mesh> mesh : meshes) {
+        entities[mesh->GetMaterial()].push_back(mesh);
+    }
+}
+
+void EntityManager::LoadMeshes()
+{
+    //TODO: Load meshes and add them to the list of meshes and the entity list under the materials that they can use
+}
+
+void EntityManager::LoadMaterials()
+{
+    //TODO: Load materials and add them to the list of materials
+}
+
+#pragma endregion
+
+#pragma region Update
+
+void EntityManager::Update()
+{
+    for (std::shared_ptr<Mesh> mesh : meshes) {
+        mesh->UpdateInstanceBuffer();
+    }
+}
+
+void EntityManager::Draw(uint32_t imageIndex, VkCommandBuffer* commandBuffer)
+{
+    //Setup command
+    VkCommandBufferBeginInfo beginInfo = {};
+    beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+    beginInfo.flags = 0;
+    beginInfo.pInheritanceInfo = nullptr;
+
+    if (vkBeginCommandBuffer(*commandBuffer, &beginInfo) != VK_SUCCESS) {
+        throw std::runtime_error("Failed to begin recording Command Buffer!");
+    }
+
+    //Setup render pass
+    VkRenderPassBeginInfo renderPassBeginInfo = {};
+    renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+    renderPassBeginInfo.renderPass = SwapChain::GetInstance()->GetRenderPass();
+    renderPassBeginInfo.framebuffer = SwapChain::GetInstance()->GetFrameBuffers()[imageIndex];
+    renderPassBeginInfo.renderArea.extent = SwapChain::GetInstance()->GetExtents();
+    renderPassBeginInfo.renderArea.offset = { 0, 0 };
+
+    std::array<VkClearValue, 2> clearColors = {};
+    clearColors[0] = { 0.0f, 0.0f, 0.0f, 1.0f };
+    clearColors[1].depthStencil = { 1.0f, 0 };
+
+    renderPassBeginInfo.clearValueCount = static_cast<uint32_t>(clearColors.size());
+    renderPassBeginInfo.pClearValues = clearColors.data();
+
+    //Setup commands
+    vkCmdBeginRenderPass(*commandBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+
+    //Begin Per Material Commands
+    for (std::shared_ptr<Material> material : materials) {
+        vkCmdBindPipeline(*commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, material->GetPipeline());//Per material
+
+        vkCmdBindDescriptorSets(*commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, material->GetPipelineLayout(), 0, static_cast<uint32_t>(material->GetDescriptorSets().size()), material->GetDescriptorSets().data(), 0, nullptr);//Per Material
+
+        //Begin Per Mesh Commands
+        for (std::shared_ptr<Mesh> mesh : entities[material]) {
+            VkBuffer vertexBuffers[] = { mesh->GetVertexBuffer()->GetBuffer() };
+            VkDeviceSize offsets[] = { 0 };
+            vkCmdBindVertexBuffers(*commandBuffer, 0, 1, vertexBuffers, offsets);//Per mesh
+
+            VkBuffer instanceBuffers[] = { mesh->GetInstanceBuffer()->GetBuffer() };
+            vkCmdBindVertexBuffers(*commandBuffer, 1, 1, instanceBuffers, offsets);//Per mesh
+
+            VkBuffer indexBuffers[] = { mesh->GetIndexBuffer()->GetBuffer() };
+            vkCmdBindIndexBuffer(*commandBuffer, mesh->GetIndexBuffer()->GetBuffer(), 0, VK_INDEX_TYPE_UINT16);//Per mesh
+
+            vkCmdDrawIndexed(*commandBuffer, static_cast<uint32_t>(mesh->GetIndices().size()), mesh->GetActiveInstanceCount(), 0, 0, 0);//Per mesh
+        }
+    }
+
+    vkCmdEndRenderPass(*commandBuffer);
+
+    if (vkEndCommandBuffer(*commandBuffer) != VK_SUCCESS) {
+        throw std::runtime_error("Failed to end Command Buffer!");
+    }
+}
+
+#pragma endregion
+
+#pragma region Memory Management
+
+void EntityManager::CreateDescriptorPool()
+{
+    VkDescriptorPoolSize poolSize = {};
+    poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    poolSize.descriptorCount = static_cast<uint32_t>(SwapChain::GetInstance()->GetImages().size() * meshes.size());
+
+    VkDescriptorPoolCreateInfo createInfo = {};
+    createInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+    createInfo.poolSizeCount = 1;
+    createInfo.pPoolSizes = &poolSize;
+    createInfo.maxSets = static_cast<uint32_t>(SwapChain::GetInstance()->GetImages().size() * meshes.size());
+
+    if (vkCreateDescriptorPool(VulkanManager::GetInstance()->GetLogicalDevice(), &createInfo, nullptr, &descriptorPool)) {
+        throw std::runtime_error("Failed to create Descriptor Pool!");
+    }
+}
+
+void EntityManager::CreateMaterialResources()
+{
+    for (size_t i = 0; i < materials.size(); i++) {
+        materials[i]->Init();
+    }
+}
+
+void EntityManager::CreateMeshResources()
+{
+    for (size_t i = 0; i < meshes.size(); i++) {
+        meshes[i]->Init();
+    }
+}
+
+void EntityManager::Cleanup()
+{
+    //Cleanup Materials
+    CleanupMaterials();
+
+    //Cleanup Meshes
+    CleanupMeshes();
+}
+
+void EntityManager::CleanupMaterials()
+{
+    for (size_t i = 0; i < materials.size(); i++) {
+        materials[i]->Cleanup();
+    }
+}
+
+void EntityManager::CleanupMeshes()
+{
+    for (size_t i = 0; i < meshes.size(); i++) {
+        meshes[i]->Cleanup();
+    }
+}
+
+#pragma endregion
