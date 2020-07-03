@@ -322,7 +322,7 @@ void SwapChain::CreateDepthResources()
 		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
 		depthImage);
 
-	Image::CreateImageView(depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT);
+	Image::CreateImageView(&depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT);
 }
 
 void SwapChain::CreateSyncObjects()

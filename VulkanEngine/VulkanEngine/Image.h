@@ -67,7 +67,7 @@ public:
 	/// <param name="image">The image to attach the image view to</param>
 	/// <param name="format">The format of the image</param>
 	/// <param name="aspectFlags">The aspect flag defining the use of the image</param>
-	static void CreateImageView(Image image, VkFormat format, VkImageAspectFlags aspectFlags);
+	static void CreateImageView(Image* image, VkFormat format, VkImageAspectFlags aspectFlags);
 
 	/// <summary>
 	/// Creates an image view forr the specified image

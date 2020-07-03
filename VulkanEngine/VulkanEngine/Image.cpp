@@ -76,11 +76,11 @@ void Image::CreateImage(uint32_t width, uint32_t height, VkFormat format, VkImag
 	vkBindImageMemory(VulkanManager::GetInstance()->GetLogicalDevice(), *image.GetImage(), *image.GetMemory(), 0);
 }
 
-void Image::CreateImageView(Image image, VkFormat format, VkImageAspectFlags aspectFlags)
+void Image::CreateImageView(Image* image, VkFormat format, VkImageAspectFlags aspectFlags)
 {
 	VkImageViewCreateInfo createInfo = {};
 	createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-	createInfo.image = *image.GetImage();
+	createInfo.image = *image->GetImage();
 	createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
 	createInfo.format = format;
 	createInfo.subresourceRange.aspectMask = aspectFlags;
@@ -89,7 +89,7 @@ void Image::CreateImageView(Image image, VkFormat format, VkImageAspectFlags asp
 	createInfo.subresourceRange.baseArrayLayer = 0;
 	createInfo.subresourceRange.layerCount = 1;
 
-	if (vkCreateImageView(VulkanManager::GetInstance()->GetLogicalDevice(), &createInfo, nullptr, image.GetView()) != VK_SUCCESS) {
+	if (vkCreateImageView(VulkanManager::GetInstance()->GetLogicalDevice(), &createInfo, nullptr, image->GetView()) != VK_SUCCESS) {
 		throw std::runtime_error("Failed to create image view!");
 	}
 }

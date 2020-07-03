@@ -300,9 +300,11 @@ void VulkanManager::CreateLogicalDevice()
 	createInfo.enabledExtensionCount = static_cast<uint32_t>(deviceExtensions.size());
 	createInfo.ppEnabledExtensionNames = deviceExtensions.data();
 
-	if (DebugManager::GetInstance()->GetEnableValidationLayers()) {
+	std::vector<const char*> enabledLayers = DebugManager::GetInstance()->GetValidationLayers();
+
+	if (enabledLayers.size() > 0) {
 		createInfo.enabledLayerCount = static_cast<uint32_t>(DebugManager::GetInstance()->GetValidationLayers().size());
-		createInfo.ppEnabledLayerNames = DebugManager::GetInstance()->GetValidationLayers().data();
+		createInfo.ppEnabledLayerNames = enabledLayers.data();
 	}
 	else {
 		createInfo.enabledLayerCount = 0;
@@ -328,7 +330,7 @@ void VulkanManager::CreateSurface()
 void VulkanManager::Cleanup()
 {
 	//Cleanup Swap Chain and associated resources
-	SwapChain::GetInstance()->Cleanup();
+	SwapChain::GetInstance()->FullCleanup();
 
 	//Cleanup Entities
 	EntityManager::GetInstance()->Cleanup();
@@ -388,7 +390,7 @@ void VulkanManager::Draw()
 		EntityManager::GetInstance()->Update();
 
 		//Re-record command buffer
-		EntityManager::GetInstance()->Draw(imageIndex, SwapChain::GetInstance()->GetCommandBuffer(imageIndex));
+		//EntityManager::GetInstance()->Draw(imageIndex, SwapChain::GetInstance()->GetCommandBuffer(imageIndex));
 
 		SwapChain::GetInstance()->EndDraw(imageIndex);
 	}
