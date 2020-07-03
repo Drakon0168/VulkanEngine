@@ -72,7 +72,11 @@ bool DebugManager::GetEnableValidationLayers()
 
 std::vector<const char*> DebugManager::GetValidationLayers()
 {
-	return validationLayers;
+	if (enableValidationLayers) {
+		return validationLayers;
+	}
+
+	return {};
 }
 
 #pragma endregion

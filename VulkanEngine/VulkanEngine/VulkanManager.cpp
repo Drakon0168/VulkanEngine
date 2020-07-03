@@ -243,11 +243,13 @@ void VulkanManager::CreateInstance()
 	createInfo.ppEnabledExtensionNames = requiredExtensions.data();
 	createInfo.enabledLayerCount = 0;
 
+	std::vector<const char*> validationLayers = DebugManager::GetInstance()->GetValidationLayers();
+
 	//Add validation layers if they are enabled
 	VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo;
-	if (DebugManager::GetInstance()->GetEnableValidationLayers()) {
+	if (validationLayers.size() > 0) {
 		createInfo.enabledLayerCount = static_cast<uint32_t>(DebugManager::GetInstance()->GetValidationLayers().size());
-		createInfo.ppEnabledLayerNames = DebugManager::GetInstance()->GetValidationLayers().data();
+		createInfo.ppEnabledLayerNames = validationLayers.data();
 
 		DebugManager::GetInstance()->PopulateDebugMessengerCreateInfo(debugCreateInfo);
 		createInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT*)&debugCreateInfo;
