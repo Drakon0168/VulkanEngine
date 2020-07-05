@@ -7,7 +7,7 @@ private:
 
 	static WindowManager* instance;
 
-	GLFWwindow* window;
+	GLFWwindow* window = nullptr;
 
 public:
 

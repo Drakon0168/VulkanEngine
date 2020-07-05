@@ -6,6 +6,7 @@ std::vector<char> FileManager::ReadFile(const std::string& filePath)
 	std::ifstream file(filePath, std::ios::ate | std::ios::binary);
 
 	if (!file.is_open()) {
+		std::cout << "File Manager Line " << __LINE__ << ": " << std::endl;
 		throw std::runtime_error("Failed to open file!");
 	}
 

@@ -28,7 +28,7 @@ private:
 
 	VkRenderPass renderPass;
 
-	VkCommandPool commandPool;
+	VkCommandPool commandPool = VK_NULL_HANDLE;
 	std::vector<VkCommandBuffer> commandBuffers;
 
 	std::vector<Buffer> uniformBuffers;

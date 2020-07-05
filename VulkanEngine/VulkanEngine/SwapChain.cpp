@@ -106,9 +106,6 @@ void SwapChain::CreateSwapChainResources()
 	//Create the render pass
 	CreateRenderPass();
 
-	//Create material resources
-	EntityManager::GetInstance()->CreateMaterialResources();
-	
 	//Create Depth Buffer resources
 	CreateDepthResources();
 
@@ -121,7 +118,13 @@ void SwapChain::CreateSwapChainResources()
 	//Create Uniform Buffers
 	CreateUniformBuffers();
 
-	//TODO: Setup Meshes
+	//Load Meshes and materials
+	EntityManager::GetInstance()->Init();
+
+	//Create material resources
+	EntityManager::GetInstance()->CreateMaterialResources();
+
+	//Setup Meshes and Materials
 	EntityManager::GetInstance()->CreateMeshResources();
 
 	//Create the Command Buffers
@@ -261,17 +264,17 @@ void SwapChain::Cleanup()
 
 void SwapChain::FullCleanup()
 {
+	Cleanup();
+
+	//Destroy Command Pool
+	vkDestroyCommandPool(logicalDevice, commandPool, nullptr);
+
 	//Destroy Semaphores
 	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
 		vkDestroySemaphore(logicalDevice, imageAvailableSemaphores[i], nullptr);
 		vkDestroySemaphore(logicalDevice, renderFinishedSemaphores[i], nullptr);
 		vkDestroyFence(logicalDevice, inFlightFences[i], nullptr);
 	}
-
-	Cleanup();
-
-	//Destroy Command Pool
-	vkDestroyCommandPool(logicalDevice, commandPool, nullptr);
 }
 
 void SwapChain::CreateImageViews()
@@ -457,7 +460,7 @@ void SwapChain::CreateCommandBuffers()
 		throw std::runtime_error("Failed to allocate Command Buffers");
 	}
 
-	for (size_t i = 0; i < commandBuffers.size(); i++) {
+	for (uint32_t i = 0; i < commandBuffers.size(); i++) {
 		EntityManager::GetInstance()->Draw(i, &commandBuffers[i]);
 	}
 }
@@ -481,9 +484,8 @@ void SwapChain::Update()
 
 void SwapChain::UpdateUniformBuffer(uint32_t imageIndex)
 {
-	//Setup the model view and projection matrices
-	UniformBufferObject ubo = {}; //TODO: Move this to work with multiple objects
-	//ubo.model = meshes[i].GetTransform()->GetModelMatrix();
+	//Setup the view and projection matrices
+	UniformBufferObject ubo = {};
 	ubo.view = Camera::GetMainCamera()->GetView();
 	ubo.projection = Camera::GetMainCamera()->GetProjection();
 
@@ -545,7 +547,6 @@ void SwapChain::EndDraw(uint32_t imageIndex)
 
 	//Reset fence
 	vkResetFences(logicalDevice, 1, &inFlightFences[currentFrame]);
-
 	if (vkQueueSubmit(VulkanManager::GetInstance()->GetGraphicsQueue(), 1, &submitInfo, inFlightFences[currentFrame]) != VK_SUCCESS) {
 		throw std::runtime_error("Failed to submit draw command buffer!");
 	}

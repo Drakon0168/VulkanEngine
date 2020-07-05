@@ -60,12 +60,13 @@ void EntityManager::Init()
 
 void EntityManager::LoadMeshes()
 {
-    //TODO: Load meshes and add them to the list of meshes and the entity list under the materials that they can use
+    meshes.push_back(std::make_shared<Mesh>(materials[0]));
+    meshes[0]->GenerateCube();
 }
 
 void EntityManager::LoadMaterials()
 {
-    
+    materials.push_back(std::make_shared<Material>("shaders/vert.spv", "shaders/frag.spv"));
 }
 
 #pragma endregion
@@ -113,7 +114,7 @@ void EntityManager::Draw(uint32_t imageIndex, VkCommandBuffer* commandBuffer)
     for (std::shared_ptr<Material> material : materials) {
         vkCmdBindPipeline(*commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, material->GetPipeline());//Per material
 
-        vkCmdBindDescriptorSets(*commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, material->GetPipelineLayout(), 0, static_cast<uint32_t>(material->GetDescriptorSets().size()), material->GetDescriptorSets().data(), 0, nullptr);//Per Material
+        vkCmdBindDescriptorSets(*commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, material->GetPipelineLayout(), 0, 1, &material->GetDescriptorSets()[imageIndex], 0, nullptr);//Per Material
 
         //Begin Per Mesh Commands
         for (std::shared_ptr<Mesh> mesh : entities[material]) {
