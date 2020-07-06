@@ -469,19 +469,6 @@ void SwapChain::CreateCommandBuffers()
 
 #pragma region Game Loop
 
-void SwapChain::Update()
-{
-	//Setup the view and projection matrices
-	UniformBufferObject ubo = {};
-	ubo.view = Camera::GetMainCamera()->GetView();
-	ubo.projection = Camera::GetMainCamera()->GetProjection();
-
-	void* data;
-	vkMapMemory(logicalDevice, uniformBuffers[currentFrame].GetBufferMemory(), 0, sizeof(ubo), 0, &data);
-	memcpy(data, &ubo, sizeof(ubo));
-	vkUnmapMemory(logicalDevice, uniformBuffers[currentFrame].GetBufferMemory());
-}
-
 void SwapChain::UpdateUniformBuffer(uint32_t imageIndex)
 {
 	//Setup the view and projection matrices

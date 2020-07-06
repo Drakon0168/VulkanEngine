@@ -385,12 +385,8 @@ void VulkanManager::Draw()
 	uint32_t imageIndex = SwapChain::GetInstance()->BeginDraw();
 
 	if (imageIndex != -1) {
-
-		//Update entities
-		//EntityManager::GetInstance()->Update();
-
 		//Re-record command buffer
-		//EntityManager::GetInstance()->Draw(imageIndex, SwapChain::GetInstance()->GetCommandBuffer(imageIndex));
+		EntityManager::GetInstance()->Draw(imageIndex, SwapChain::GetInstance()->GetCommandBuffer(imageIndex));
 
 		SwapChain::GetInstance()->EndDraw(imageIndex);
 	}
@@ -401,8 +397,6 @@ void VulkanManager::Update()
 	GameManager::GetInstance()->Update();
 
 	EntityManager::GetInstance()->Update();
-
-	SwapChain::GetInstance()->Update();
 }
 
 #pragma endregion

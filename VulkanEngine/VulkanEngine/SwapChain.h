@@ -198,12 +198,7 @@ public:
 
 #pragma endregion
 
-#pragma region GameLoop
-
-	/// <summary>
-	/// Updates the uniform buffer representing the camera matrices
-	/// </summary>
-	void Update();
+#pragma region Game Loop
 
 	/// <summary>
 	/// Updates the current uniform buffer
