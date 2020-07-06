@@ -387,7 +387,7 @@ void VulkanManager::Draw()
 	if (imageIndex != -1) {
 
 		//Update entities
-		EntityManager::GetInstance()->Update();
+		//EntityManager::GetInstance()->Update();
 
 		//Re-record command buffer
 		//EntityManager::GetInstance()->Draw(imageIndex, SwapChain::GetInstance()->GetCommandBuffer(imageIndex));
