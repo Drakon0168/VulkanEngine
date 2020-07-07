@@ -224,7 +224,7 @@ void SwapChain::RecreateSwapChain()
 	CreateUniformBuffers();
 
 	//Re-create materials
-	EntityManager::GetInstance()->CreateMeshResources();
+	EntityManager::GetInstance()->CreateMaterialResources();
 
 	CreateCommandBuffers();
 }
