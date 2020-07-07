@@ -139,9 +139,10 @@ void SwapChain::CreateSwapChain()
 	SwapChainSupportDetails details = QuerySwapChainSupport(physicalDevice);
 
 	//Setup swap chain
-	VkExtent2D extent = ChooseSwapExtent(details.capabilities);
+	//VkExtent2D extent = ChooseSwapExtent(details.capabilities);
 	VkSurfaceFormatKHR surfaceFormat = ChooseSwapSurfaceFormat(details.formats);
 	VkPresentModeKHR presentMode = ChooseSwapSurfacePresentMode(details.presentModes);
+	VkExtent2D extent = ChooseSwapExtent(details.capabilities);
 
 	//Set chain length
 	uint32_t imageCount = details.capabilities.minImageCount + 1;
@@ -216,7 +217,7 @@ void SwapChain::RecreateSwapChain()
 	CreateImageViews();
 
 	CreateRenderPass();
-	
+
 	CreateDepthResources();
 
 	CreateFrameBuffers();
@@ -498,7 +499,8 @@ uint32_t SwapChain::BeginDraw()
 	else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
 		throw std::runtime_error("Failed to aquire next swap chain image!");
 	}
-
+	//Update uniform buffers
+	UpdateUniformBuffer(imageIndex);
 	//Make sure the image is not already in use
 	if (imagesInFlight[imageIndex] != VK_NULL_HANDLE) {
 		vkWaitForFences(logicalDevice, 1, &imagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);
@@ -507,8 +509,7 @@ uint32_t SwapChain::BeginDraw()
 	//Mark the image as being in use
 	imagesInFlight[imageIndex] = inFlightFences[currentFrame];
 
-	//Update uniform buffers
-	UpdateUniformBuffer(imageIndex);
+	
 
 	return imageIndex;
 }
@@ -534,7 +535,7 @@ void SwapChain::EndDraw(uint32_t imageIndex)
 
 	//Reset fence
 	vkResetFences(logicalDevice, 1, &inFlightFences[currentFrame]);
-	if (vkQueueSubmit(VulkanManager::GetInstance()->GetGraphicsQueue(), 1, &submitInfo, inFlightFences[currentFrame]) != VK_SUCCESS) {
+	if (vkQueueSubmit(VulkanManager::GetInstance()->GetGraphicsQueue(), 1, &submitInfo, inFlightFences[currentFrame]) != VK_SUCCESS) { //stops here
 		throw std::runtime_error("Failed to submit draw command buffer!");
 	}
 
@@ -552,11 +553,11 @@ void SwapChain::EndDraw(uint32_t imageIndex)
 
 	VkResult result = vkQueuePresentKHR(VulkanManager::GetInstance()->GetPresentQueue(), &presentInfo);
 
-	if (result == VK_SUBOPTIMAL_KHR || result == VK_ERROR_OUT_OF_DATE_KHR) {
+	if (result == VK_SUBOPTIMAL_KHR || result == VK_ERROR_OUT_OF_DATE_KHR || frameBufferResized) {
 		RecreateSwapChain();
 		SetFrameBufferResized(false);
 	}
-	else if (result != VK_SUCCESS) {
+	else if (result != VK_SUCCESS) { // stops here
 		throw std::runtime_error("Failed to present swap chain image!");
 	}
 
