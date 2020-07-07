@@ -33,7 +33,9 @@ void CommandBuffer::EndSingleTimeCommand(VkCommandBuffer commandBuffer)
 	submitInfo.commandBufferCount = 1;
 	submitInfo.pCommandBuffers = &commandBuffer;
 
-	vkQueueSubmit(VulkanManager::GetInstance()->GetGraphicsQueue(), 1, &submitInfo, VK_NULL_HANDLE);
+	if (vkQueueSubmit(VulkanManager::GetInstance()->GetGraphicsQueue(), 1, &submitInfo, VK_NULL_HANDLE) != VK_SUCCESS) {
+		throw std::runtime_error("Failed to submit single time command buffer");
+	}
 	vkQueueWaitIdle(VulkanManager::GetInstance()->GetGraphicsQueue());
 
 	vkFreeCommandBuffers(VulkanManager::GetInstance()->GetLogicalDevice(), SwapChain::GetInstance()->GetCommandPool(), 1, &commandBuffer);

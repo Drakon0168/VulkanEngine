@@ -26,7 +26,6 @@ void GameManager::Init()
 
 void GameManager::Update()
 {
-    Time::Update();
 }
 
 void GameManager::Draw()

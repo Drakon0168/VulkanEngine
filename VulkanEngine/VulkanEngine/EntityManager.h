@@ -17,8 +17,6 @@ private:
 	std::vector<std::shared_ptr<Material>> materials;
 	std::vector<std::shared_ptr<Mesh>> meshes;
 
-	VkDescriptorPool descriptorPool = VK_NULL_HANDLE;
-
 public:
 #pragma region Singleton
 

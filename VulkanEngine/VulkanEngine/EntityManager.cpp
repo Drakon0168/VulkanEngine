@@ -31,11 +31,6 @@ std::vector<std::shared_ptr<Mesh>> EntityManager::GetMeshes()
     return meshes;
 }
 
-VkDescriptorPool EntityManager::GetDescriptorPool()
-{
-    return descriptorPool;
-}
-
 #pragma endregion
 
 #pragma region Initialization
@@ -142,23 +137,6 @@ void EntityManager::Draw(uint32_t imageIndex, VkCommandBuffer* commandBuffer)
 #pragma endregion
 
 #pragma region Memory Management
-
-void EntityManager::CreateDescriptorPool()
-{
-    VkDescriptorPoolSize poolSize = {};
-    poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-    poolSize.descriptorCount = static_cast<uint32_t>(SwapChain::GetInstance()->GetImages().size() * meshes.size());
-
-    VkDescriptorPoolCreateInfo createInfo = {};
-    createInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-    createInfo.poolSizeCount = 1;
-    createInfo.pPoolSizes = &poolSize;
-    createInfo.maxSets = static_cast<uint32_t>(SwapChain::GetInstance()->GetImages().size() * meshes.size());
-
-    if (vkCreateDescriptorPool(VulkanManager::GetInstance()->GetLogicalDevice(), &createInfo, nullptr, &descriptorPool)) {
-        throw std::runtime_error("Failed to create Descriptor Pool!");
-    }
-}
 
 void EntityManager::CreateMaterialResources()
 {

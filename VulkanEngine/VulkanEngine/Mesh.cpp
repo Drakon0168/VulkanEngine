@@ -65,7 +65,7 @@ void Mesh::CreateInstanceBuffer()
 
 	//Copy Buffer Data
 	instanceBuffer = std::make_shared<Buffer>();
-	Buffer::CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, *instanceBuffer);
+	Buffer::CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, *instanceBuffer);
 	Buffer::CopyBuffer(stagingBuffer.GetBuffer(), instanceBuffer->GetBuffer(), bufferSize);
 
 	//Cleanup
@@ -239,6 +239,8 @@ void Mesh::Draw(VkCommandBuffer* commandBuffer)
 {
 }
 
+#pragma endregion
+
 #pragma region Instances
 
 void Mesh::AddInstance(std::shared_ptr<Transform> value)
@@ -283,21 +285,11 @@ void Mesh::UpdateInstanceBuffer()
 		bufferData[i] = TransformData::LoadMat4(instances[i]->GetModelMatrix());
 	}
 
-	Buffer stagingBuffer;
-
-	Buffer::CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer);
-
 	//Copy Data
 	void* data;
-	vkMapMemory(logicalDevice, stagingBuffer.GetBufferMemory(), 0, bufferSize, 0, &data);
+	vkMapMemory(logicalDevice, instanceBuffer->GetBufferMemory(), 0, bufferSize, 0, &data);
 	memcpy(data, bufferData.data(), bufferSize);
-	vkUnmapMemory(logicalDevice, stagingBuffer.GetBufferMemory());
-
-	//Copy Buffer Data
-	Buffer::CopyBuffer(stagingBuffer.GetBuffer(), instanceBuffer->GetBuffer(), bufferSize);
-
-	//Cleanup
-	stagingBuffer.Cleanup();
+	vkUnmapMemory(logicalDevice, instanceBuffer->GetBufferMemory());
 }
 
 void Mesh::UpdateVertexBuffer()

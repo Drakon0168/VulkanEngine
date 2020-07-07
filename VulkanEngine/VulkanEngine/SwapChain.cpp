@@ -509,8 +509,6 @@ uint32_t SwapChain::BeginDraw()
 	//Mark the image as being in use
 	imagesInFlight[imageIndex] = inFlightFences[currentFrame];
 
-	
-
 	return imageIndex;
 }
 
@@ -535,7 +533,7 @@ void SwapChain::EndDraw(uint32_t imageIndex)
 
 	//Reset fence
 	vkResetFences(logicalDevice, 1, &inFlightFences[currentFrame]);
-	if (vkQueueSubmit(VulkanManager::GetInstance()->GetGraphicsQueue(), 1, &submitInfo, inFlightFences[currentFrame]) != VK_SUCCESS) { //stops here
+	if (vkQueueSubmit(VulkanManager::GetInstance()->GetGraphicsQueue(), 1, &submitInfo, inFlightFences[currentFrame]) != VK_SUCCESS) { //stops here VK_DEVICE_LOST
 		throw std::runtime_error("Failed to submit draw command buffer!");
 	}
 
