@@ -77,6 +77,10 @@ void EntityManager::Update()
 
 void EntityManager::Draw(uint32_t imageIndex, VkCommandBuffer* commandBuffer)
 {
+    if (vkResetCommandBuffer(*commandBuffer, VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT) != VK_SUCCESS) {
+        throw std::runtime_error("Failed to reset command buffer!");
+    }
+
     //Setup command
     VkCommandBufferBeginInfo beginInfo = {};
     beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
