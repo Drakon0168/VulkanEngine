@@ -42,12 +42,6 @@ public:
 	/// <returns>std::vector<std::shared_ptr<Mesh>> of the meshes that are in use</returns>
 	std::vector<std::shared_ptr<Mesh>> GetMeshes();
 
-	/// <summary>
-	/// Returns the descriptor pool that is being used
-	/// </summary>
-	/// <returns>The VkDescriptorPool that is being used</returns>
-	VkDescriptorPool GetDescriptorPool();
-
 #pragma endregion
 
 #pragma region Initialization
@@ -85,11 +79,6 @@ public:
 #pragma endregion
 
 #pragma region Memory Management
-
-	/// <summary>
-	/// Creates and allocates the descriptor pool
-	/// </summary>
-	void CreateDescriptorPool();
 
 	/// <summary>
 	/// Creates and allocates the resources on all materials

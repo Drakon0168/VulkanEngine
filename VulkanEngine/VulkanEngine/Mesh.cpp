@@ -260,6 +260,7 @@ void Mesh::AddInstance(std::shared_ptr<Transform> value)
 	//If no empty indices were found add to the end
 	if (emptyIndex == -1) {
 		instances.push_back(value);
+		return;
 	}
 
 	//Otherwise add to empty index
