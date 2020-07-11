@@ -48,9 +48,29 @@ public:
 	void CreateInstanceBuffer();
 
 	/// <summary>
+	/// Creates and allocates the vertex buffer that will be used by this mesh
+	/// </summary>
+	void CreateVertexBuffer();
+
+	/// <summary>
+	/// Creates and allocates the index buffer that will be used by this mesh
+	/// </summary>
+	void CreateIndexBuffer();
+
+	/// <summary>
 	/// Updates the mesh's instance buffer
 	/// </summary>
 	void UpdateInstanceBuffer();
+
+	/// <summary>
+	/// Updates the mesh's vertex buffer 
+	/// </summary>
+	void UpdateVertexBuffer();
+
+	/// <summary>
+	/// Updates the mesh's index buffer
+	/// </summary>
+	void UpdateIndexBuffer();
 
 #pragma endregion
 

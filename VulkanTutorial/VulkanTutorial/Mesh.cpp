@@ -48,6 +48,56 @@ void Mesh::CreateInstanceBuffer()
 	vkUnmapMemory(logicalDevice, instanceBuffer->GetBufferMemory());
 }
 
+void Mesh::CreateVertexBuffer()
+{
+	//Create the staging buffer
+	VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
+	Buffer stagingBuffer;
+
+	Buffer::CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer);
+
+	//Map vertex data to the buffer
+	void* data;
+	vkMapMemory(logicalDevice, stagingBuffer.GetBufferMemory(), 0, bufferSize, 0, &data);
+	memcpy(data, vertices.data(), bufferSize);
+	vkUnmapMemory(logicalDevice, stagingBuffer.GetBufferMemory());
+
+	//Create the vertex buffer
+	vertexBuffer = std::make_shared<Buffer>();
+	Buffer::CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, *vertexBuffer);
+
+	//Copy buffer data
+	Buffer::CopyBuffer(stagingBuffer.GetBuffer(), vertexBuffer->GetBuffer(), bufferSize);
+
+	//Cleanup staging buffer
+	stagingBuffer.Cleanup();
+}
+
+void Mesh::CreateIndexBuffer()
+{
+	//Create the staging buffer
+	VkDeviceSize bufferSize = sizeof(indices[0]) * indices.size();
+	Buffer stagingBuffer;
+
+	Buffer::CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer);
+
+	//Map index data to the buffer
+	void* data;
+	vkMapMemory(logicalDevice, stagingBuffer.GetBufferMemory(), 0, bufferSize, 0, &data);
+	memcpy(data, indices.data(), bufferSize);
+	vkUnmapMemory(logicalDevice, stagingBuffer.GetBufferMemory());
+
+	//Create the index buffer
+	indexBuffer = std::make_shared<Buffer>();
+	Buffer::CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, *indexBuffer);
+
+	//Copy buffer data
+	Buffer::CopyBuffer(stagingBuffer.GetBuffer(), indexBuffer->GetBuffer(), bufferSize);
+
+	//Cleanup staging buffer
+	stagingBuffer.Cleanup();
+}
+
 void Mesh::UpdateInstanceBuffer()
 {
 	//Get Data as TransformData

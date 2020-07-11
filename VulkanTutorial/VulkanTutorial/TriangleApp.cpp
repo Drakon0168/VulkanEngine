@@ -73,9 +73,6 @@ void TriangleApp::Run()
 		}
 	}
 
-	vertexBuffers.resize(meshes.size());
-	indexBuffers.resize(meshes.size());
-
 	//Set starting camera values
 	camera = new Camera(glm::vec3(0.0f, 5.0f, 5.0f), glm::quat(glm::vec3(glm::radians(45.0f), 0.0f, 0.0f)), true);
 	camera->GetTransform()->LookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -154,10 +151,10 @@ void TriangleApp::InitVulkan()
 
 	for (size_t i = 0; i < meshes.size(); i++) {
 		//Create the Vertex Buffer
-		CreateVertexBuffer(i);
+		meshes[i].CreateVertexBuffer();
 
 		//Create the Index Buffer
-		CreateIndexBuffer(i);
+		meshes[i].CreateIndexBuffer();
 
 		//Create Instance Buffer
 		meshes[i].CreateInstanceBuffer();
@@ -1537,58 +1534,6 @@ VkShaderModule TriangleApp::CreateShaderModule(const std::vector<char>& code)
 #pragma endregion
 
 #pragma region Mesh Management
-
-void TriangleApp::CreateVertexBuffer(int index)
-{
-	//Create the staging buffer
-	VkDeviceSize bufferSize = sizeof(meshes[index].GetVertices()[0]) * meshes[index].GetVertices().size();
-	Buffer stagingBuffer;
-
-	Buffer::CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer);
-	
-	//Map vertex data to the buffer
-	void* data;
-	vkMapMemory(logicalDevice, stagingBuffer.GetBufferMemory(), 0, bufferSize, 0, &data);
-	memcpy(data, meshes[index].GetVertices().data(), bufferSize);
-	vkUnmapMemory(logicalDevice, stagingBuffer.GetBufferMemory());
-
-	//Create the vertex buffer
-	vertexBuffers[index] = std::make_shared<Buffer>();
-	meshes[index].SetVertexBuffer(vertexBuffers[index]);
-	Buffer::CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, *vertexBuffers[index]);
-
-	//Copy buffer data
-	Buffer::CopyBuffer(stagingBuffer.GetBuffer(), vertexBuffers[index]->GetBuffer(), bufferSize);
-
-	//Cleanup staging buffer
-	stagingBuffer.Cleanup();
-}
-
-void TriangleApp::CreateIndexBuffer(int index)
-{
-	//Create the staging buffer
-	VkDeviceSize bufferSize = sizeof(meshes[index].GetIndices()[0]) * meshes[index].GetIndices().size();
-	Buffer stagingBuffer;
-
-	Buffer::CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer);
-
-	//Map index data to the buffer
-	void* data;
-	vkMapMemory(logicalDevice, stagingBuffer.GetBufferMemory(), 0, bufferSize, 0, &data);
-	memcpy(data, meshes[index].GetIndices().data(), bufferSize);
-	vkUnmapMemory(logicalDevice, stagingBuffer.GetBufferMemory());
-
-	//Create the index buffer
-	indexBuffers[index] = std::make_shared<Buffer>();
-	meshes[index].SetIndexBuffer(indexBuffers[index]);
-	Buffer::CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, *indexBuffers[index]);
-
-	//Copy buffer data
-	Buffer::CopyBuffer(stagingBuffer.GetBuffer(), indexBuffers[index]->GetBuffer(), bufferSize);
-
-	//Cleanup staging buffer
-	stagingBuffer.Cleanup();
-}
 
 void TriangleApp::CreateUniformBuffers()
 {

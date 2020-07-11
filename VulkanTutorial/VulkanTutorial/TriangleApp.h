@@ -70,9 +70,6 @@ private:
 	size_t currentFrame = 0;
 	bool frameBufferResized = false;
 
-	std::vector<std::shared_ptr<Buffer>> vertexBuffers;
-	std::vector<std::shared_ptr<Buffer>> indexBuffers;
-
 	std::vector<std::shared_ptr<Buffer>> uniformBuffers;
 
 	std::vector<VkDescriptorSet> descriptorSets;
@@ -203,10 +200,6 @@ private:
 	//Creates the Vulkan shader from the shader data
 	VkShaderModule CreateShaderModule(const std::vector<char>& code);
 
-	//Creates the vertex buffer
-	void CreateVertexBuffer(int index);
-	//Creates the index buffer
-	void CreateIndexBuffer(int index);
 	//Creates the uniform buffer
 	void CreateUniformBuffers();
 	//Updates the uniform buffers
