@@ -48,17 +48,35 @@ public:
 	/// <returns>The descriptor sets used by the material</returns>
 	std::vector<VkDescriptorSet> GetDescriptorSets();
 
-	//TODO: Delete once this is created in the material class
-	void SetDescriptorSets(std::vector<VkDescriptorSet> value);
-
 	/// <summary>
 	/// Returns the descriptor pool that is used by this material
 	/// </summary>
 	/// <returns>The material's descriptor pool</returns>
 	VkDescriptorPool GetDescriptorPool();
 
-	//TODO: Delete once this is created in the material class
-	void SetDescriptorPool(VkDescriptorPool value);
+#pragma endregion
+
+#pragma region Resource Management
+
+	/// <summary>
+	/// Initializes material resources
+	/// </summary>
+	void Init();
+
+	/// <summary>
+	/// Creates and allocates the descriptor pool used by this material
+	/// </summary>
+	void CreateDescriptorPool();
+
+	/// <summary>
+	/// Creates and allocates the descriptor sets used by this material
+	/// </summary>
+	void CreateDescriptorSets();
+
+	/// <summary>
+	/// Cleans up material resources
+	/// </summary>
+	void Cleanup();
 
 #pragma endregion
 };

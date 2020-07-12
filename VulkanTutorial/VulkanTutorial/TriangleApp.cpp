@@ -10,6 +10,11 @@ VkDevice TriangleApp::logicalDevice = VK_NULL_HANDLE;
 VkQueue TriangleApp::graphicsQueue = VK_NULL_HANDLE;
 VkQueue TriangleApp::presentQueue = VK_NULL_HANDLE;
 
+VkDescriptorSetLayout TriangleApp::descriptorSetLayout = VK_NULL_HANDLE;
+
+std::vector<std::shared_ptr<Buffer>> TriangleApp::uniformBuffers = std::vector<std::shared_ptr<Buffer>>();
+std::vector<VkImage> TriangleApp::swapChainImages = std::vector<VkImage>();
+
 float TriangleApp::deltaTime = 0.0f;
 float TriangleApp::totalTime = 0.0f;
 
@@ -158,11 +163,9 @@ void TriangleApp::InitVulkan()
 		meshes[i]->Init();
 	}
 
-	//Create the descriptor pool
-	CreateDescriptorPool();
-
-	//Create the descriptor sets
-	CreateDescriptorSets();
+	for (size_t i = 0; i < materials.size(); i++) {
+		materials[i]->Init();
+	}
 
 	//Create the texture image
 	CreateTextureImage();
@@ -1009,8 +1012,11 @@ void TriangleApp::RecreateSwapChain()
 	CreateDepthResources();
 	CreateFrameBuffers();
 	CreateUniformBuffers();
-	CreateDescriptorPool();
-	CreateDescriptorSets();
+	
+	for (size_t i = 0; i < materials.size(); i++) {
+		materials[i]->Init();
+	}
+
 	CreateCommandBuffers();
 }
 
@@ -1046,9 +1052,9 @@ void TriangleApp::CleanupSwapChain()
 		uniformBuffers[i]->Cleanup();
 	}
 
+	//Cleanup Materials
 	for (int i = 0; i < materials.size(); i++) {
-		//Destroy Descriptor Pool
-		vkDestroyDescriptorPool(logicalDevice, materials[i]->GetDescriptorPool(), nullptr);
+		materials[i]->Cleanup();
 	}
 
 	//Destroy Depth Image Views
@@ -1387,65 +1393,6 @@ void TriangleApp::CreateDescriptorSetLayout()
 
 	if (vkCreateDescriptorSetLayout(logicalDevice, &createInfo, nullptr, &descriptorSetLayout) != VK_SUCCESS) {
 		throw std::runtime_error("Failed to create descriptor set layout");
-	}
-}
-
-void TriangleApp::CreateDescriptorPool()
-{
-	VkDescriptorPoolSize poolSize = {};
-	poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-	poolSize.descriptorCount = static_cast<uint32_t>(swapChainImages.size());
-
-	VkDescriptorPoolCreateInfo createInfo = {};
-	createInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-	createInfo.poolSizeCount = 1;
-	createInfo.pPoolSizes = &poolSize;
-	createInfo.maxSets = static_cast<uint32_t>(swapChainImages.size());
-
-	VkDescriptorPool pool;
-
-	if (vkCreateDescriptorPool(logicalDevice, &createInfo, nullptr, &pool)) {
-		throw std::runtime_error("Failed to create Descriptor Pool!");
-	}
-
-	materials[0]->SetDescriptorPool(pool);
-}
-
-void TriangleApp::CreateDescriptorSets()
-{
-	std::vector<VkDescriptorSetLayout> layouts(swapChainImages.size(), descriptorSetLayout);
-	VkDescriptorSetAllocateInfo allocateInfo = {};
-	allocateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-	allocateInfo.descriptorPool = materials[0]->GetDescriptorPool();
-	allocateInfo.descriptorSetCount = static_cast<uint32_t>(swapChainImages.size());
-	allocateInfo.pSetLayouts = layouts.data();
-
-	std::vector<VkDescriptorSet> descriptorSets(swapChainImages.size());
-
-	if (vkAllocateDescriptorSets(logicalDevice, &allocateInfo, descriptorSets.data()) != VK_SUCCESS) {
-		throw std::runtime_error("Failed to allocate Descriptor Sets!");
-	}
-
-	materials[0]->SetDescriptorSets(descriptorSets);
-
-	for (size_t i = 0; i < uniformBuffers.size(); i++) {
-		VkDescriptorBufferInfo bufferInfo = {};
-		bufferInfo.buffer = uniformBuffers[i]->GetBuffer();
-		bufferInfo.offset = 0;
-		bufferInfo.range = sizeof(UniformBufferObject);
-
-		VkWriteDescriptorSet descriptorWrite = {};
-		descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		descriptorWrite.dstSet = materials[0]->GetDescriptorSets()[i];
-		descriptorWrite.dstBinding = 0;
-		descriptorWrite.dstArrayElement = 0;
-		descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-		descriptorWrite.descriptorCount = 1;
-		descriptorWrite.pBufferInfo = &bufferInfo;
-		descriptorWrite.pImageInfo = nullptr;
-		descriptorWrite.pTexelBufferView = nullptr;
-
-		vkUpdateDescriptorSets(logicalDevice, 1, &descriptorWrite, 0, nullptr);
 	}
 }
 

@@ -35,6 +35,10 @@ public:
 	static VkDevice logicalDevice;
 	static VkQueue graphicsQueue;
 	static VkQueue presentQueue;
+	static std::vector<VkImage> swapChainImages;
+
+	static VkDescriptorSetLayout descriptorSetLayout;
+	static std::vector<std::shared_ptr<Buffer>> uniformBuffers;
 
 	//Find the type of memory used by the GPU
 	static uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
@@ -61,7 +65,6 @@ private:
 	VkDebugUtilsMessengerEXT debugMessenger;
 
 	VkRenderPass renderPass;
-	VkDescriptorSetLayout descriptorSetLayout;
 	VkPipelineLayout pipelineLayout;
 	VkPipeline graphicsPipeline;
 
@@ -72,14 +75,11 @@ private:
 	size_t currentFrame = 0;
 	bool frameBufferResized = false;
 
-	std::vector<std::shared_ptr<Buffer>> uniformBuffers;
-
 	std::vector<VkCommandBuffer> commandBuffers;
 
 	VkSurfaceKHR surface;
 
 	VkSwapchainKHR swapChain;
-	std::vector<VkImage> swapChainImages;
 	std::vector<VkImageView> swapChainImageView;
 	std::vector<VkFramebuffer> swapChainFrameBuffers;
 	VkFormat swapChainImageFormat;
@@ -190,10 +190,6 @@ private:
 	void CreateGraphicsPipeline();
 	//Create the descriptor set for the Uniform Buffer Object
 	void CreateDescriptorSetLayout();
-	//Creates the descriptor pool
-	void CreateDescriptorPool();
-	//Creates the descriptor sets
-	void CreateDescriptorSets();
 	//Creates the Render Pass
 	void CreateRenderPass();
 	//Creates the Vulkan shader from the shader data
