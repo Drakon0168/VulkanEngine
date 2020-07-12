@@ -152,6 +152,7 @@ void EntityManager::CreateMaterialResources()
 void EntityManager::CreateMeshResources()
 {
     for (size_t i = 0; i < meshes.size(); i++) {
+        meshes[i]->AddInstance(std::make_shared<Transform>(glm::vec3(0.0f, 0.0f, 0.0f)));
         meshes[i]->Init();
     }
 }

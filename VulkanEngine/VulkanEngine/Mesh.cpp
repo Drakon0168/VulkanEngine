@@ -2,74 +2,58 @@
 #include "Mesh.h"
 
 #include "VulkanManager.h"
+#include "TransformData.h"
 
 #define logicalDevice VulkanManager::GetInstance()->GetLogicalDevice()
 
-#pragma region Memory Management
+#pragma region Constructor
 
-Mesh::Mesh(std::shared_ptr<Material> material, std::vector<Vertex> vertices, std::vector<uint16_t> indices, std::shared_ptr<Buffer> vertexBuffer, uint32_t vertexOffset, std::shared_ptr<Buffer> indexBuffer, uint32_t indexOffset, std::shared_ptr<Buffer> instanceBuffer, std::vector<std::shared_ptr<Transform>> instances)
+Mesh::Mesh(std::shared_ptr<Material> material, std::vector<Vertex> vertices, std::vector<uint16_t> indices, std::shared_ptr<Buffer> vertexBuffer, uint32_t vertexBufferOffset, std::shared_ptr<Buffer> indexBuffer, uint32_t indexBufferOffset, std::vector<std::shared_ptr<Transform>> instances, std::shared_ptr<Buffer> instanceBuffer)
 {
 	this->material = material;
-
 	this->vertices = vertices;
-	this->vertexOffset = vertexOffset;
-	this->vertexBuffer = vertexBuffer;
-
 	this->indices = indices;
-	this->indexOffset = indexOffset;
+	this->vertexBuffer = vertexBuffer;
+	this->vertexBufferOffset = vertexBufferOffset;
 	this->indexBuffer = indexBuffer;
-
-	this->instanceBuffer;
+	this->indexBufferOffset = indexBufferOffset;
 	this->instances = instances;
+	this->instanceBuffer = instanceBuffer;
+
+	activeInstanceCount = static_cast<uint32_t>(instances.size());
 }
+
+#pragma endregion
+
+#pragma region Buffer Management
 
 void Mesh::Init()
 {
-	//Create the texture image
-	//CreateTextureImage();
-
-	//Create the texture's image view
-	//CreateTextureImageView();
-
-	CreateInstanceBuffer();
-
 	CreateVertexBuffer();
-
 	CreateIndexBuffer();
+	CreateInstanceBuffer();
 }
 
 void Mesh::CreateInstanceBuffer()
 {
-	if (instances.size() < 1) {
-		instances.push_back(std::make_shared<Transform>());
-	}
-
 	//Get Data as TransformData
-	std::vector<TransformData> bufferData(instances.size());
+	std::vector<std::shared_ptr<Transform>> activeInstances = GetActiveInstances();
+	std::vector<TransformData> bufferData(activeInstanceCount);
 
-	for (size_t i = 0; i < instances.size(); i++) {
-		bufferData[i] = TransformData::LoadMat4(instances[i]->GetModelMatrix());
+	for (size_t i = 0; i < activeInstanceCount; i++) {
+		bufferData[i] = TransformData::LoadMat4(activeInstances[i]->GetModelMatrix());
 	}
 
-	//Create staging buffer
+	//Create buffer
 	VkDeviceSize bufferSize = sizeof(TransformData) * bufferData.size();
-	Buffer stagingBuffer;
-
-	Buffer::CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer);
+	instanceBuffer = std::make_shared<Buffer>(VkBuffer(), VkDeviceMemory());
+	Buffer::CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, *instanceBuffer);
 
 	//Copy Data
 	void* data;
-	vkMapMemory(logicalDevice, stagingBuffer.GetBufferMemory(), 0, bufferSize, 0, &data);
+	vkMapMemory(logicalDevice, instanceBuffer->GetBufferMemory(), 0, bufferSize, 0, &data);
 	memcpy(data, bufferData.data(), bufferSize);
-	vkUnmapMemory(logicalDevice, stagingBuffer.GetBufferMemory());
-
-	//Copy Buffer Data
-	instanceBuffer = std::make_shared<Buffer>();
-	Buffer::CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, *instanceBuffer);
-	Buffer::CopyBuffer(stagingBuffer.GetBuffer(), instanceBuffer->GetBuffer(), bufferSize);
-
-	//Cleanup
-	stagingBuffer.Cleanup();
+	vkUnmapMemory(logicalDevice, instanceBuffer->GetBufferMemory());
 }
 
 void Mesh::CreateVertexBuffer()
@@ -129,6 +113,67 @@ void Mesh::Cleanup()
 	instanceBuffer->Cleanup();
 }
 
+void Mesh::UpdateInstanceBuffer()
+{
+	//Get Data as TransformData
+	std::vector<std::shared_ptr<Transform>> activeInstances = GetActiveInstances();
+	std::vector<TransformData> bufferData(activeInstanceCount);
+
+	for (size_t i = 0; i < activeInstanceCount; i++) {
+		bufferData[i] = TransformData::LoadMat4(activeInstances[i]->GetModelMatrix());
+	}
+
+	VkDeviceSize bufferSize = sizeof(TransformData) * bufferData.size();
+
+	//Copy Data
+	void* data;
+	vkMapMemory(logicalDevice, instanceBuffer->GetBufferMemory(), 0, bufferSize, 0, &data);
+	memcpy(data, bufferData.data(), bufferSize);
+	vkUnmapMemory(logicalDevice, instanceBuffer->GetBufferMemory());
+}
+
+void Mesh::UpdateVertexBuffer()
+{
+	//Create the staging buffer
+	VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
+	Buffer stagingBuffer;
+
+	Buffer::CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer);
+
+	//Map index data to the buffer
+	void* data;
+	vkMapMemory(logicalDevice, stagingBuffer.GetBufferMemory(), 0, bufferSize, 0, &data);
+	memcpy(data, vertices.data(), bufferSize);
+	vkUnmapMemory(logicalDevice, stagingBuffer.GetBufferMemory());
+
+	//Copy buffer data
+	Buffer::CopyBuffer(stagingBuffer.GetBuffer(), vertexBuffer->GetBuffer(), bufferSize);
+
+	//Cleanup staging buffer
+	stagingBuffer.Cleanup();
+}
+
+void Mesh::UpdateIndexBuffer()
+{
+	//Create the staging buffer
+	VkDeviceSize bufferSize = sizeof(indices[0]) * indices.size();
+	Buffer stagingBuffer;
+
+	Buffer::CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer);
+
+	//Map index data to the buffer
+	void* data;
+	vkMapMemory(logicalDevice, stagingBuffer.GetBufferMemory(), 0, bufferSize, 0, &data);
+	memcpy(data, indices.data(), bufferSize);
+	vkUnmapMemory(logicalDevice, stagingBuffer.GetBufferMemory());
+
+	//Copy buffer data
+	Buffer::CopyBuffer(stagingBuffer.GetBuffer(), indexBuffer->GetBuffer(), bufferSize);
+
+	//Cleanup staging buffer
+	stagingBuffer.Cleanup();
+}
+
 #pragma endregion
 
 #pragma region Accessors
@@ -150,13 +195,13 @@ std::shared_ptr<Buffer> Mesh::GetVertexBuffer()
 
 uint32_t Mesh::GetVertexBufferOffset()
 {
-	return vertexOffset;
+	return vertexBufferOffset;
 }
 
 void Mesh::SetVertexBuffer(std::shared_ptr<Buffer> value, uint32_t offset)
 {
 	vertexBuffer = value;
-	vertexOffset = offset;
+	vertexBufferOffset = offset;
 }
 
 std::vector<uint16_t> Mesh::GetIndices()
@@ -176,13 +221,33 @@ std::shared_ptr<Buffer> Mesh::GetIndexBuffer()
 
 uint32_t Mesh::GetIndexBufferOffset()
 {
-	return indexOffset;
+	return indexBufferOffset;
 }
 
 void Mesh::SetIndexBuffer(std::shared_ptr<Buffer> value, uint32_t offset)
 {
 	indexBuffer = value;
-	indexOffset = offset;
+	indexBufferOffset = offset;
+}
+
+uint32_t Mesh::GetActiveInstanceCount()
+{
+	return activeInstanceCount;
+}
+
+std::vector<std::shared_ptr<Transform>> Mesh::GetActiveInstances()
+{
+	std::vector<std::shared_ptr<Transform>> activeInstances;
+	activeInstanceCount = 0;
+
+	for (size_t i = 0; i < instances.size(); i++) {
+		if (instances[i] != nullptr) {
+			activeInstances.push_back(instances[i]);
+			activeInstanceCount++;
+		}
+	}
+
+	return activeInstances;
 }
 
 std::shared_ptr<Buffer> Mesh::GetInstanceBuffer()
@@ -195,36 +260,6 @@ void Mesh::SetInstanceBuffer(std::shared_ptr<Buffer> value)
 	instanceBuffer = value;
 }
 
-std::vector<std::shared_ptr<Transform>> Mesh::GetInstances()
-{
-	return instances;
-}
-
-void Mesh::SetInstances(std::vector<std::shared_ptr<Transform>> value)
-{
-	instances = value;
-}
-
-std::vector<std::shared_ptr<Transform>> Mesh::GetActiveInstances()
-{
-	activeInstanceCount = 0;
-	std::vector<std::shared_ptr<Transform>> activeInstances;
-
-	for (int i = 0; i < instances.size(); i++) {
-		if (instances[i] != nullptr) {
-			activeInstances.push_back(instances[i]);
-			activeInstanceCount++;
-		}
-	}
-
-	return activeInstances;
-}
-
-uint32_t Mesh::GetActiveInstanceCount()
-{
-	return activeInstanceCount;
-}
-
 std::shared_ptr<Material> Mesh::GetMaterial()
 {
 	return material;
@@ -235,10 +270,6 @@ void Mesh::SetMaterial(std::shared_ptr<Material> value)
 	material = value;
 }
 
-void Mesh::Draw(VkCommandBuffer* commandBuffer)
-{
-}
-
 #pragma endregion
 
 #pragma region Instances
@@ -246,91 +277,31 @@ void Mesh::Draw(VkCommandBuffer* commandBuffer)
 void Mesh::AddInstance(std::shared_ptr<Transform> value)
 {
 	activeInstanceCount++;
+	size_t freeIndex = -1;
 
-	//Check for empty indexes that can be reused
-	int emptyIndex = -1;
-	for (int i = 0; i < instances.size(); i++) {
+	for (size_t i = 0; i < instances.size(); i++) {
 		if (instances[i] == nullptr) {
-			emptyIndex = i;
+			freeIndex = i;
 			break;
 		}
 	}
 
-	//Add to empty index
-	//If no empty indices were found add to the end
-	if (emptyIndex == -1) {
+	if (freeIndex == -1) {
 		instances.push_back(value);
 		return;
 	}
 
-	//Otherwise add to empty index
-	instances[emptyIndex] = value;
+	instances[freeIndex] = value;
 }
 
 void Mesh::RemoveInstance(int instanceId)
 {
-	activeInstanceCount--;
-	instances[instanceId] = nullptr;
-}
-
-#pragma endregion
-
-#pragma region Buffer Management
-
-void Mesh::UpdateInstanceBuffer()
-{
-	VkDeviceSize bufferSize = sizeof(TransformData) * instances.size();
-	std::vector<TransformData> bufferData(instances.size());
-
-	for (size_t i = 0; i < instances.size(); i++) {
-		bufferData[i] = TransformData::LoadMat4(instances[i]->GetModelMatrix());
+	if (instanceId < 0 || instanceId >= instances.size()) {
+		throw std::runtime_error("Failed to remove instance Id out of bounds!");
 	}
 
-	//Copy Data
-	void* data;
-	vkMapMemory(logicalDevice, instanceBuffer->GetBufferMemory(), 0, bufferSize, 0, &data);
-	memcpy(data, bufferData.data(), bufferSize);
-	vkUnmapMemory(logicalDevice, instanceBuffer->GetBufferMemory());
-}
-
-void Mesh::UpdateVertexBuffer()
-{
-	VkDeviceSize bufferSize = sizeof(Vertex) * vertices.size();
-	Buffer stagingBuffer;
-
-	Buffer::CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer);
-
-	//Copy Data
-	void* data;
-	vkMapMemory(logicalDevice, stagingBuffer.GetBufferMemory(), 0, bufferSize, 0, &data);
-	memcpy(data, vertices.data(), bufferSize);
-	vkUnmapMemory(logicalDevice, stagingBuffer.GetBufferMemory());
-
-	//Copy Buffer Data
-	Buffer::CopyBuffer(stagingBuffer.GetBuffer(), vertexBuffer->GetBuffer(), bufferSize);
-
-	//Cleanup
-	stagingBuffer.Cleanup();
-}
-
-void Mesh::UpdateIndexBuffer()
-{
-	VkDeviceSize bufferSize = sizeof(indices[0]) * indices.size();
-	Buffer stagingBuffer;
-
-	Buffer::CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer);
-
-	//Copy Data
-	void* data;
-	vkMapMemory(logicalDevice, stagingBuffer.GetBufferMemory(), 0, bufferSize, 0, &data);
-	memcpy(data, indices.data(), bufferSize);
-	vkUnmapMemory(logicalDevice, stagingBuffer.GetBufferMemory());
-
-	//Copy Buffer Data
-	Buffer::CopyBuffer(stagingBuffer.GetBuffer(), indexBuffer->GetBuffer(), bufferSize);
-
-	//Cleanup
-	stagingBuffer.Cleanup();
+	activeInstanceCount--;
+	instances[instanceId] == nullptr;
 }
 
 #pragma endregion
@@ -357,12 +328,13 @@ void Mesh::GeneratePlane()
 		2, 3, 0
 	};
 
-	//UpdateVertexBuffer();
-	//UpdateIndexBuffer();
+	if (vertexBuffer != nullptr && indexBuffer != nullptr) {
+		UpdateVertexBuffer();
+		UpdateIndexBuffer();
+	}
 }
 
-void Mesh::GenerateCube()
-{
+void Mesh::GenerateCube() {
 	//Set vertices
 	vertices.resize(4);
 
@@ -395,11 +367,13 @@ void Mesh::GenerateCube()
 		5,7,3
 	};
 
-	//UpdateVertexBuffer();
-	//UpdateIndexBuffer();
+	if (vertexBuffer != nullptr && indexBuffer != nullptr) {
+		UpdateVertexBuffer();
+		UpdateIndexBuffer();
+	}
 }
 
-void Mesh::GenerateSphere(uint32_t resolution)
+void Mesh::GenerateSphere(int resolution)
 {
 	//Set minimum resolution of 3
 	if (resolution < 3) {
@@ -430,7 +404,7 @@ void Mesh::GenerateSphere(uint32_t resolution)
 	}
 
 	//Add bottom
-	vertices.push_back(Vertex(glm::vec3(0.0f, -radius, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 0.0f)));
+	vertices.push_back(Vertex(glm::vec3(0.0f, -radius, 0.0f), glm::vec3(1.0f, 1.0f,1.0f), glm::vec2(0.0f, 0.0f)));
 
 	//Set Indices
 	//Add Cap
@@ -494,8 +468,10 @@ void Mesh::GenerateSphere(uint32_t resolution)
 		}
 	}
 
-	//UpdateVertexBuffer();
-	//UpdateIndexBuffer();
+	if (vertexBuffer != nullptr && indexBuffer != nullptr) {
+		UpdateVertexBuffer();
+		UpdateIndexBuffer();
+	}
 }
 
 #pragma endregion

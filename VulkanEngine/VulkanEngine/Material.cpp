@@ -308,7 +308,6 @@ void Material::Cleanup()
 	vkDestroyPipeline(logicalDevice, pipeline, nullptr);
 	vkDestroyPipelineLayout(logicalDevice, pipelineLayout, nullptr);
 
-	vkFreeDescriptorSets(logicalDevice, descriptorPool, static_cast<uint32_t>(descriptorSets.size()), descriptorSets.data());
 	vkDestroyDescriptorPool(logicalDevice, descriptorPool, nullptr);
 	vkDestroyDescriptorSetLayout(logicalDevice, descriptorSetLayout, nullptr);
 }

@@ -332,8 +332,8 @@ void VulkanManager::Cleanup()
 	//Cleanup Swap Chain and associated resources
 	SwapChain::GetInstance()->FullCleanup();
 
-	//Cleanup Entities
-	EntityManager::GetInstance()->Cleanup();
+	//Cleanup Meshes
+	EntityManager::GetInstance()->CleanupMeshes();
 
 	//Destroy Logical Device
 	vkDestroyDevice(logicalDevice, nullptr);

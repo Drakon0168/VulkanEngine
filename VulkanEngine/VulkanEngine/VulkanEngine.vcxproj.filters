@@ -81,9 +81,6 @@
     <ClCompile Include="InputAxis.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
     <ClCompile Include="CommandBuffer.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
@@ -95,6 +92,9 @@
     </ClCompile>
     <ClCompile Include="WindowManager.cpp">
       <Filter>Source Files\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Source Files\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -149,9 +149,6 @@
     <ClInclude Include="InputAxis.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>Header Files\Components</Filter>
-    </ClInclude>
     <ClInclude Include="CommandBuffer.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
@@ -174,6 +171,9 @@
       <Filter>Header Files\Structs</Filter>
     </ClInclude>
     <ClInclude Include="Buffer.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
   </ItemGroup>

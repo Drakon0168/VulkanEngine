@@ -1,39 +1,48 @@
 #pragma once
-#include "pch.h"
 
+#include "pch.h"
+#include "Vertex.h"
 #include "Transform.h"
-#include "Buffer.h"
 #include "Material.h"
+#include "Buffer.h"
+#include "UniformBufferObject.h"
 
 class Mesh
 {
 private:
+	//Vertices
 	std::vector<Vertex> vertices;
-	uint32_t vertexOffset;
+	uint32_t vertexBufferOffset;
 	std::shared_ptr<Buffer> vertexBuffer;
 
+	//Indices
 	std::vector<uint16_t> indices;
-	uint32_t indexOffset;
+	uint32_t indexBufferOffset;
 	std::shared_ptr<Buffer> indexBuffer;
 
-	std::shared_ptr<Buffer> instanceBuffer;
-	uint32_t activeInstanceCount;
+	//Instances
 	std::vector<std::shared_ptr<Transform>> instances;
+	uint32_t activeInstanceCount;
+	std::shared_ptr<Buffer> instanceBuffer;
 
+	//Material
 	std::shared_ptr<Material> material;
 
 public:
 
-#pragma region Memory Management
+#pragma region Constructor
 
 	Mesh(
 		std::shared_ptr<Material> material = nullptr,
-		std::vector<Vertex> vertices = std::vector<Vertex>(),
-		std::vector<uint16_t> indices = std::vector<uint16_t>(),
-		std::shared_ptr<Buffer> vertexBuffer = nullptr, uint32_t vertexOffset = 0,
-		std::shared_ptr<Buffer> indexBuffer = nullptr, uint32_t indexOffset = 0,
-		std::shared_ptr<Buffer> instanceBuffer = nullptr,
-		std::vector<std::shared_ptr<Transform>> instances = std::vector<std::shared_ptr<Transform>>());
+		std::vector<Vertex> vertices = {},
+		std::vector<uint16_t> indices = {},
+		std::shared_ptr<Buffer> vertexBuffer = nullptr, uint32_t vertexBufferOffset = 0, 
+		std::shared_ptr<Buffer> indexBuffer = nullptr, uint32_t indexBufferOffset = 0,
+		std::vector<std::shared_ptr<Transform>> instances = std::vector<std::shared_ptr<Transform>>(), std::shared_ptr<Buffer> instanceBuffer = nullptr);
+
+#pragma endregion
+
+#pragma region Buffer Management
 
 	/// <summary>
 	/// Creates and allocates mesh resources
@@ -41,198 +50,175 @@ public:
 	void Init();
 
 	/// <summary>
-	/// Creates and allocates the instance buffer
+	/// Creates and allocates the instance buffer that will be used by this mesh
 	/// </summary>
 	void CreateInstanceBuffer();
 
 	/// <summary>
-	/// Creates and allocates the vertex buffer
+	/// Creates and allocates the vertex buffer that will be used by this mesh
 	/// </summary>
 	void CreateVertexBuffer();
 
 	/// <summary>
-	/// Creates and allocates the index buffer
+	/// Creates and allocates the index buffer that will be used by this mesh
 	/// </summary>
 	void CreateIndexBuffer();
 
 	/// <summary>
-	/// Cleans up the mesh's resources
+	/// Cleans up all mesh resources
 	/// </summary>
 	void Cleanup();
+
+	/// <summary>
+	/// Updates the mesh's instance buffer
+	/// </summary>
+	void UpdateInstanceBuffer();
+
+	/// <summary>
+	/// Updates the mesh's vertex buffer 
+	/// </summary>
+	void UpdateVertexBuffer();
+
+	/// <summary>
+	/// Updates the mesh's index buffer
+	/// </summary>
+	void UpdateIndexBuffer();
 
 #pragma endregion
 
 #pragma region Accessors
 
 	/// <summary>
-	/// Returns the list of this mesh's vertices
+	/// Returns the list of vertices associated with this mesh
 	/// </summary>
-	/// <returns>The mesh's vertices</returns>
+	/// <returns>List of vertices</returns>
 	std::vector<Vertex> GetVertices();
 
 	/// <summary>
-	/// Sets the vertex list to the specified value
+	/// Sets the list of vertices associated with this mesh
 	/// </summary>
-	/// <param name="value">The value to set the vertex list to</param>
+	/// <param name="value">The list to set vertices to</param>
 	void SetVertices(std::vector<Vertex> value);
 
 	/// <summary>
-	/// Returns the vertex buffer used by this mesh
+	/// Returns a shared pointer to the vertex buffer with this mesh's data
 	/// </summary>
-	/// <returns>A shared pointer to the mesh's vertex buffer</returns>
+	/// <returns>The vertex buffer with this mesh's data</returns>
 	std::shared_ptr<Buffer> GetVertexBuffer();
 
 	/// <summary>
-	/// Gets the offset into the vertex buffer (for when multiple mesh's share a vertex buffer)
+	/// The offset in the vertex buffer for this mesh's data
 	/// </summary>
-	/// <returns>The offset into the vertex buffer</returns>
+	/// <returns>The vertex buffer offset</returns>
 	uint32_t GetVertexBufferOffset();
 
 	/// <summary>
-	/// Sets the vertex buffer and offset into it
+	/// Sets the vertex buffer and vertex offset 
 	/// </summary>
-	/// <param name="value">The buffer to set to</param>
-	/// <param name="offset">The offset into the buffer where this mesh's data starts</param>
-	void SetVertexBuffer(std::shared_ptr<Buffer> value, uint32_t offset);
+	/// <param name="value">The vertex buffer to set to</param>
+	/// <param name="offset">The offset within the buffer that this mesh's data is stored at</param>
+	void SetVertexBuffer(std::shared_ptr<Buffer> value, uint32_t offset = 0);
 
 	/// <summary>
-	/// Returns the list of indices
+	/// Returns the list of indices associated with this mesh
 	/// </summary>
-	/// <returns>The mesh's indices</returns>
+	/// <returns>List of indices</returns>
 	std::vector<uint16_t> GetIndices();
 
 	/// <summary>
-	/// Sets the index list of this mesh
+	/// Sets the list of indices associated with this mesh
 	/// </summary>
-	/// <param name="value">The index list to set to</param>
+	/// <param name="value">The list to set indices to</param>
 	void SetIndices(std::vector<uint16_t> value);
 
 	/// <summary>
-	/// Returns the index buffer used by the mesh
+	/// Returns a shared pointer to the index buffer with this mesh's data
 	/// </summary>
-	/// <returns>The mesh's index buffer</returns>
+	/// <returns>The index buffer with this mesh's data</returns>
 	std::shared_ptr<Buffer> GetIndexBuffer();
 
 	/// <summary>
-	/// Returns the offset into the index buffer of this mesh's data
+	/// The offset in the index buffer for this mesh's data
 	/// </summary>
-	/// <returns>The offset into the index buffer</returns>
+	/// <returns>The index buffer offset</returns>
 	uint32_t GetIndexBufferOffset();
 
 	/// <summary>
-	/// Sets the index buffer and the offset into it
+	/// Sets the index buffer and index offset
 	/// </summary>
-	/// <param name="value">The value to set the index buffer to</param>
-	/// <param name="offset">The offset into the buffer of this mesh's data</param>
-	void SetIndexBuffer(std::shared_ptr<Buffer> value, uint32_t offset);
+	/// <param name="value">The index buffer to set to</param>
+	/// <param name="offset">The offset within the buffer that this mesh's data is stored at</param>
+	void SetIndexBuffer(std::shared_ptr<Buffer> value, uint32_t offset = 0);
 
 	/// <summary>
-	/// Returns the mesh's instance buffer
+	/// Returns the number of active instances of this mesh
+	/// </summary>
+	/// <returns>The number of active mesh instances</returns>
+	uint32_t GetActiveInstanceCount();
+
+	/// <summary>
+	/// Returns a std::vector of all of the active instances of this mesh
+	/// </summary>
+	std::vector<std::shared_ptr<Transform>> GetActiveInstances();
+
+	/// <summary>
+	/// Returns the instance buffer used by this mesh
 	/// </summary>
 	/// <returns>The mesh's instance buffer</returns>
 	std::shared_ptr<Buffer> GetInstanceBuffer();
 
 	/// <summary>
-	/// Sets the instance buffer of the mesh
+	/// Sets the instance buffer to the specified value
 	/// </summary>
-	/// <param name="value">The instance buffer to set to</param>
+	/// <param name="value">The value to set the instance buffer to</param>
 	void SetInstanceBuffer(std::shared_ptr<Buffer> value);
 
 	/// <summary>
-	/// Returns a list of the transforms of each instance of this mesh
+	/// Returns the material that is being used by this mesh
 	/// </summary>
-	/// <returns>The list of instance transforms</returns>
-	std::vector<std::shared_ptr<Transform>> GetInstances();
-
-	/// <summary>
-	/// Sets the instance list of the mesh
-	/// </summary>
-	/// <param name="value">The value to set to</param>
-	void SetInstances(std::vector<std::shared_ptr<Transform>> value);
-
-	/// <summary>
-	/// Returns a list of the active instances of the mesh
-	/// </summary>
-	/// <returns>The active instances of the mesh</returns>
-	std::vector<std::shared_ptr<Transform>> GetActiveInstances();
-
-	/// <summary>
-	/// Returns the number of active instances
-	/// </summary>
-	/// <returns>The number of active instances</returns>
-	uint32_t GetActiveInstanceCount();
-
-	/// <summary>
-	/// Returns the material used by the mesh
-	/// </summary>
-	/// <returns>The mesh's material</returns>
+	/// <returns>The material used by this mesh</returns>
 	std::shared_ptr<Material> GetMaterial();
 
 	/// <summary>
-	/// Sets the material used by the mesh
+	/// Sets the material used by this mesh
 	/// </summary>
-	/// <param name="value">The value to set to</param>
+	/// <param name="value">The material to use</param>
 	void SetMaterial(std::shared_ptr<Material> value);
-
-#pragma endregion
-
-#pragma region Draw
-
-	void Draw(VkCommandBuffer* commandBuffer);
 
 #pragma endregion
 
 #pragma region Instances
 
 	/// <summary>
-	/// Adds a transform to the mesh's list of instances
+	/// Adds the specified transform to the instance list
 	/// </summary>
-	/// <param name="value">The transform to add to the list</param>
+	/// <param name="value">The transform to add</param>
 	void AddInstance(std::shared_ptr<Transform> value);
 
 	/// <summary>
-	/// Removes a transform from the list of instances
+	/// Removes the specified instance from the instance list
 	/// </summary>
-	/// <param name="instanceId">The index of the instance to remove from the list</param>
+	/// <param name="instanceId">The index of the instance to remove</param>
 	void RemoveInstance(int instanceId);
-
-#pragma endregion
-
-#pragma region Buffer Management
-
-	/// <summary>
-	/// Updates the instance buffer with all of the active instances
-	/// </summary>
-	void UpdateInstanceBuffer();
-
-	/// <summary>
-	/// Updates the vertex buffer to match the vertex list
-	/// </summary>
-	void UpdateVertexBuffer();
-
-	/// <summary>
-	/// Updates the index buffer to match the index list
-	/// </summary>
-	void UpdateIndexBuffer();
 
 #pragma endregion
 
 #pragma region Mesh Generation
 
 	/// <summary>
-	/// Generates a plane and updates the buffers
+	/// Sets the vertices and indices to generate a plane
 	/// </summary>
 	void GeneratePlane();
 
 	/// <summary>
-	/// Generates a cube and updates the buffers
+	/// Sets the vertices and indices to generate a cube
 	/// </summary>
 	void GenerateCube();
 
 	/// <summary>
-	/// Generates a sphere and updates the buffers
+	/// Sets the vertices and indices to generate a sphere
 	/// </summary>
-	void GenerateSphere(uint32_t resolution);
+	void GenerateSphere(int resolution = 5);
 
 #pragma endregion
 };
