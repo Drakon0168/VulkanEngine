@@ -61,15 +61,20 @@ void TriangleApp::Run()
 		std::cout << "Setting up Vulkan . . ." << std::endl;
 	}
 
+	//TODO: Remove this once the entity manager is in use
+	materials.push_back(std::make_shared<Material>());
+
 	//TODO: Remove this once meshes are generated in an init function or loaded from models
 	meshes.resize(2);
-	meshes[0].GenerateCube();
-	meshes[1].GenerateSphere(10);
+	meshes[0] = std::make_shared<Mesh>(materials[0]);
+	meshes[0]->GenerateCube();
+	meshes[1] = std::make_shared<Mesh>(materials[0]);
+	meshes[1]->GenerateSphere(10);
 
 	for (int y = 0; y < 3; y++) {
 		for (int x = 0; x < 3; x++) {
-			meshes[0].AddInstance(std::make_shared<Transform>(glm::vec3(-1.5f + 1.5f * x, 0.0f, -1.5f + 1.5f * y)));
-			meshes[1].AddInstance(std::make_shared<Transform>(glm::vec3(-1.5f + 1.5f * x, 1.0f, -1.5f + 1.5f * y)));
+			meshes[0]->AddInstance(std::make_shared<Transform>(glm::vec3(-1.5f + 1.5f * x, 0.0f, -1.5f + 1.5f * y)));
+			meshes[1]->AddInstance(std::make_shared<Transform>(glm::vec3(-1.5f + 1.5f * x, 1.0f, -1.5f + 1.5f * y)));
 		}
 	}
 
@@ -151,13 +156,13 @@ void TriangleApp::InitVulkan()
 
 	for (size_t i = 0; i < meshes.size(); i++) {
 		//Create the Vertex Buffer
-		meshes[i].CreateVertexBuffer();
+		meshes[i]->CreateVertexBuffer();
 
 		//Create the Index Buffer
-		meshes[i].CreateIndexBuffer();
+		meshes[i]->CreateIndexBuffer();
 
 		//Create Instance Buffer
-		meshes[i].CreateInstanceBuffer();
+		meshes[i]->CreateInstanceBuffer();
 	}
 
 	//Create the descriptor pool
@@ -196,7 +201,7 @@ void TriangleApp::Cleanup()
 
 	//Cleanup instance buffer
 	for (size_t i = 0; i < meshes.size(); i++) {
-		meshes[i].GetInstanceBuffer()->Cleanup();
+		meshes[i]->GetInstanceBuffer()->Cleanup();
 	}
 
 	//Destroy Descriptor Set Layout
@@ -204,8 +209,8 @@ void TriangleApp::Cleanup()
 
 	//Cleanup Buffers
 	for (size_t i = 0; i < meshes.size(); i++) {
-		meshes[i].GetVertexBuffer()->Cleanup();
-		meshes[i].GetIndexBuffer()->Cleanup();
+		meshes[i]->GetVertexBuffer()->Cleanup();
+		meshes[i]->GetIndexBuffer()->Cleanup();
 	}
 
 	//Destroy Logical Device
@@ -260,9 +265,9 @@ void TriangleApp::Update()
 {
 	float scaledTime = (totalTime * glm::radians(360.0f)) / 7;
 
-	meshes[0].GetActiveInstances()[4]->SetPosition(glm::vec3(0.0f, sinf(scaledTime * 1.0f), 0.0f));
-	meshes[0].GetActiveInstances()[0]->Rotate(glm::vec3(0.875f, 1.75f, 0.875f) * 90.0f * deltaTime);
-	meshes[1].GetActiveInstances()[4]->SetPosition(glm::vec3(cosf(scaledTime), 1.0f, sinf(scaledTime)));
+	meshes[0]->GetActiveInstances()[4]->SetPosition(glm::vec3(0.0f, sinf(scaledTime * 1.0f), 0.0f));
+	meshes[0]->GetActiveInstances()[0]->Rotate(glm::vec3(0.875f, 1.75f, 0.875f) * 90.0f * deltaTime);
+	meshes[1]->GetActiveInstances()[4]->SetPosition(glm::vec3(cosf(scaledTime), 1.0f, sinf(scaledTime)));
 }
 
 void TriangleApp::DrawFrame()
@@ -297,7 +302,7 @@ void TriangleApp::DrawFrame()
 
 	//Update instance buffer
 	for (size_t i = 0; i < meshes.size(); i++) {
-		meshes[i].UpdateInstanceBuffer();
+		meshes[i]->UpdateInstanceBuffer();
 	}
 
 	//Submit to the graphics queue
@@ -1183,8 +1188,8 @@ VkExtent2D TriangleApp::ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& surface
 void TriangleApp::CreateGraphicsPipeline()
 {
 	//Read in shader code
-	auto vertexShaderCode = ReadFile("shaders/vert.spv");
-	auto fragmentShaderCode = ReadFile("shaders/frag.spv");
+	auto vertexShaderCode = ReadFile(materials[0]->GetVertexShaderPath());
+	auto fragmentShaderCode = ReadFile(materials[0]->GetFragmentShaderPath());
 
 	//Create shader module
 	VkShaderModule vertexShaderModule = CreateShaderModule(vertexShaderCode);
@@ -1644,17 +1649,17 @@ void TriangleApp::CreateCommandBuffers()
 
 			vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[i], 0, nullptr);//Per material
 
-			VkBuffer vertexBuffers[] = { meshes[j].GetVertexBuffer()->GetBuffer() };
+			VkBuffer vertexBuffers[] = { meshes[j]->GetVertexBuffer()->GetBuffer() };
 			VkDeviceSize offsets[] = { 0 };
 			vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);//Per mesh
 
-			VkBuffer instanceBuffers[] = { meshes[j].GetInstanceBuffer()->GetBuffer() };//Per Mesh
+			VkBuffer instanceBuffers[] = { meshes[j]->GetInstanceBuffer()->GetBuffer() };//Per Mesh
 			vkCmdBindVertexBuffers(commandBuffers[i], 1, 1, instanceBuffers, offsets);
 
-			VkBuffer indexBuffers[] = { meshes[j].GetIndexBuffer()->GetBuffer() };
-			vkCmdBindIndexBuffer(commandBuffers[i], meshes[j].GetIndexBuffer()->GetBuffer(), 0, VK_INDEX_TYPE_UINT16);//Per mesh
+			VkBuffer indexBuffers[] = { meshes[j]->GetIndexBuffer()->GetBuffer() };
+			vkCmdBindIndexBuffer(commandBuffers[i], meshes[j]->GetIndexBuffer()->GetBuffer(), 0, VK_INDEX_TYPE_UINT16);//Per mesh
 
-			vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(meshes[j].GetIndices().size()), meshes[j].GetActiveInstanceCount(), 0, 0, 0);//Per mesh
+			vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(meshes[j]->GetIndices().size()), meshes[j]->GetActiveInstanceCount(), 0, 0, 0);//Per mesh
 		}
 		//End Per object commands
 

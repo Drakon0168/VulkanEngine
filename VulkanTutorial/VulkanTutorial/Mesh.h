@@ -3,6 +3,7 @@
 #include "pch.h"
 #include "Vertex.h"
 #include "Transform.h"
+#include "Material.h"
 #include "Buffer.h"
 #include "UniformBufferObject.h"
 
@@ -21,6 +22,8 @@ private:
 	uint32_t activeInstanceCount;
 	std::shared_ptr<Buffer> instanceBuffer;
 
+	std::shared_ptr<Material> material;
+
 #pragma region Buffer Management
 
 	void UpdateBuffers();
@@ -32,6 +35,7 @@ public:
 #pragma region Constructor
 
 	Mesh(
+		std::shared_ptr<Material> material = nullptr,
 		std::vector<Vertex> vertices = {},
 		std::vector<uint16_t> indices = {},
 		std::shared_ptr<Buffer> vertexBuffer = nullptr, uint32_t vertexBufferOffset = 0, 
@@ -160,6 +164,18 @@ public:
 	/// </summary>
 	/// <param name="value">The value to set the instance buffer to</param>
 	void SetInstanceBuffer(std::shared_ptr<Buffer> value);
+
+	/// <summary>
+	/// Returns the material that is being used by this mesh
+	/// </summary>
+	/// <returns>The material used by this mesh</returns>
+	std::shared_ptr<Material> GetMaterial();
+
+	/// <summary>
+	/// Sets the material used by this mesh
+	/// </summary>
+	/// <param name="value">The material to use</param>
+	void SetMaterial(std::shared_ptr<Material> value);
 
 #pragma endregion
 

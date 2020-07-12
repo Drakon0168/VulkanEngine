@@ -50,7 +50,9 @@ private:
 	static float totalTime;
 
 	Camera* camera;
-	std::vector<Mesh> meshes;
+
+	std::vector<std::shared_ptr<Material>> materials;
+	std::vector<std::shared_ptr<Mesh>> meshes;
 
 	GLFWwindow* window;
 

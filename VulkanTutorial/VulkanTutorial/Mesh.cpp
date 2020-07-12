@@ -8,8 +8,9 @@
 
 #pragma region Constructor
 
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<uint16_t> indices, std::shared_ptr<Buffer> vertexBuffer, uint32_t vertexBufferOffset, std::shared_ptr<Buffer> indexBuffer, uint32_t indexBufferOffset, std::vector<std::shared_ptr<Transform>> instances, std::shared_ptr<Buffer> instanceBuffer)
+Mesh::Mesh(std::shared_ptr<Material> material, std::vector<Vertex> vertices, std::vector<uint16_t> indices, std::shared_ptr<Buffer> vertexBuffer, uint32_t vertexBufferOffset, std::shared_ptr<Buffer> indexBuffer, uint32_t indexBufferOffset, std::vector<std::shared_ptr<Transform>> instances, std::shared_ptr<Buffer> instanceBuffer)
 {
+	this->material = material;
 	this->vertices = vertices;
 	this->indices = indices;
 	this->vertexBuffer = vertexBuffer;
@@ -117,6 +118,48 @@ void Mesh::UpdateInstanceBuffer()
 	vkUnmapMemory(logicalDevice, instanceBuffer->GetBufferMemory());
 }
 
+void Mesh::UpdateVertexBuffer()
+{
+	//Create the staging buffer
+	VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
+	Buffer stagingBuffer;
+
+	Buffer::CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer);
+
+	//Map index data to the buffer
+	void* data;
+	vkMapMemory(logicalDevice, stagingBuffer.GetBufferMemory(), 0, bufferSize, 0, &data);
+	memcpy(data, vertices.data(), bufferSize);
+	vkUnmapMemory(logicalDevice, stagingBuffer.GetBufferMemory());
+
+	//Copy buffer data
+	Buffer::CopyBuffer(stagingBuffer.GetBuffer(), vertexBuffer->GetBuffer(), bufferSize);
+
+	//Cleanup staging buffer
+	stagingBuffer.Cleanup();
+}
+
+void Mesh::UpdateIndexBuffer()
+{
+	//Create the staging buffer
+	VkDeviceSize bufferSize = sizeof(indices[0]) * indices.size();
+	Buffer stagingBuffer;
+
+	Buffer::CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer);
+
+	//Map index data to the buffer
+	void* data;
+	vkMapMemory(logicalDevice, stagingBuffer.GetBufferMemory(), 0, bufferSize, 0, &data);
+	memcpy(data, indices.data(), bufferSize);
+	vkUnmapMemory(logicalDevice, stagingBuffer.GetBufferMemory());
+
+	//Copy buffer data
+	Buffer::CopyBuffer(stagingBuffer.GetBuffer(), indexBuffer->GetBuffer(), bufferSize);
+
+	//Cleanup staging buffer
+	stagingBuffer.Cleanup();
+}
+
 #pragma endregion
 
 #pragma region Accessors
@@ -201,6 +244,16 @@ std::shared_ptr<Buffer> Mesh::GetInstanceBuffer()
 void Mesh::SetInstanceBuffer(std::shared_ptr<Buffer> value)
 {
 	instanceBuffer = value;
+}
+
+std::shared_ptr<Material> Mesh::GetMaterial()
+{
+	return material;
+}
+
+void Mesh::SetMaterial(std::shared_ptr<Material> value)
+{
+	material = value;
 }
 
 #pragma endregion
