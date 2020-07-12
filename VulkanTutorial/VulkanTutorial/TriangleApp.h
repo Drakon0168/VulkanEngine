@@ -74,9 +74,6 @@ private:
 
 	std::vector<std::shared_ptr<Buffer>> uniformBuffers;
 
-	std::vector<VkDescriptorSet> descriptorSets;
-	VkDescriptorPool descriptorPool;
-
 	std::vector<VkCommandBuffer> commandBuffers;
 
 	VkSurfaceKHR surface;

@@ -5,7 +5,8 @@ private:
 	char* vertexShaderPath;
 	char* fragmentShaderPath;
 
-
+	std::vector<VkDescriptorSet> descriptorSets;
+	VkDescriptorPool descriptorPool;
 
 public:
 
@@ -40,6 +41,24 @@ public:
 	/// </summary>
 	/// <param name="value">The file path to the shader file</param>
 	void SetFragmentShaderPath(char* value);
+
+	/// <summary>
+	/// Returns the list of descriptor sets used by this material
+	/// </summary>
+	/// <returns>The descriptor sets used by the material</returns>
+	std::vector<VkDescriptorSet> GetDescriptorSets();
+
+	//TODO: Delete once this is created in the material class
+	void SetDescriptorSets(std::vector<VkDescriptorSet> value);
+
+	/// <summary>
+	/// Returns the descriptor pool that is used by this material
+	/// </summary>
+	/// <returns>The material's descriptor pool</returns>
+	VkDescriptorPool GetDescriptorPool();
+
+	//TODO: Delete once this is created in the material class
+	void SetDescriptorPool(VkDescriptorPool value);
 
 #pragma endregion
 };

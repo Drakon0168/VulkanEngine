@@ -33,4 +33,24 @@ void Material::SetFragmentShaderPath(char* value)
     fragmentShaderPath = value;
 }
 
+std::vector<VkDescriptorSet> Material::GetDescriptorSets()
+{
+    return descriptorSets;
+}
+
+void Material::SetDescriptorSets(std::vector<VkDescriptorSet> value)
+{
+    descriptorSets = value;
+}
+
+VkDescriptorPool Material::GetDescriptorPool()
+{
+    return descriptorPool;
+}
+
+void Material::SetDescriptorPool(VkDescriptorPool value)
+{
+    descriptorPool = value;
+}
+
 #pragma endregion

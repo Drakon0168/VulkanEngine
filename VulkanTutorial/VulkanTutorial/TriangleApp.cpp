@@ -1046,8 +1046,10 @@ void TriangleApp::CleanupSwapChain()
 		uniformBuffers[i]->Cleanup();
 	}
 
-	//Destroy Descriptor Pool
-	vkDestroyDescriptorPool(logicalDevice, descriptorPool, nullptr);
+	for (int i = 0; i < materials.size(); i++) {
+		//Destroy Descriptor Pool
+		vkDestroyDescriptorPool(logicalDevice, materials[i]->GetDescriptorPool(), nullptr);
+	}
 
 	//Destroy Depth Image Views
 	vkDestroyImageView(logicalDevice, depthImageView, nullptr);
@@ -1400,9 +1402,13 @@ void TriangleApp::CreateDescriptorPool()
 	createInfo.pPoolSizes = &poolSize;
 	createInfo.maxSets = static_cast<uint32_t>(swapChainImages.size());
 
-	if (vkCreateDescriptorPool(logicalDevice, &createInfo, nullptr, &descriptorPool)) {
+	VkDescriptorPool pool;
+
+	if (vkCreateDescriptorPool(logicalDevice, &createInfo, nullptr, &pool)) {
 		throw std::runtime_error("Failed to create Descriptor Pool!");
 	}
+
+	materials[0]->SetDescriptorPool(pool);
 }
 
 void TriangleApp::CreateDescriptorSets()
@@ -1410,15 +1416,17 @@ void TriangleApp::CreateDescriptorSets()
 	std::vector<VkDescriptorSetLayout> layouts(swapChainImages.size(), descriptorSetLayout);
 	VkDescriptorSetAllocateInfo allocateInfo = {};
 	allocateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-	allocateInfo.descriptorPool = descriptorPool;
+	allocateInfo.descriptorPool = materials[0]->GetDescriptorPool();
 	allocateInfo.descriptorSetCount = static_cast<uint32_t>(swapChainImages.size());
 	allocateInfo.pSetLayouts = layouts.data();
 
-	descriptorSets.resize(swapChainImages.size());
+	std::vector<VkDescriptorSet> descriptorSets(swapChainImages.size());
 
 	if (vkAllocateDescriptorSets(logicalDevice, &allocateInfo, descriptorSets.data()) != VK_SUCCESS) {
 		throw std::runtime_error("Failed to allocate Descriptor Sets!");
 	}
+
+	materials[0]->SetDescriptorSets(descriptorSets);
 
 	for (size_t i = 0; i < uniformBuffers.size(); i++) {
 		VkDescriptorBufferInfo bufferInfo = {};
@@ -1428,7 +1436,7 @@ void TriangleApp::CreateDescriptorSets()
 
 		VkWriteDescriptorSet descriptorWrite = {};
 		descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		descriptorWrite.dstSet = descriptorSets[i];
+		descriptorWrite.dstSet = materials[0]->GetDescriptorSets()[i];
 		descriptorWrite.dstBinding = 0;
 		descriptorWrite.dstArrayElement = 0;
 		descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
@@ -1634,7 +1642,7 @@ void TriangleApp::CreateCommandBuffers()
 		for (size_t j = 0; j < meshes.size(); j++) {
 			vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);//Per material
 
-			vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[i], 0, nullptr);//Per material
+			vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &materials[0]->GetDescriptorSets()[i], 0, nullptr);//Per material
 
 			VkBuffer vertexBuffers[] = { meshes[j]->GetVertexBuffer()->GetBuffer() };
 			VkDeviceSize offsets[] = { 0 };
