@@ -10,25 +10,23 @@
 class Mesh
 {
 private:
+	//Vertices
 	std::vector<Vertex> vertices;
 	uint32_t vertexBufferOffset;
 	std::shared_ptr<Buffer> vertexBuffer;
 
+	//Indices
 	std::vector<uint16_t> indices;
 	uint32_t indexBufferOffset;
 	std::shared_ptr<Buffer> indexBuffer;
 
+	//Instances
 	std::vector<std::shared_ptr<Transform>> instances;
 	uint32_t activeInstanceCount;
 	std::shared_ptr<Buffer> instanceBuffer;
 
+	//Material
 	std::shared_ptr<Material> material;
-
-#pragma region Buffer Management
-
-	void UpdateBuffers();
-
-#pragma endregion
 
 public:
 
@@ -47,6 +45,11 @@ public:
 #pragma region Buffer Management
 
 	/// <summary>
+	/// Creates and allocates mesh resources
+	/// </summary>
+	void Init();
+
+	/// <summary>
 	/// Creates and allocates the instance buffer that will be used by this mesh
 	/// </summary>
 	void CreateInstanceBuffer();
@@ -60,6 +63,11 @@ public:
 	/// Creates and allocates the index buffer that will be used by this mesh
 	/// </summary>
 	void CreateIndexBuffer();
+
+	/// <summary>
+	/// Cleans up all mesh resources
+	/// </summary>
+	void Cleanup();
 
 	/// <summary>
 	/// Updates the mesh's instance buffer

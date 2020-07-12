@@ -27,6 +27,13 @@ Mesh::Mesh(std::shared_ptr<Material> material, std::vector<Vertex> vertices, std
 
 #pragma region Buffer Management
 
+void Mesh::Init()
+{
+	CreateVertexBuffer();
+	CreateIndexBuffer();
+	CreateInstanceBuffer();
+}
+
 void Mesh::CreateInstanceBuffer()
 {
 	//Get Data as TransformData
@@ -97,6 +104,13 @@ void Mesh::CreateIndexBuffer()
 
 	//Cleanup staging buffer
 	stagingBuffer.Cleanup();
+}
+
+void Mesh::Cleanup()
+{
+	vertexBuffer->Cleanup();
+	indexBuffer->Cleanup();
+	instanceBuffer->Cleanup();
 }
 
 void Mesh::UpdateInstanceBuffer()
@@ -258,7 +272,7 @@ void Mesh::SetMaterial(std::shared_ptr<Material> value)
 
 #pragma endregion
 
-#pragma region Mesh Generation
+#pragma region Instances
 
 void Mesh::AddInstance(std::shared_ptr<Transform> value)
 {
@@ -290,6 +304,10 @@ void Mesh::RemoveInstance(int instanceId)
 	instances[instanceId] == nullptr;
 }
 
+#pragma endregion
+
+#pragma region Mesh Generation
+
 void Mesh::GeneratePlane()
 {
 	//Set vertices
@@ -310,7 +328,10 @@ void Mesh::GeneratePlane()
 		2, 3, 0
 	};
 
-	UpdateBuffers();
+	if (vertexBuffer != nullptr && indexBuffer != nullptr) {
+		UpdateVertexBuffer();
+		UpdateIndexBuffer();
+	}
 }
 
 void Mesh::GenerateCube() {
@@ -346,7 +367,10 @@ void Mesh::GenerateCube() {
 		5,7,3
 	};
 
-	UpdateBuffers();
+	if (vertexBuffer != nullptr && indexBuffer != nullptr) {
+		UpdateVertexBuffer();
+		UpdateIndexBuffer();
+	}
 }
 
 void Mesh::GenerateSphere(int resolution)
@@ -444,16 +468,10 @@ void Mesh::GenerateSphere(int resolution)
 		}
 	}
 
-	UpdateBuffers();
-}
-
-#pragma endregion
-
-#pragma region Buffer Management
-
-void Mesh::UpdateBuffers()
-{
-	//TODO: Update buffers with accurate mesh data
+	if (vertexBuffer != nullptr && indexBuffer != nullptr) {
+		UpdateVertexBuffer();
+		UpdateIndexBuffer();
+	}
 }
 
 #pragma endregion

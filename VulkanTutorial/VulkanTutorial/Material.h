@@ -5,6 +5,8 @@ private:
 	char* vertexShaderPath;
 	char* fragmentShaderPath;
 
+
+
 public:
 
 #pragma region Constructor

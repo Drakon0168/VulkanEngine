@@ -155,14 +155,7 @@ void TriangleApp::InitVulkan()
 	CreateUniformBuffers();
 
 	for (size_t i = 0; i < meshes.size(); i++) {
-		//Create the Vertex Buffer
-		meshes[i]->CreateVertexBuffer();
-
-		//Create the Index Buffer
-		meshes[i]->CreateIndexBuffer();
-
-		//Create Instance Buffer
-		meshes[i]->CreateInstanceBuffer();
+		meshes[i]->Init();
 	}
 
 	//Create the descriptor pool
@@ -196,21 +189,15 @@ void TriangleApp::Cleanup()
 	//Cleanup swap chain and associated resources
 	CleanupSwapChain();
 
-	//Destroy Command Pool
-	vkDestroyCommandPool(logicalDevice, Command::commandPool, nullptr);
-
-	//Cleanup instance buffer
-	for (size_t i = 0; i < meshes.size(); i++) {
-		meshes[i]->GetInstanceBuffer()->Cleanup();
-	}
-
 	//Destroy Descriptor Set Layout
 	vkDestroyDescriptorSetLayout(logicalDevice, descriptorSetLayout, nullptr);
 
-	//Cleanup Buffers
+	//Destroy Command Pool
+	vkDestroyCommandPool(logicalDevice, Command::commandPool, nullptr);
+
+	//Cleanup Meshes
 	for (size_t i = 0; i < meshes.size(); i++) {
-		meshes[i]->GetVertexBuffer()->Cleanup();
-		meshes[i]->GetIndexBuffer()->Cleanup();
+		meshes[i]->Cleanup();
 	}
 
 	//Destroy Logical Device
