@@ -57,6 +57,12 @@ void EntityManager::LoadMeshes()
 {
     meshes.push_back(std::make_shared<Mesh>(materials[0]));
     meshes[0]->GenerateCube();
+
+    meshes.push_back(std::make_shared<Mesh>(materials[0]));
+    meshes[1]->GenerateSphere(10);
+
+    meshes.push_back(std::make_shared<Mesh>(materials[0]));
+    meshes[2]->GeneratePlane();
 }
 
 void EntityManager::LoadMaterials()
@@ -117,17 +123,19 @@ void EntityManager::Draw(uint32_t imageIndex, VkCommandBuffer* commandBuffer)
 
         //Begin Per Mesh Commands
         for (std::shared_ptr<Mesh> mesh : entities[material]) {
-            VkBuffer vertexBuffers[] = { mesh->GetVertexBuffer()->GetBuffer() };
-            VkDeviceSize offsets[] = { 0 };
-            vkCmdBindVertexBuffers(*commandBuffer, 0, 1, vertexBuffers, offsets);//Per mesh
+            if (mesh->GetActiveInstanceCount() > 0) {
+                VkBuffer vertexBuffers[] = { mesh->GetVertexBuffer()->GetBuffer() };
+                VkDeviceSize offsets[] = { 0 };
+                vkCmdBindVertexBuffers(*commandBuffer, 0, 1, vertexBuffers, offsets);//Per mesh
 
-            VkBuffer instanceBuffers[] = { mesh->GetInstanceBuffer()->GetBuffer() };
-            vkCmdBindVertexBuffers(*commandBuffer, 1, 1, instanceBuffers, offsets);//Per mesh
+                VkBuffer instanceBuffers[] = { mesh->GetInstanceBuffer()->GetBuffer() };
+                vkCmdBindVertexBuffers(*commandBuffer, 1, 1, instanceBuffers, offsets);//Per mesh
 
-            VkBuffer indexBuffers[] = { mesh->GetIndexBuffer()->GetBuffer() };
-            vkCmdBindIndexBuffer(*commandBuffer, mesh->GetIndexBuffer()->GetBuffer(), 0, VK_INDEX_TYPE_UINT16);//Per mesh
+                VkBuffer indexBuffers[] = { mesh->GetIndexBuffer()->GetBuffer() };
+                vkCmdBindIndexBuffer(*commandBuffer, mesh->GetIndexBuffer()->GetBuffer(), 0, VK_INDEX_TYPE_UINT16);//Per mesh
 
-            vkCmdDrawIndexed(*commandBuffer, static_cast<uint32_t>(mesh->GetIndices().size()), mesh->GetActiveInstanceCount(), 0, 0, 0);//Per mesh
+                vkCmdDrawIndexed(*commandBuffer, static_cast<uint32_t>(mesh->GetIndices().size()), mesh->GetActiveInstanceCount(), 0, 0, 0);//Per mesh
+            }
         }
     }
 

@@ -193,7 +193,8 @@ public:
 	/// Adds the specified transform to the instance list
 	/// </summary>
 	/// <param name="value">The transform to add</param>
-	void AddInstance(std::shared_ptr<Transform> value);
+	/// <returns>The instance ID of the instance that was created</returns>
+	int AddInstance(std::shared_ptr<Transform> value);
 
 	/// <summary>
 	/// Removes the specified instance from the instance list

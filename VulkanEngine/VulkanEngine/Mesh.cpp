@@ -274,7 +274,7 @@ void Mesh::SetMaterial(std::shared_ptr<Material> value)
 
 #pragma region Instances
 
-void Mesh::AddInstance(std::shared_ptr<Transform> value)
+int Mesh::AddInstance(std::shared_ptr<Transform> value)
 {
 	activeInstanceCount++;
 	size_t freeIndex = -1;
@@ -288,16 +288,21 @@ void Mesh::AddInstance(std::shared_ptr<Transform> value)
 
 	if (freeIndex == -1) {
 		instances.push_back(value);
-		return;
+		return (instances.size() - 1);
 	}
 
 	instances[freeIndex] = value;
+	return freeIndex;
 }
 
 void Mesh::RemoveInstance(int instanceId)
 {
 	if (instanceId < 0 || instanceId >= instances.size()) {
-		throw std::runtime_error("Failed to remove instance Id out of bounds!");
+		throw std::runtime_error("Failed to remove instance, ID out of bounds!");
+	}
+
+	if (instances[instanceId] == nullptr) {
+		throw std::runtime_error("Failed to remove instance, ID was empty!");
 	}
 
 	activeInstanceCount--;

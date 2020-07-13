@@ -1,8 +1,14 @@
 #pragma once
+#include "pch.h"
+
+#include "GameObject.h"
+
 class GameManager
 {
 private:
 	static GameManager* instance;
+
+	std::vector<std::shared_ptr<GameObject>> gameObjects;
 public:
 #pragma region Singleton
 
