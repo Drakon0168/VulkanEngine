@@ -12,7 +12,6 @@ GameObject::GameObject(std::shared_ptr<Mesh> mesh, std::shared_ptr<Transform> tr
 
 	instanceId = -1;
 	active = false;
-	timer = 0;
 }
 
 #pragma endregion
@@ -66,13 +65,6 @@ void GameObject::Despawn()
 
 void GameObject::Update()
 {
-	timer += Time::GetDeltaTime();
-
-	std::cout << "Timer: " << timer << std::endl;
-
-	if (active && timer > 5.0f) {
-		Despawn();
-	}
 }
 
 #pragma endregion
