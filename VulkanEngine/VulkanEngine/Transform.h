@@ -26,7 +26,10 @@ public:
 
 #pragma region Constructor
 
-	Transform(glm::vec3 postition = glm::vec3(0.0f,0.0f,0.0f), glm::quat orientation = glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)), glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f));
+	Transform(
+		glm::vec3 postition = glm::vec3(0.0f, 0.0f, 0.0f), 
+		glm::quat orientation = glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)), 
+		glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f));
 
 #pragma endregion
 

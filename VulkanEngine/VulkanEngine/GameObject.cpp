@@ -20,7 +20,7 @@ GameObject::GameObject(std::shared_ptr<Mesh> mesh, std::shared_ptr<Transform> tr
 
 std::shared_ptr<Transform> GameObject::GetTransform()
 {
-	return std::shared_ptr<Transform>();
+	return transform;
 }
 
 void GameObject::SetTransform(std::shared_ptr<Transform> value)

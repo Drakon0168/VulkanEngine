@@ -31,6 +31,9 @@
     <Filter Include="Source Files\Shaders">
       <UniqueIdentifier>{7b1ab22d-992b-430f-b765-090b384ac123}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Enums">
+      <UniqueIdentifier>{8521b87b-d588-4b2c-8368-37acbc592b4d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="VulkanEngine.cpp">
@@ -97,7 +100,7 @@
       <Filter>Source Files\Components</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -179,21 +182,24 @@
     <ClInclude Include="Mesh.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="MeshTypes.h">
+      <Filter>Header Files\Enums</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\shaders\BasicShader.vert">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="..\shaders\BasicShader.frag">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
+    <ClInclude Include="GameObject.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\compile.bat">
       <Filter>Source Files\Shaders</Filter>
     </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\BasicShader.frag">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="shaders\BasicShader.vert">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

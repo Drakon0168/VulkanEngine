@@ -55,14 +55,16 @@ void EntityManager::Init()
 
 void EntityManager::LoadMeshes()
 {
-    meshes.push_back(std::make_shared<Mesh>(materials[0]));
-    meshes[0]->GenerateCube();
+    meshes.resize(MeshTypes::Count);
 
-    meshes.push_back(std::make_shared<Mesh>(materials[0]));
-    meshes[1]->GenerateSphere(10);
+    meshes[MeshTypes::Plane] = std::make_shared<Mesh>(materials[0]);
+    meshes[MeshTypes::Plane]->GeneratePlane();
 
-    meshes.push_back(std::make_shared<Mesh>(materials[0]));
-    meshes[2]->GeneratePlane();
+    meshes[MeshTypes::Cube] = std::make_shared<Mesh>(materials[0]);
+    meshes[MeshTypes::Cube]->GenerateCube();
+
+    meshes[MeshTypes::Sphere] = std::make_shared<Mesh>(materials[0]);
+    meshes[MeshTypes::Sphere]->GenerateSphere(10);
 }
 
 void EntityManager::LoadMaterials()

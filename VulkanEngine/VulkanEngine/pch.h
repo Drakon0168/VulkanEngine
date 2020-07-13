@@ -38,4 +38,7 @@
 #include "TransformData.h"
 #include "Vertex.h"
 
+//Enums
+#include "MeshTypes.h"
+
 #endif //PCH_H

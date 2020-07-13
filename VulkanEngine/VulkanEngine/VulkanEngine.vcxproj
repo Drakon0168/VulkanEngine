@@ -195,6 +195,7 @@
     <ClInclude Include="Light.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="MeshTypes.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PhysicsManager.h" />
     <ClInclude Include="QueueFamilyIndices.h" />
@@ -220,8 +221,10 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)shaders\frag.spv;$(ProjectDir)shaders\vert.spv;%(Outputs)</Outputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)shaders\BasicShader.frag;$(ProjectDir)shaders\BasicShader.vert;%(AdditionalInputs)</AdditionalInputs>
     </CustomBuild>
-    <None Include="..\shaders\BasicShader.frag" />
-    <None Include="..\shaders\BasicShader.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\BasicShader.frag" />
+    <None Include="shaders\BasicShader.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
