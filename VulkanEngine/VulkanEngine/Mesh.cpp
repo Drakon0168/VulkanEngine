@@ -306,7 +306,7 @@ void Mesh::RemoveInstance(int instanceId)
 	}
 
 	activeInstanceCount--;
-	instances[instanceId] == nullptr;
+	instances[instanceId] = nullptr;
 }
 
 #pragma endregion

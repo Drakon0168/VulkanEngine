@@ -12,6 +12,7 @@ private:
 	std::shared_ptr<Mesh> mesh;
 	int instanceId;
 
+	float timer;
 	bool active;
 
 public:

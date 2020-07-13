@@ -37,6 +37,9 @@ void GameManager::Init()
 
 void GameManager::Update()
 {
+    for (size_t i = 0; i < gameObjects.size(); i++) {
+        gameObjects[i]->Update();
+    }
 }
 
 #pragma endregion
