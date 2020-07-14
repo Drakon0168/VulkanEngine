@@ -319,10 +319,10 @@ void Mesh::GeneratePlane()
 	vertices.resize(4);
 
 	vertices = {
-		{{-0.5f, 0.0f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f}},
-		{{0.5f, 0.0f, -0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f}},
-		{{0.5f, 0.0f, 0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}},
-		{{-0.5f, 0.0f, 0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}},
+		{{-0.5f, 0.0f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
+		{{0.5f, 0.0f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
+		{{0.5f, 0.0f, 0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 1.0f}},
+		{{-0.5f, 0.0f, 0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 1.0f}},
 	};
 
 	//Set indices
@@ -344,14 +344,14 @@ void Mesh::GenerateCube() {
 	vertices.resize(4);
 
 	vertices = {
-		{{0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f}},
-		{{0.5f, 0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f}},
-		{{0.5f, -0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f}},
-		{{0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f}},
-		{{-0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f}},
-		{{-0.5f, 0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f}},
-		{{-0.5f, -0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f}},
-		{{-0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f}},
+		{{0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
+		{{0.5f, 0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
+		{{0.5f, -0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
+		{{0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
+		{{-0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
+		{{-0.5f, 0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
+		{{-0.5f, -0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
+		{{-0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
 	};
 
 	//Set indices
@@ -394,22 +394,25 @@ void Mesh::GenerateSphere(int resolution)
 	float radius = 0.5f;
 
 	//Add cap
-	vertices.push_back(Vertex(glm::vec3(0.0f, radius, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 0.0f)));
+	vertices.push_back(Vertex(glm::vec3(0.0f, radius, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 0.0f)));
 
 	for (uint32_t row = 1; row < resolution - 1; row++) {
 		float height = cosf(heightAngleOffset * row) * radius;
 		float width = sinf(heightAngleOffset * row) * radius;
 
 		for (uint16_t col = 0; col < resolution; col++) {
+			glm::vec3 normal = glm::normalize(glm::vec3(cosf(angleOffset * col) * width, height, sinf(angleOffset * col) * width));
+
 			vertices.push_back(Vertex(
 				glm::vec3(cosf(angleOffset * col) * width, height, sinf(angleOffset * col) * width),
 				glm::vec3(1.0f, 1.0f, 1.0f),
+				normal,
 				glm::vec2((float)col / resolution, (float)height / resolution)));
 		}
 	}
 
 	//Add bottom
-	vertices.push_back(Vertex(glm::vec3(0.0f, -radius, 0.0f), glm::vec3(1.0f, 1.0f,1.0f), glm::vec2(0.0f, 0.0f)));
+	vertices.push_back(Vertex(glm::vec3(0.0f, -radius, 0.0f), glm::vec3(1.0f, 1.0f,1.0f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec2(0.0f, 0.0f)));
 
 	//Set Indices
 	//Add Cap

@@ -158,9 +158,6 @@
     <ClInclude Include="CommandBuffer.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
-    <ClInclude Include="SwapChain.h">
-      <Filter>Header Files\Components</Filter>
-    </ClInclude>
     <ClInclude Include="SwapChainSupportDetails.h">
       <Filter>Header Files\Structs</Filter>
     </ClInclude>
@@ -187,6 +184,9 @@
     </ClInclude>
     <ClInclude Include="GameObject.h">
       <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="SwapChain.h">
+      <Filter>Header Files\Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -63,12 +63,13 @@ void Material::CreateGraphicsPipeline()
 	};
 
 	//Setup the Vertex input
-	std::array<VkVertexInputAttributeDescription, 3> vertexDescriptions = Vertex::getAttributeDescriptions();
+	std::array<VkVertexInputAttributeDescription, 4> vertexDescriptions = Vertex::getAttributeDescriptions();
 	std::array<VkVertexInputAttributeDescription, 4> transformDescriptions = TransformData::getAttributeDescriptions();
-	std::array<VkVertexInputAttributeDescription, 7> attributeDescriptions = {
+	std::array<VkVertexInputAttributeDescription, 8> attributeDescriptions = {
 		vertexDescriptions[0],
 		vertexDescriptions[1],
 		vertexDescriptions[2],
+		vertexDescriptions[3],
 		transformDescriptions[0],
 		transformDescriptions[1],
 		transformDescriptions[2],

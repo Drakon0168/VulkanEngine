@@ -476,6 +476,8 @@ void SwapChain::UpdateUniformBuffer(uint32_t imageIndex)
 	UniformBufferObject ubo = {};
 	ubo.view = Camera::GetMainCamera()->GetView();
 	ubo.projection = Camera::GetMainCamera()->GetProjection();
+	ubo.cameraPosition = Camera::GetMainCamera()->GetTransform()->GetPosition();
+	ubo.totalTime = Time::GetTotalTime();
 
 	void* data;
 	vkMapMemory(logicalDevice, uniformBuffers[imageIndex].GetBufferMemory(), 0, sizeof(ubo), 0, &data);
