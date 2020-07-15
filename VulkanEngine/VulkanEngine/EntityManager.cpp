@@ -65,6 +65,9 @@ void EntityManager::LoadMeshes()
 
     meshes[MeshTypes::Sphere] = std::make_shared<Mesh>(materials[0]);
     meshes[MeshTypes::Sphere]->GenerateSphere(50);
+
+    meshes[MeshTypes::Model] = std::make_shared<Mesh>(materials[0]);
+    meshes[MeshTypes::Model]->LoadModel();
 }
 
 void EntityManager::LoadMaterials()
