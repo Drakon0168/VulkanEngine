@@ -2,6 +2,7 @@
 #include "VulkanManager.h"
 
 #include "GameManager.h"
+#include "InputManager.h"
 #include "WindowManager.h"
 #include "DebugManager.h"
 #include "EntityManager.h"
@@ -372,6 +373,9 @@ void VulkanManager::MainLoop()
 
 		//Calculate time change per frame
 		Time::Update();
+
+		//Update Inputs
+		InputManager::GetInstance()->Update();
 
 		Update();
 		Draw();

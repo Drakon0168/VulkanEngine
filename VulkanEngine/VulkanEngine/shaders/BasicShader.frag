@@ -32,7 +32,7 @@ void main(){
 		vec3 diffuse = lights[i].color * clamp(dot(normal, -1 * direction), 0.0f, 1.0f);
 
 		//Calculate specular color
-		float specular = pow(clamp(dot(reflect(direction, normal), cameraDirection), 0.0f, 1.0f), 64) * 0.5f;
+		float specular = pow(clamp(dot(reflect(direction, normal), cameraDirection), 0.0f, 1.0f), 64) * 0.1f;
 
 		//Calculate final color
 		finalColor +=  (diffuse + specular) * strength;

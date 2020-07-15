@@ -31,7 +31,7 @@ int main()
 	delete DebugManager::GetInstance();
 	delete EntityManager::GetInstance();
 	delete GameManager::GetInstance();
-	//delete InputManager::GetInstance();
+	delete InputManager::GetInstance();
 	//delete PhysicsManager::GetInstance();
 	delete WindowManager::GetInstance();
 

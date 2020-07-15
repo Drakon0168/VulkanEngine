@@ -40,5 +40,7 @@
 
 //Enums
 #include "MeshTypes.h"
+#include "Controls.h"
+#include "InputStates.h"
 
 #endif //PCH_H
