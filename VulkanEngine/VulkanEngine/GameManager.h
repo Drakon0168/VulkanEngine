@@ -9,6 +9,8 @@ private:
 	static GameManager* instance;
 
 	std::vector<std::shared_ptr<GameObject>> gameObjects;
+
+	float cameraSpeed = 2.5f;
 public:
 #pragma region Singleton
 

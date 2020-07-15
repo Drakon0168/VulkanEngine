@@ -2,6 +2,8 @@
 #include "GameManager.h"
 
 #include "EntityManager.h"
+#include "InputManager.h"
+#include "Camera.h"
 
 #pragma region Singleton
 
@@ -47,6 +49,37 @@ void GameManager::Init()
 
 void GameManager::Update()
 {
+    //Move Camera
+    glm::vec3 moveDirection = glm::vec3(0.0f, 0.0f, 0.0f);
+
+    if (InputManager::GetInstance()->GetKey(Controls::Forward)) {
+        moveDirection += glm::vec3(0.0f, 0.0f, 1.0f);
+    }
+    if (InputManager::GetInstance()->GetKey(Controls::Back)) {
+        moveDirection += glm::vec3(0.0f, 0.0f, -1.0f);
+    }
+    if (InputManager::GetInstance()->GetKey(Controls::Up)) {
+        moveDirection += glm::vec3(0.0f, 1.0f, 0.0f);
+    }
+    if (InputManager::GetInstance()->GetKey(Controls::Down)) {
+        moveDirection += glm::vec3(0.0f, -1.0f, 0.0f);
+    }
+    if (InputManager::GetInstance()->GetKey(Controls::Left)) {
+        moveDirection += glm::vec3(1.0f, 0.0f, 0.0f);
+    }
+    if (InputManager::GetInstance()->GetKey(Controls::Right)) {
+        moveDirection += glm::vec3(-1.0f, 0.0f, 0.0f);
+    }
+
+    if (moveDirection.x != 0 || moveDirection.y != 0 || moveDirection.z != 0) {
+        moveDirection = glm::normalize(moveDirection);
+    }
+
+    std::cout << "Move Direction: (" << moveDirection.x << ", " << moveDirection.y << ", " << moveDirection.z << ")" << std::endl;
+
+    Camera::GetMainCamera()->GetTransform()->Translate(moveDirection * cameraSpeed * Time::GetDeltaTime(), true);
+
+    //Update Game Objects
     for (size_t i = 0; i < gameObjects.size(); i++) {
         gameObjects[i]->Update();
     }
