@@ -75,9 +75,18 @@ void GameManager::Update()
         moveDirection = glm::normalize(moveDirection);
     }
 
-    std::cout << "Move Direction: (" << moveDirection.x << ", " << moveDirection.y << ", " << moveDirection.z << ")" << std::endl;
-
     Camera::GetMainCamera()->GetTransform()->Translate(moveDirection * cameraSpeed * Time::GetDeltaTime(), true);
+
+    //Rotate Camera
+    glm::vec2 deltaMouse = InputManager::GetInstance()->GetDeltaMouse();
+    if (deltaMouse.x != 0 || deltaMouse.y != 0) {
+        deltaMouse = glm::normalize(deltaMouse);
+    }
+
+    glm::quat orientation = Camera::GetMainCamera()->GetTransform()->GetOrientation();
+    glm::vec3 rotation = orientation * glm::vec3(deltaMouse.y, -deltaMouse.x, 0.0f);
+
+    Camera::GetMainCamera()->GetTransform()->Rotate(rotation);
 
     //Update Game Objects
     for (size_t i = 0; i < gameObjects.size(); i++) {
