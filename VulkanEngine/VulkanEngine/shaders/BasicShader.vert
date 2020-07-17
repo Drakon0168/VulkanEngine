@@ -41,7 +41,8 @@ void main(){
 
 	//Pass variables through to fragment shader
 	float scaledTime = ubo.totalTime / 2.5f;
-	lights[0] = Light(vec3(0.0f, 1.1f, 0.0f) + vec3(cos(scaledTime), 0.0f, sin(scaledTime)) * 1.5f, vec3(1.0f, 1.0f, 1.0f), 3f);
+	lights[0] = Light(vec3(0.0f, 1.1f, 0.0f) + vec3(cos(scaledTime), 0.0f, sin(scaledTime)) * 1.5f, vec3(1.0f, 1.0f, 1.0f), 3.0f);
+	lights[1] = Light(vec3(0.0f, 2.0f, 3.0f), vec3(1.0f, 1.0f, 1.0f), 3.0f);
 	vertColor = inColor;
 	normal = inNormal;
 	uv = texCoord;

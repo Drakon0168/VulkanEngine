@@ -7,7 +7,6 @@
 #include "Buffer.h"
 #include "UniformBufferObject.h"
 
-
 class Mesh
 {
 private:
@@ -225,6 +224,9 @@ public:
 	/// </summary>
 	void GenerateSphere(int resolution = 5);
 
+	/// <summary>
+	/// Loads the model specified by the model path
+	/// </summary>
 	void LoadModel();
 
 #pragma endregion
