@@ -7,6 +7,7 @@
 #include "Buffer.h"
 #include "UniformBufferObject.h"
 
+
 class Mesh
 {
 private:
@@ -28,6 +29,8 @@ private:
 	//Material
 	std::shared_ptr<Material> material;
 
+	const std::string MODEL_PATH = "models/room.obj";
+	const std::string TEXTURE_PATH = "textures/room.jpg";
 public:
 
 #pragma region Constructor
@@ -84,6 +87,7 @@ public:
 	/// </summary>
 	void UpdateIndexBuffer();
 
+	
 #pragma endregion
 
 #pragma region Accessors
@@ -220,6 +224,8 @@ public:
 	/// Sets the vertices and indices to generate a sphere
 	/// </summary>
 	void GenerateSphere(int resolution = 5);
+
+	void LoadModel();
 
 #pragma endregion
 };

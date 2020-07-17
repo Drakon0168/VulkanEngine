@@ -4,5 +4,6 @@ enum MeshTypes {
 	Plane,
 	Cube,
 	Sphere,
+	Model,
 	Count
 };
