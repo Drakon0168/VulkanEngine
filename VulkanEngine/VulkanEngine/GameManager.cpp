@@ -45,8 +45,8 @@ void GameManager::Init()
     gameObjects[2]->SetTransform(std::make_shared<Transform>(glm::vec3(1.0f, 0.5f, 0.0f)));
 
     //setup model
-    gameObjects[3]->SetTransform(std::make_shared<Transform>(glm::vec3(0.0f, 0.5f, 2.5f)));
-    gameObjects[3]->GetTransform()->SetOrientation(glm::vec3(0.0f, 45.0f, 0.0f));
+    gameObjects[3]->SetTransform(std::make_shared<Transform>(glm::vec3(0.0f, 0.0f, 2.5f)));
+    gameObjects[3]->GetTransform()->SetOrientation(glm::vec3(-90.0f, 90.0f, 0.0f));
 
     for (size_t i = 0; i < gameObjects.size(); i++) {
         gameObjects[i]->Spawn();

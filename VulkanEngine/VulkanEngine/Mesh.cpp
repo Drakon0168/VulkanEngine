@@ -333,8 +333,8 @@ void Mesh::GeneratePlane()
 	indices.resize(6);
 
 	indices = {
-		0, 1, 2,
-		2, 3, 0
+		0, 2, 1,
+		2, 0, 3
 	};
 
 	if (vertexBuffer != nullptr && indexBuffer != nullptr) {
@@ -362,18 +362,18 @@ void Mesh::GenerateCube() {
 	indices.resize(6);
 
 	indices = {
-		0,5,1,
-		0,4,5,
-		2,3,7,
-		2,7,6,
-		1,2,0,
-		1,3,2,
-		4,0,2,
-		4,2,6,
-		5,4,6,
-		5,6,7,
-		5,3,1,
-		5,7,3
+		0,1,5,
+		0,5,4,
+		2,7,3,
+		2,6,7,
+		1,0,2,
+		1,2,3,
+		4,2,0,
+		4,6,2,
+		5,6,4,
+		5,7,6,
+		5,1,3,
+		5,3,7
 	};
 
 	if (vertexBuffer != nullptr && indexBuffer != nullptr) {
@@ -423,13 +423,13 @@ void Mesh::GenerateSphere(int resolution)
 	for (uint16_t i = 1; i <= resolution; i++) {
 		if (i == 1) {
 			indices.push_back(0);
-			indices.push_back(resolution);
 			indices.push_back(i);
+			indices.push_back(resolution);
 		}
 		else {
 			indices.push_back(0);
-			indices.push_back(i - 1);
 			indices.push_back(i);
+			indices.push_back(i - 1);
 		}
 	}
 
@@ -445,19 +445,19 @@ void Mesh::GenerateSphere(int resolution)
 			for (int j = rowStart; j <= rowEnd; j++) {
 				if (j == rowStart) {
 					indices.push_back(j);
+					indices.push_back(rowEnd + resolution);
 					indices.push_back(rowEnd);
-					indices.push_back(rowEnd + resolution);
 					indices.push_back(j);
-					indices.push_back(rowEnd + resolution);
 					indices.push_back(j + resolution);
+					indices.push_back(rowEnd + resolution);
 				}
 				else {
 					indices.push_back(j);
+					indices.push_back((j - 1) + resolution);
 					indices.push_back(j - 1);
-					indices.push_back((j - 1) + resolution);
 					indices.push_back(j);
-					indices.push_back((j - 1) + resolution);
 					indices.push_back(j + resolution);
+					indices.push_back((j - 1) + resolution);
 				}
 			}
 		}
@@ -470,13 +470,13 @@ void Mesh::GenerateSphere(int resolution)
 	for (uint16_t i = 0; i < resolution; i++) {
 		if (i == 0) {
 			indices.push_back(vertices.size() - 1);
-			indices.push_back(rowStart);
 			indices.push_back(rowEnd);
+			indices.push_back(rowStart);
 		}
 		else {
 			indices.push_back(vertices.size() - 1);
-			indices.push_back(rowStart + i);
 			indices.push_back(rowStart + i - 1);
+			indices.push_back(rowStart + i);
 		}
 	}
 
