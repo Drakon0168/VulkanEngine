@@ -374,6 +374,8 @@ void VulkanManager::MainLoop()
 		//Calculate time change per frame
 		Time::Update();
 
+		//std::cout << "FPS: " << 1.0f / Time::GetDeltaTime() << std::endl;
+
 		//Update Inputs
 		InputManager::GetInstance()->Update();
 

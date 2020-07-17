@@ -21,7 +21,7 @@ public:
 
 #pragma endregion
 
-#pragma Accessors
+#pragma region Accessors
 
 	/// <summary>
 	/// Returns the transform that is being used by this game object

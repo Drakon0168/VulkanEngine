@@ -20,7 +20,7 @@ GameManager* GameManager::GetInstance()
 
 #pragma endregion
 
-#pragma region GameLoop
+#pragma region Game Loop
 
 void GameManager::Init()
 {
@@ -49,6 +49,17 @@ void GameManager::Init()
 
 void GameManager::Update()
 {
+    //Rotate Camera
+    glm::vec2 deltaMouse = InputManager::GetInstance()->GetDeltaMouse();
+    if (deltaMouse.x != 0 || deltaMouse.y != 0) {
+        deltaMouse = glm::normalize(deltaMouse);
+    }
+
+    glm::quat orientation = Camera::GetMainCamera()->GetTransform()->GetOrientation();
+    glm::vec3 rotation = orientation * glm::vec3(deltaMouse.y, 0.0f, 0.0f) + glm::vec3(0.0f, -deltaMouse.x, 0.0f);
+
+    Camera::GetMainCamera()->GetTransform()->Rotate(rotation);
+
     //Move Camera
     glm::vec3 moveDirection = glm::vec3(0.0f, 0.0f, 0.0f);
 
@@ -76,17 +87,6 @@ void GameManager::Update()
     }
 
     Camera::GetMainCamera()->GetTransform()->Translate(moveDirection * cameraSpeed * Time::GetDeltaTime(), true);
-
-    //Rotate Camera
-    glm::vec2 deltaMouse = InputManager::GetInstance()->GetDeltaMouse();
-    if (deltaMouse.x != 0 || deltaMouse.y != 0) {
-        deltaMouse = glm::normalize(deltaMouse);
-    }
-
-    glm::quat orientation = Camera::GetMainCamera()->GetTransform()->GetOrientation();
-    glm::vec3 rotation = orientation * glm::vec3(deltaMouse.y, -deltaMouse.x, 0.0f);
-
-    Camera::GetMainCamera()->GetTransform()->Rotate(rotation);
 
     //Update Game Objects
     for (size_t i = 0; i < gameObjects.size(); i++) {
