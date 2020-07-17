@@ -56,6 +56,8 @@ void EntityManager::Init()
 void EntityManager::LoadMeshes()
 {
     meshes.resize(MeshTypes::Count);
+ 
+   //meshes.resize(MeshTypes::Count);
 
     meshes[MeshTypes::Plane] = std::make_shared<Mesh>(materials[0]);
     meshes[MeshTypes::Plane]->GeneratePlane();
@@ -66,7 +68,7 @@ void EntityManager::LoadMeshes()
     meshes[MeshTypes::Sphere] = std::make_shared<Mesh>(materials[0]);
     meshes[MeshTypes::Sphere]->GenerateSphere(50);
 
-    meshes[MeshTypes::Model] = std::make_shared<Mesh>(materials[0]);
+  meshes[MeshTypes::Model] = std::make_shared<Mesh>(materials[0]);
     meshes[MeshTypes::Model]->LoadModel();
 }
 

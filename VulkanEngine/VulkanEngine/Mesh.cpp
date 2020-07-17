@@ -37,6 +37,9 @@ void Mesh::Init()
 }
 
 void Mesh::LoadModel() {
+
+	vertices.clear();
+	indices.clear();
 	tinyobj::attrib_t attrib;
 	std::vector<tinyobj::shape_t> shapes;
 	std::vector<tinyobj::material_t> materials;
@@ -45,7 +48,7 @@ void Mesh::LoadModel() {
 	if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, MODEL_PATH.c_str())) {
 		throw std::runtime_error(warn + err);
 	}
-
+	
 	std::unordered_map<Vertex, uint32_t> uniqueVertices{};
 
 	for (const auto& shape : shapes) {
@@ -72,6 +75,11 @@ void Mesh::LoadModel() {
 
 			indices.push_back(uniqueVertices[vertex]);
 		}
+	}
+
+	if (vertexBuffer != nullptr && indexBuffer != nullptr) {
+		UpdateVertexBuffer();
+		UpdateIndexBuffer();
 	}
 }
 void Mesh::CreateInstanceBuffer()
