@@ -32,7 +32,7 @@ int main()
 	delete EntityManager::GetInstance();
 	delete GameManager::GetInstance();
 	delete InputManager::GetInstance();
-	//delete PhysicsManager::GetInstance();
+	delete PhysicsManager::GetInstance();
 	delete WindowManager::GetInstance();
 
 	//Check for memory leaks
