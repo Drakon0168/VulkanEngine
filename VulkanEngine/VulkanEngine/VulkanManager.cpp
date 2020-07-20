@@ -6,6 +6,7 @@
 #include "WindowManager.h"
 #include "DebugManager.h"
 #include "EntityManager.h"
+#include "PhysicsManager.h"
 #include "SwapChain.h"
 #include "Camera.h"
 
@@ -401,6 +402,8 @@ void VulkanManager::Draw()
 void VulkanManager::Update()
 {
 	GameManager::GetInstance()->Update();
+
+	PhysicsManager::GetInstance()->Update();
 
 	EntityManager::GetInstance()->Update();
 }

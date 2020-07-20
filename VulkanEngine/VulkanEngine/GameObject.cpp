@@ -2,13 +2,19 @@
 #include "GameObject.h"
 
 #include "EntityManager.h"
+#include "PhysicsManager.h"
 
 #pragma region Constructor
 
-GameObject::GameObject(std::shared_ptr<Mesh> mesh, std::shared_ptr<Transform> transform)
+GameObject::GameObject(std::shared_ptr<Mesh> mesh, std::shared_ptr<Transform> transform, std::shared_ptr<PhysicsObject> physicsObject)
 {
 	this->mesh = mesh;
 	this->transform = transform;
+	this->physicsObject = physicsObject;
+
+	if (physicsObject != nullptr) {
+		PhysicsManager::GetInstance()->AddPhysicsObject(physicsObject);
+	}
 
 	instanceId = -1;
 	active = false;
@@ -26,6 +32,21 @@ std::shared_ptr<Transform> GameObject::GetTransform()
 void GameObject::SetTransform(std::shared_ptr<Transform> value)
 {
 	transform = value;
+
+	if (physicsObject != nullptr) {
+		physicsObject->SetTransform(value);
+	}
+}
+
+std::shared_ptr<PhysicsObject> GameObject::GetPhysicsObject()
+{
+	return physicsObject;
+}
+
+void GameObject::SetPhysicsObject(std::shared_ptr<PhysicsObject> value)
+{
+	physicsObject = value;
+	PhysicsManager::GetInstance()->AddPhysicsObject(physicsObject);
 }
 
 std::shared_ptr<Mesh> GameObject::GetMesh()
@@ -46,6 +67,11 @@ void GameObject::Spawn()
 {
 	if (transform == nullptr) {
 		transform = std::make_shared<Transform>();
+	}
+
+	if (physicsObject == nullptr) {
+		physicsObject = std::make_shared<PhysicsObject>(transform);
+		PhysicsManager::GetInstance()->AddPhysicsObject(physicsObject);
 	}
 
 	instanceId = mesh->AddInstance(transform);

@@ -10,6 +10,10 @@ PhysicsManager* PhysicsManager::GetInstance()
     if (instance == nullptr) {
         instance = new PhysicsManager();
         instance->physicsObjects.resize(PhysicsLayers::PhysicsLayerCount);
+
+        for (size_t i = 0; i < instance->physicsObjects.size(); i++) {
+            instance->physicsObjects[i] = std::vector<std::shared_ptr<PhysicsObject>>();
+        }
     }
 
     return instance;
@@ -37,6 +41,26 @@ glm::vec3 PhysicsManager::GetGravityDirection()
 void PhysicsManager::SetGravityDirection(glm::vec3 value)
 {
     gravityDirection = value;
+}
+
+void PhysicsManager::AddPhysicsObject(std::shared_ptr<PhysicsObject> object)
+{
+    physicsObjects[object->GetPhysicsLayer()].push_back(object);
+}
+
+#pragma endregion
+
+#pragma region Update
+
+void PhysicsManager::Update()
+{
+    //Update dynamic objects
+    for (size_t i = 0; i < physicsObjects[PhysicsLayers::Dynamic].size(); i++) {
+        physicsObjects[PhysicsLayers::Dynamic][i]->Update();
+    }
+
+    //Check for collisions
+    DetectCollisions();
 }
 
 #pragma endregion

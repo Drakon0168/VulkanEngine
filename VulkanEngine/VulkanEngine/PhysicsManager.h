@@ -47,6 +47,21 @@ public:
 	/// <param name="value">The value to set the direction to</param>
 	void SetGravityDirection(glm::vec3 value);
 
+	/// <summary>
+	/// Adds a physics object to the list of physics objects
+	/// </summary>
+	/// <param name="object">The object to add</param>
+	void AddPhysicsObject(std::shared_ptr<PhysicsObject> object);
+
+#pragma endregion
+
+#pragma region Update
+
+	/// <summary>
+	/// Updates dynamic physics objects and checks for collisions
+	/// </summary>
+	void Update();
+
 #pragma endregion
 
 #pragma region Collision Detection

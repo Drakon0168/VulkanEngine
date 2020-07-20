@@ -5,11 +5,13 @@
 
 #pragma region Constructor
 
-PhysicsObject::PhysicsObject(std::shared_ptr<Transform> transform, float mass, bool affectedByGravity)
+PhysicsObject::PhysicsObject(std::shared_ptr<Transform> transform, PhysicsLayers physicsLayer, float mass, bool affectedByGravity, bool alive)
 {
 	this->transform = transform;
 	this->mass = mass;
-	this->affectedByGravity = true;
+	this->affectedByGravity = affectedByGravity;
+	this->physicsLayer = physicsLayer;
+	this->alive = alive;
 
 	velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 	acceleration = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -54,6 +56,21 @@ std::shared_ptr<Transform> PhysicsObject::GetTransform()
 	return transform;
 }
 
+void PhysicsObject::SetTransform(std::shared_ptr<Transform> value)
+{
+	transform = value;
+}
+
+bool PhysicsObject::GetAlive()
+{
+	return alive;
+}
+
+void PhysicsObject::SetAlive(bool value)
+{
+	alive = value;
+}
+
 #pragma endregion
 
 #pragma Physics
@@ -73,16 +90,25 @@ void PhysicsObject::ApplyForce(glm::vec3 force, bool applyMass)
 
 void PhysicsObject::Update()
 {
-	if (affectedByGravity) {
-		ApplyForce(PhysicsManager::GetInstance()->GetGravity() * PhysicsManager::GetInstance()->GetGravityDirection());
+	if (alive) {
+		if (affectedByGravity) {
+			ApplyForce(PhysicsManager::GetInstance()->GetGravity() * PhysicsManager::GetInstance()->GetGravityDirection());
+		}
+
+		//Apply acceleration
+		velocity += acceleration;
+		acceleration = glm::vec3(0.0f, 0.0f, 0.0f);
+
+		//Apply velocity
+		transform->Translate(velocity * Time::GetDeltaTime());
+
+		//TODO: remove this once actual collisions are working
+		glm::vec3 position = transform->GetPosition();
+		if (position.y <= 0.5f) {
+			velocity = glm::vec3(velocity.x, velocity.y * -0.8f, velocity.z);
+			transform->SetPosition(glm::vec3(position.x, 0.5f, position.z));
+		}
 	}
-
-	//Apply acceleration
-	velocity += acceleration;
-	acceleration = glm::vec3(0.0f, 0.0f, 0.0f);
-
-	//Apply velocity
-	transform->Translate(velocity * Time::GetDeltaTime());
 }
 
 #pragma endregion

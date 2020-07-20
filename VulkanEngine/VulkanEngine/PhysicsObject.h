@@ -13,13 +13,13 @@ private:
 	glm::vec3 acceleration;
 
 	bool affectedByGravity;
+	bool alive;
 	PhysicsLayers physicsLayer;
-
 public:
 
 #pragma region Constructor
 
-	PhysicsObject(std::shared_ptr<Transform> transform, float mass = 1.0f, bool affectedByGravity = true);
+	PhysicsObject(std::shared_ptr<Transform> transform, PhysicsLayers physicsLayer = PhysicsLayers::Dynamic, float mass = 1.0f, bool affectedByGravity = true, bool alive = false);
 
 #pragma endregion
 
@@ -66,6 +66,24 @@ public:
 	/// </summary>
 	/// <returns>The physics object's transform</returns>
 	std::shared_ptr<Transform> GetTransform();
+
+	/// <summary>
+	/// Sets the object's transform to the specified value
+	/// </summary>
+	/// <param name="value">The transform to set to</param>
+	void SetTransform(std::shared_ptr<Transform> value);
+
+	/// <summary>
+	/// Returns whether or not the object is alive (currently part of the physics system)
+	/// </summary>
+	/// <returns>Whether the object is alive</returns>
+	bool GetAlive();
+
+	/// <summary>
+	/// Sets whether or not the object is alive (currently part of the physics system)
+	/// </summary>
+	/// <param name="value">The value to set to</param>
+	void SetAlive(bool value);
 
 #pragma endregion
 
