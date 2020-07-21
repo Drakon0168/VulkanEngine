@@ -104,7 +104,6 @@ void GameManager::Update()
     }
 
     if (InputManager::GetInstance()->GetKeyPressed(Controls::Jump)) {
-        std::cout << "Jumped" << std::endl;
         gameObjects[2]->GetPhysicsObject()->ApplyForce(glm::vec3(0.0f, 10000.0f, 0.0f));
     }
 }

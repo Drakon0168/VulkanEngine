@@ -1,0 +1,26 @@
+Header{
+    text-align: center;
+}
+
+#Navigation{
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    background-color: #888;
+}
+
+#Navigation li{
+    flex-grow: 1;
+    text-align: center;
+    list-style: none;
+    transition: 0.2s;
+    background-color: #ccc;
+}
+
+#Navigation li:hover{
+    background-color: #ddd;
+}
+
+#Navigation #CurrentPage{
+    background-color: #eee;
+}

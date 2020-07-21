@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8"/>
+    <title>Justin Dennis' Portfolio</title>
+
+    <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
+    <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
+    
+    <link type="text/css" rel="stylesheet" href="css/stylesheet.css" />
+    <script src="scripts/loader.js" type="module"></script>
+</head>
+<body>
+    <header>
+        <h1>Vulkan Engine Wiki</h1>
+    </header>
+    <div id="root">
+        <ul id="Navigation" class="container-fluid">
+            <li data-value="CLASSES" v-on:click="ChangePage(0)">Classes</li>
+            <li id="CurrentPage" data-value="HOME" v-on:click="ChangePage(1)">Home</li>
+            <li data-value="SYSTEMS" v-on:click="ChangePage(2)">Systems</li>
+        </ul>
+        <div v-if="page == 0" id="Classes" class="container-fluid">
+        </div>
+        <div v-if="page == 1" id="Home" class="container-fluid">
+            <h2>Intro</h2>
+            <p>Welcome to the vulkan engine wiki! This is the source for all documentation regarding the engine, code documentation, engine specific tutorials, and explanations of the different systems used by the engine.</p>
+            <h2>Getting Started</h2>
+            <p>There are a few things that will need to be setup in order to start working with the engine.</p>
+            <ol>
+                <li>Fork or Download the Git Repository</li>
+                <li>Make sure you have Vulkan installed and that it can run on your computer</li>
+                <li>Make sure that the path to the Vulkan SDK is correct in project settings</li>
+            </ol>
+        </div>
+        <div v-if="page == 2" id="Systems" class="container-fluid">
+        </div>
+    </div>
+</body>
+</html>
