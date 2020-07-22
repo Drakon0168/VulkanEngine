@@ -17,12 +17,117 @@
         <h1>Vulkan Engine Wiki</h1>
     </header>
     <div id="root">
-        <ul id="Navigation" class="container-fluid">
+        <ul id="Navigation" class="navbar">
             <li data-value="CLASSES" v-on:click="ChangePage(0)">Classes</li>
             <li id="CurrentPage" data-value="HOME" v-on:click="ChangePage(1)">Home</li>
             <li data-value="SYSTEMS" v-on:click="ChangePage(2)">Systems</li>
         </ul>
-        <div v-if="page == 0" id="Classes" class="container-fluid">
+        <div v-if="page == 0" id="Classes" class="container-fluid row">
+            <div id="ClassList" class="col-2">
+                <h2>Managers</h2>
+                <ul>
+                    <li>Debug Manager</li>
+                    <li>Entity Manager</li>
+                    <li>File Manager</li>
+                    <li>Game Manager</li>
+                    <li>Input Manager</li>
+                    <li>Physics Manager</li>
+                    <li>Swap Chain</li>
+                    <li>Time</li>
+                    <li>Vulkan Manager</li>
+                    <li>Window Manager</li>
+                </ul>
+                <h2>Components</h2>
+                <ul>
+                    <li>Buffer</li>
+                    <li>Camera</li>
+                    <li>Command Buffer</li>
+                    <li>Game Object</li>
+                    <li>Image</li>
+                    <li>Input</li>
+                    <li>Input Axis</li>
+                    <li>Material</li>
+                    <li>Mesh</li>
+                    <li>Physics Object</li>
+                    <li>Transform</li>
+                </ul>
+                <h2>Structs</h2>
+                <ul>
+                    <li>Light</li>
+                    <li>Queue Family Indices</li>
+                    <li>Swap Chain Support Details</li>
+                    <li>Transform Data</li>
+                    <li>Uniform Buffer Object</li>
+                    <li v-on:click="DisplayClass('Vertex')">Vertex</li>
+                </ul>
+                <h2>Shaders</h2>
+                <ul>
+                    <li>Basic Shader</li>
+                </ul>
+                <h2>Enums</h2>
+                <ul>
+                    <li>Controls</li>
+                    <li>Input States</li>
+                    <li>Mesh Types</li>
+                    <li>Physics Layers</li>
+                </ul>
+            </div>
+            <div id="ClassContent" class="col">
+                <h2>{{currentClass.Name}}</h2>
+                <p>{{currentClass.Description}}</p>
+                <h3>Variables</h3>
+                <ul>
+                    <li>
+                        <h4>Variable Name</h4>
+                        <p>Variable description</p>
+                    </li>
+                     <li>
+                        <h4>Variable Name</h4>
+                        <p>Variable description</p>
+                    </li>
+                     <li>
+                        <h4>Variable Name</h4>
+                        <p>Variable description</p>
+                    </li>
+                </ul>
+                <h3>Methods</h3>
+                <ul>
+                    <li>
+                        <h4>Method Name</h4>
+                        <p>Method Description</p>
+                        <h5>Parameters</h5>
+                        <ul>
+                            <li>
+                                <h6>Parameter Name</h6>
+                                <p>Parameter Description</p>
+                            </li>
+                            <li>
+                                <h6>Parameter Name</h6>
+                                <p>Parameter Description</p>
+                            </li>
+                            <li>
+                                <h6>Parameter Name</h6>
+                                <p>Parameter Description</p>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <h4>Method Name</h4>
+                        <p>Method Description</p>
+                        <h5>Parameters</h5>
+                        <ul>
+                            <li>
+                                <h6>Parameter Name</h6>
+                                <p>Parameter Description</p>
+                            </li>
+                            <li>
+                                <h6>Parameter Name</h6>
+                                <p>Parameter Description</p>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
         </div>
         <div v-if="page == 1" id="Home" class="container-fluid">
             <h2>Intro</h2>

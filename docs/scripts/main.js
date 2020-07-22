@@ -4,6 +4,7 @@ export const app = new Vue({
     el: "#root",
     data: {
         page: 1,
+        currentClass:{}
     },
     methods: {
         ChangePage: function(value){
@@ -17,6 +18,22 @@ export const app = new Vue({
             
             this.page = value;
         },
+        DisplayClass: function(value){
+            let file = new XMLHttpRequest();
+            file.open("GET", "../resources/" + value + ".json", false);
+            
+            file.onreadystatechange = function(){
+                if(file.readyState == 4){
+                    if(file.status == 200 || file.status == 0){
+                        let text = file.responseText;
+                        this.currentClass = JSON.parse(text);
+                        console.log(this.currentClass);
+                    }
+                }
+            }
+            
+            file.send(null);
+        }
     },
 });
 

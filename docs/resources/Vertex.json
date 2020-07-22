@@ -1,0 +1,90 @@
+{
+    "Name": "Vertex",
+    "Description": "The basic vertex class used to store data on the individual points of the mesh. This data then gets passed into the shader along with a list of indices in order to draw a mesh",
+    "Variables": [
+        {
+            "Name": "Position",
+            "Type": "glm::vec3",
+            "Description": "Vector 3 storing the position of the vertex in local space."
+        },
+        {
+            "Name": "Normal",
+            "Type": "glm::vec3",
+            "Description": "Vector 3 storing the normal of the vertex, the normal is a vector perpendicular to the faces that the vertex is attached to, it is used for lighting calculations in the shader."
+        },
+        {
+            "Name": "Color",
+            "Type": "glm::vec3",
+            "Description": "Vector 3 storing the color of the vertex, the color is used in conjunction with or in place of a texture when rendering the mesh."
+        },
+        {
+            "Name": "Texture Coordinate",
+            "Type": "glm::vec2",
+            "Description": "Vector 3 storing the texture or UV coordinate of the vertex used to map textures onto the mesh whan rendering."
+        }
+    ],
+    "Methods": [
+        {
+            "Name": "Vertex",
+            "Description": "Sets the initial values of the parameters",
+            "Parameters": [
+                {
+                    "Name": "Position",
+                    "Type": "glm::vec3",
+                    "Description": "Vector 3 storing the position of the vertex in local space."
+                },
+                {
+                    "Name": "Normal",
+                    "Type": "glm::vec3",
+                    "Description": "Vector 3 storing the normal of the vertex, the normal is a vector perpendicular to the faces that the vertex is attached to, it is used for lighting calculations in the shader."
+                },
+                {
+                    "Name": "Color",
+                    "Type": "glm::vec3",
+                    "Description": "Vector 3 storing the color of the vertex, the color is used in conjunction with or in place of a texture when rendering the mesh."
+                },
+                {
+                    "Name": "Texture Coordinate",
+                    "Type": "glm::vec2",
+                    "Description": "Vector 3 storing the texture or UV coordinate of the vertex used to map textures onto the mesh whan rendering."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "getBindingDescription",
+            "Description": "Static method that creates and returns a binding description used by the descriptor sets to describe the data that is being passed into the shaders",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "VkVertexInputBindingDescription",
+                "Description": "Struct describing the data of the vertex struct."
+            }
+        },
+        {
+            "Name": "getAttributeDescriptions",
+            "Description": "Static method that creates and returns an array of attribute descriptions used by the descriptor sets to describe the type and layout of the data being passed into the shader.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "std::array<VkVertexInputAttributeDescription, 4>",
+                "Description": "An array of structs describing the type and layout of the data contained in the Vertex struct."
+            }
+        },
+        {
+            "Name": "operator==",
+            "Description": "Operator overload of the '==' operator used to compare two vertices.",
+            "Parameters": [
+                {
+                    "Name": "Other",
+                    "Type": "const Vertex",
+                    "Description": "The vertex that this one is being compared to"
+                }
+            ],
+            "Returns": {
+                "Type": "Bool",
+                "Description": "Boolean describing whether or not the two vertices were equal to each other, returns true if the two vertices are evaluated as equal."
+            }
+        }
+    ]
+}
