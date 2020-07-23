@@ -52,7 +52,7 @@
             "Returns": {}
         },
         {
-            "Name": "getBindingDescription",
+            "Name": "GetBindingDescription",
             "Description": "Static method that creates and returns a binding description used by the descriptor sets to describe the data that is being passed into the shaders",
             "Parameters": [
             ],
@@ -62,7 +62,7 @@
             }
         },
         {
-            "Name": "getAttributeDescriptions",
+            "Name": "GetAttributeDescriptions",
             "Description": "Static method that creates and returns an array of attribute descriptions used by the descriptor sets to describe the type and layout of the data being passed into the shader.",
             "Parameters": [
             ],
