@@ -41,6 +41,6 @@ Header{
     background-color: #ddd;
 }
 
-li {
+ul li {
     list-style: none;
 }
