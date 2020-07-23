@@ -25,7 +25,7 @@
     ],
     "Methods": [
         {
-            "Name": "Vertex",
+            "Name": "Vertex (Constructor)",
             "Description": "Sets the initial values of the parameters",
             "Parameters": [
                 {

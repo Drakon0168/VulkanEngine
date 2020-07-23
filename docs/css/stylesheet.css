@@ -32,6 +32,15 @@ Header{
     background-color: #ccc;
 }
 
-#ClassList li {
+#ClassList li{
+    background-color: #ccc;
+    transition: 0.2s;
+}
+
+#ClassList li:hover{
+    background-color: #ddd;
+}
+
+li {
     list-style: none;
 }

@@ -22,7 +22,7 @@ export const app = new Vue({
             let file = new XMLHttpRequest();
             file.open("GET", "../resources/" + value + ".json", false);
             
-            file.onreadystatechange = function(){
+            file.onreadystatechange = () => {
                 if(file.readyState == 4){
                     if(file.status == 200 || file.status == 0){
                         let text = file.responseText;

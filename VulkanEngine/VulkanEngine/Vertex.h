@@ -15,7 +15,7 @@ struct Vertex {
 		this->textureCoordinate = textureCoordinate;
 	}
 
-	static VkVertexInputBindingDescription getBindingDescription() {
+	static VkVertexInputBindingDescription GetBindingDescription() {
 		VkVertexInputBindingDescription bindingDescription = {};
 		bindingDescription.binding = 0;
 		bindingDescription.stride = sizeof(Vertex);
@@ -24,7 +24,7 @@ struct Vertex {
 		return bindingDescription;
 	}
 
-	static std::array<VkVertexInputAttributeDescription, 4> getAttributeDescriptions() {
+	static std::array<VkVertexInputAttributeDescription, 4> GetAttributeDescriptions() {
 		//Setup attributes
 		std::array<VkVertexInputAttributeDescription, 4> attributeDescriptions = {};
 		attributeDescriptions[0].binding = 0;

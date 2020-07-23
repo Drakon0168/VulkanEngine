@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8"/>
-    <title>Justin Dennis' Portfolio</title>
+    <title>Vulkan Engine Wiki</title>
 
     <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
     <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
@@ -72,61 +72,43 @@
                     <li>Physics Layers</li>
                 </ul>
             </div>
-            <div id="ClassContent" class="col">
+            <div id="ClassContent" v-if="currentClass" class="col">
                 <h2>{{currentClass.Name}}</h2>
                 <p>{{currentClass.Description}}</p>
-                <h3>Variables</h3>
-                <ul>
-                    <li>
-                        <h4>Variable Name</h4>
-                        <p>Variable description</p>
-                    </li>
-                     <li>
-                        <h4>Variable Name</h4>
-                        <p>Variable description</p>
-                    </li>
-                     <li>
-                        <h4>Variable Name</h4>
-                        <p>Variable description</p>
-                    </li>
-                </ul>
-                <h3>Methods</h3>
-                <ul>
-                    <li>
-                        <h4>Method Name</h4>
-                        <p>Method Description</p>
-                        <h5>Parameters</h5>
-                        <ul>
-                            <li>
-                                <h6>Parameter Name</h6>
-                                <p>Parameter Description</p>
-                            </li>
-                            <li>
-                                <h6>Parameter Name</h6>
-                                <p>Parameter Description</p>
-                            </li>
-                            <li>
-                                <h6>Parameter Name</h6>
-                                <p>Parameter Description</p>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <h4>Method Name</h4>
-                        <p>Method Description</p>
-                        <h5>Parameters</h5>
-                        <ul>
-                            <li>
-                                <h6>Parameter Name</h6>
-                                <p>Parameter Description</p>
-                            </li>
-                            <li>
-                                <h6>Parameter Name</h6>
-                                <p>Parameter Description</p>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
+                <div v-if="currentClass.Variables">
+                    <h3>Variables</h3>
+                    <ul>
+                        <li v-for="variable in currentClass.Variables">
+                            <h4>{{variable.Name}}</h4>
+                            <p>Type: {{variable.Type}}</p>
+                            <p>{{variable.Description}}</p>
+                        </li>
+                    </ul>
+                </div>
+                <div v-if="currentClass.Methods">
+                    <h3>Methods</h3>
+                    <ul>
+                        <li v-for="method in currentClass.Methods">
+                            <h4>{{method.Name}}</h4>
+                            <p>{{method.Description}}</p>
+                            <div v-if="method.Parameters.length > 0">
+                                <h5>Parameters</h5>
+                                <ul>
+                                    <li v-for="parameter in method.Parameters">
+                                        <h6>{{parameter.Name}}</h6>
+                                        <p>Type: {{parameter.Type}}</p>
+                                        <p>{{parameter.Description}}</p>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div v-if="method.Returns.Type">
+                                <h5>Returns</h5>
+                                <p>Type: {{method.Returns.Type}}</p>
+                                <p>{{method.Returns.Description}}</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
         <div v-if="page == 1" id="Home" class="container-fluid">
