@@ -1,0 +1,178 @@
+{
+    "Name": "Entity Manager",
+    "Description": "This class handles Meshes and Materials. The Entity Manager stores all of the Meshes and Materials that are used in the project, it handles the creation and allocation of those resources as well as drawing all of the Meshes with their corresponding Materials.",
+    "Variables": [
+        {
+            "Name": "instance",
+            "Type": "EntityManager*",
+            "Description": "The static instance of the Entity Manager for the singleton design pattern."
+        },
+        {
+            "Name": "entities",
+            "Type": "std::map<std::shared_ptr<Material>, std::vector<std::shared_ptr<Mesh>>>",
+            "Description": "The entities list is a map keeping track of which Meshes use which Materials. This is used in the draw method to decide what order the Meshes are drawn in, the loop will go through every material and then loop through the meshes that use that material. This allows us to only bind the material resources once per material per frame instead of having to bind them once per mesh material combination per fame, speeding up our draw loop."
+        },
+        {
+            "Name": "materials",
+            "Type": "std::vector<std::shared_ptr<Material>>",
+            "Description": "The list of Materials used by the application, all of these Materials should be used as keys in the entities list but they are stored separately here to make it easier to allocate and destroy them."
+        },
+        {
+            "Name": "meshes",
+            "Type": "std::vector<std::shared_ptr<Mesh>>",
+            "Description": "The list of Meshes used by the application, all of these Meshes should be used as values in the entities list but they are stored separately here to make it easier to allocate and destroy them. This list can be indexed by the MeshTypes enum to make it easier to identify the specific mesh that is needed. When creating the mesh list in LoadMeshes, simply ensure that the order in the list is the same as the order in the enum for this to work."
+        }
+    ],
+    "Methods": [
+        {
+            "Name": "GetInstance",
+            "Description": "Returns the static instance of the class for the singleton design pattern.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "EntityManager*",
+                "Description": "The singleton instance of the EntityManager."
+            }
+        },
+        {
+            "Name": "GetMaterials",
+            "Description": "Returns the list of Materials used by the application",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "std::vector<std::shared_ptr<Material>>",
+                "Description": "The list of Materials used by the application"
+            }
+        },
+        {
+            "Name": "GetMeshes",
+            "Description": "List of all of the Meshes used by the application. This list refers to meshes that use different materials as different meshes even if they share the same geometry. The MeshTypes enum can be used to access meshes in this list by substituting a MeshType for the index of the mesh. When adding meshes to the list in the LoadMeshes function make sure they are added in the order they are listed in the enum for this to work.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "std::vector<std::shared_ptr<Mesh>>",
+                "Description": "List of all of the Meshes used by the application."
+            }
+        },
+        {
+            "Name": "Init",
+            "Description": "Loads all of the Meshes and Materials used by the apllication, the init method calls both the LoadMeshes and LoadMaterials methods and then sets up the entities list. This is where the model and shader files get loaded and turned into Mehses and Materials.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "LoadMeshes",
+            "Description": "Loads all of the models that will be used by the application and stores the model data in Meshes.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "LoadMaterials",
+            "Description": "Creates Materials for each set of shaders that will be used by the application.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "Update",
+            "Description": "Updates the instance buffers of all of the meshes. This ensures that the meshes appear at the correct locations in the world when drawn and must be updated every time a particular instance of a mesh moves.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "Draw",
+            "Description": "Draws all of the meshes with their corresponding materials. This method re-records the command buffers used by Vulkan to tell the graphics card what to draw. The command buffers must be re-recorded each frame so that we can dynamically change the number of instances of each mesh that are drawn each frame. The command buffer tells the graphics card how many times to draw a specific mesh in  the VkCmdDrawIndexed call towards the end of this method. When an object is spawned or destroyed that number changes and the command buffer must be re-recorded to reflect that change, if it is not re-recorded then the amount of transform data that gets passed in to the shader will not match the number of meshes which will cause problems for the graphics card.",
+            "Parameters": [
+                {
+                    "Name": "imageIndex",
+                    "Type": "uint32_t",
+                    "Description": "The index of the swap chain image that is being drawn to this frame, this also corresponds to the index of the descriptor set that the Material will use for this frame"
+                },
+                {
+                    "Name": "commandBuffer",
+                    "Type": "VkCommandBuffer*",
+                    "Description": "The command buffer that will be recorded for this frame."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "Method Name",
+            "Description": "Description of the purpose and usage of the method",
+            "Parameters": [
+                {
+                    "Name": "Parameter Name",
+                    "Type": "Parameter Type (int, string, char, etc.)",
+                    "Description": "Description of the use of the parameter"
+                }
+            ],
+            "Returns": {
+                "Type": "Return Type (int, string, char, etc.)",
+                "Description": "Description of the return variable"
+            }
+        },
+        {
+            "Name": "Method Name",
+            "Description": "Description of the purpose and usage of the method",
+            "Parameters": [
+                {
+                    "Name": "Parameter Name",
+                    "Type": "Parameter Type (int, string, char, etc.)",
+                    "Description": "Description of the use of the parameter"
+                }
+            ],
+            "Returns": {
+                "Type": "Return Type (int, string, char, etc.)",
+                "Description": "Description of the return variable"
+            }
+        },
+        {
+            "Name": "Method Name",
+            "Description": "Description of the purpose and usage of the method",
+            "Parameters": [
+                {
+                    "Name": "Parameter Name",
+                    "Type": "Parameter Type (int, string, char, etc.)",
+                    "Description": "Description of the use of the parameter"
+                }
+            ],
+            "Returns": {
+                "Type": "Return Type (int, string, char, etc.)",
+                "Description": "Description of the return variable"
+            }
+        },
+        {
+            "Name": "Method Name",
+            "Description": "Description of the purpose and usage of the method",
+            "Parameters": [
+                {
+                    "Name": "Parameter Name",
+                    "Type": "Parameter Type (int, string, char, etc.)",
+                    "Description": "Description of the use of the parameter"
+                }
+            ],
+            "Returns": {
+                "Type": "Return Type (int, string, char, etc.)",
+                "Description": "Description of the return variable"
+            }
+        },
+        {
+            "Name": "Method Name",
+            "Description": "Description of the purpose and usage of the method",
+            "Parameters": [
+                {
+                    "Name": "Parameter Name",
+                    "Type": "Parameter Type (int, string, char, etc.)",
+                    "Description": "Description of the use of the parameter"
+                }
+            ],
+            "Returns": {
+                "Type": "Return Type (int, string, char, etc.)",
+                "Description": "Description of the return variable"
+            }
+        }
+    ]
+}

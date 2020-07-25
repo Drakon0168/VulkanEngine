@@ -11,8 +11,6 @@ private:
 	static EntityManager* instance;
 
 	std::map<std::shared_ptr<Material>, std::vector<std::shared_ptr<Mesh>>> entities;
-	std::vector<std::shared_ptr<Buffer>> vertexBuffers;
-	std::vector<std::shared_ptr<Buffer>> indexBuffers;
 
 	std::vector<std::shared_ptr<Material>> materials;
 	std::vector<std::shared_ptr<Mesh>> meshes;
