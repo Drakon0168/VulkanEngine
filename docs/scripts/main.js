@@ -20,7 +20,7 @@ export const app = new Vue({
         },
         DisplayClass: function(value){
             let file = new XMLHttpRequest();
-            file.open("GET", "https://people.rit.edu/jxd8037/VulkanEngine/" + value + ".json", false);
+            file.open("GET", value + ".json", false);
             
             file.onreadystatechange = () => {
                 if(file.readyState == 4){

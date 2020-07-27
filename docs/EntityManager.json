@@ -108,63 +108,31 @@
         },
         {
             "Name": "CreateMeshResources",
-            "Description": "Calls all mesh's Init methods to create and allocate mesh resources. Also adds a default instance of the mesh if there are no instances of the mesh already, this is because the instance buffer must have some data stored in order to be created.",
+            "Description": "Calls all mesh's Init methods to create and allocate mesh resources.",
             "Parameters": [
-                {
-                    "Name": "Parameter Name",
-                    "Type": "Parameter Type (int, string, char, etc.)",
-                    "Description": "Description of the use of the parameter"
-                }
             ],
-            "Returns": {
-                "Type": "Return Type (int, string, char, etc.)",
-                "Description": "Description of the return variable"
-            }
+            "Returns": {}
         },
         {
-            "Name": "Method Name",
-            "Description": "Description of the purpose and usage of the method",
+            "Name": "Cleanup",
+            "Description": "Calls the cleanup method on all meshes and materials.",
             "Parameters": [
-                {
-                    "Name": "Parameter Name",
-                    "Type": "Parameter Type (int, string, char, etc.)",
-                    "Description": "Description of the use of the parameter"
-                }
             ],
-            "Returns": {
-                "Type": "Return Type (int, string, char, etc.)",
-                "Description": "Description of the return variable"
-            }
+            "Returns": {}
         },
         {
-            "Name": "Method Name",
-            "Description": "Description of the purpose and usage of the method",
+            "Name": "CleanupMaterials",
+            "Description": "Calls Cleanup on all materials, deallocating their resources.",
             "Parameters": [
-                {
-                    "Name": "Parameter Name",
-                    "Type": "Parameter Type (int, string, char, etc.)",
-                    "Description": "Description of the use of the parameter"
-                }
             ],
-            "Returns": {
-                "Type": "Return Type (int, string, char, etc.)",
-                "Description": "Description of the return variable"
-            }
+            "Returns": {}
         },
         {
-            "Name": "Method Name",
-            "Description": "Description of the purpose and usage of the method",
+            "Name": "CleanupMeshes",
+            "Description": "Calls Cleanup on all meshes, deallocating their resources.",
             "Parameters": [
-                {
-                    "Name": "Parameter Name",
-                    "Type": "Parameter Type (int, string, char, etc.)",
-                    "Description": "Description of the use of the parameter"
-                }
             ],
-            "Returns": {
-                "Type": "Return Type (int, string, char, etc.)",
-                "Description": "Description of the return variable"
-            }
+            "Returns": {}
         }
     ]
 }
