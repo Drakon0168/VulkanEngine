@@ -27,11 +27,9 @@ export const app = new Vue({
                     if(file.status == 200 || file.status == 0){
                         let text = file.responseText;
                         this.currentClass = JSON.parse(text);
-                        console.log(this.currentClass);
                     }
                 }
             }
-            
             file.send(null);
         }
     },
