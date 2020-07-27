@@ -1,0 +1,47 @@
+{
+    "Name": "Game Manager",
+    "Description": "Manager class that initializes and updates all of the GameObjects and handles input from the InputManager.",
+    "Variables": [
+        {
+            "Name": "instance",
+            "Type": "GameManager*",
+            "Description": "The static instance of the GameManager for the singleton design pattern."
+        },
+        {
+            "Name": "gameObjects",
+            "Type": "std::vector<std::shared_ptr<GameObject>>",
+            "Description": "List of all of the GameObjects in the application."
+        },
+        {
+            "Name": "cameraSpeed",
+            "Type": "float",
+            "Description": "Float controlling the move speed of the camera in units per second."
+        }
+    ],
+    "Methods": [
+        {
+            "Name": "GetInstance",
+            "Description": "Returns the singleton instance of the GameManager class.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "GameManager*",
+                "Description": "The static instance of the GameManager for the singleton design pattern."
+            }
+        },
+        {
+            "Name": "Init",
+            "Description": "Initializes GameObjects by setting their Mesh, Transform, and PhysicsObject, and then spawns them.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "Update",
+            "Description": "Called once per frame, this method calls Update on all of the game objects and handles camera movement.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        }
+    ]
+}

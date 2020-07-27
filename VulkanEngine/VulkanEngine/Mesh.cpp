@@ -109,8 +109,6 @@ void Mesh::UpdateInstanceBuffer()
 {
 	instanceBuffer = std::make_shared<Buffer>(VkBuffer(), VkDeviceMemory());
 	instanceBuffer->Cleanup();
-	
-	
 	//Get Data as TransformData
 	std::vector<std::shared_ptr<Transform>> activeInstances = GetActiveInstances();
 	std::vector<TransformData> bufferData(activeInstanceCount);
@@ -119,10 +117,8 @@ void Mesh::UpdateInstanceBuffer()
 		bufferData[i] = TransformData::LoadMat4(activeInstances[i]->GetModelMatrix());
 	}
 
-	 VkDeviceSize bufferSize = sizeof(TransformData) * bufferData.size();
-	 Buffer::CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, *instanceBuffer);
-	
-	
+	VkDeviceSize bufferSize = sizeof(TransformData) * bufferData.size();
+	Buffer::CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, *instanceBuffer);
 	//Copy Data
 	void* data;
 	vkMapMemory(logicalDevice, instanceBuffer->GetBufferMemory(), 0, bufferSize, 0, &data);
@@ -480,7 +476,7 @@ void Mesh::GenerateSphere(int resolution)
 	}
 }
 
-void Mesh::LoadModel() {
+void Mesh::LoadModel(const std::string modelPath) {
 
 	vertices.clear();
 	indices.clear();
@@ -488,8 +484,8 @@ void Mesh::LoadModel() {
 	std::vector<tinyobj::shape_t> shapes;
 	std::vector<tinyobj::material_t> materials;
 	std::string warn, err;
-
-	if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, MODEL_PATH.c_str())) {
+	
+	if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, modelPath.c_str())) {
 		throw std::runtime_error(warn + err);
 	}
 

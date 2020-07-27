@@ -1,0 +1,21 @@
+{
+    "Name": "File Manager",
+    "Description": "This class handles the File IO for the application.",
+    "Methods": [
+        {
+            "Name": "ReadFile",
+            "Description": "Static method that is used read the data from the specified file path.",
+            "Parameters": [
+                {
+                    "Name": "filePath",
+                    "Type": "const std::string",
+                    "Description": "The path to the file being read, this is the path from the project directory."
+                }
+            ],
+            "Returns": {
+                "Type": "std::vector<char>",
+                "Description": "The data contained in the file at the specified file path."
+            }
+        }
+    ]
+}
