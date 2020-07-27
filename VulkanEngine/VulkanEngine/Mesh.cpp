@@ -40,24 +40,12 @@ void Mesh::Init()
 
 void Mesh::CreateInstanceBuffer()
 {
-	//Get Data as TransformData
-	std::vector<std::shared_ptr<Transform>> activeInstances = GetActiveInstances();
-	std::vector<TransformData> bufferData(activeInstanceCount);
-
-	for (size_t i = 0; i < activeInstanceCount; i++) {
-		bufferData[i] = TransformData::LoadMat4(activeInstances[i]->GetModelMatrix());
-	}
-
 	//Create buffer
-	VkDeviceSize bufferSize = sizeof(TransformData) * bufferData.size();
+	VkDeviceSize bufferSize = sizeof(TransformData);
 	instanceBuffer = std::make_shared<Buffer>(VkBuffer(), VkDeviceMemory());
 	Buffer::CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, *instanceBuffer);
 
-	//Copy Data
-	void* data;
-	vkMapMemory(logicalDevice, instanceBuffer->GetBufferMemory(), 0, bufferSize, 0, &data);
-	memcpy(data, bufferData.data(), bufferSize);
-	vkUnmapMemory(logicalDevice, instanceBuffer->GetBufferMemory());
+	//Data will be added to the buffer in UpdateInstanceBuffer method once we have data to add
 }
 
 void Mesh::CreateVertexBuffer()

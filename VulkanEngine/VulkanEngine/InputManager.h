@@ -26,7 +26,7 @@ public:
 
 #pragma endregion
 
-#pragma Constructor
+#pragma region Constructor
 
 	InputManager();
 
