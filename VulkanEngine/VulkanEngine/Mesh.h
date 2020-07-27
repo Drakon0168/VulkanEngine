@@ -28,6 +28,7 @@ private:
 	//Material
 	std::shared_ptr<Material> material;
 
+	const std::string MODEL_PATH = "models/room.obj";
 	const std::string TEXTURE_PATH = "textures/room.jpg";
 public:
 
@@ -226,8 +227,7 @@ public:
 	/// <summary>
 	/// Loads the model specified by the model path
 	/// </summary>
-	/// <param name="modelPath">The path to the model file from the project directory</param>
-	void LoadModel(const std::string modelPath);
+	void LoadModel();
 
 #pragma endregion
 };
