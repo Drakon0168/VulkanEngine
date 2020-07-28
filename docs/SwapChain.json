@@ -1,0 +1,33 @@
+{
+    "Name": "Swap Chain",
+    "Description": "Manager class that handles the swap chain used by the application. The swap allows us to render multiple frames at a time while displaying one to the screen speeding up the frame rate of the application. This class manages the different frames and ensures that we are not rendering to a frame that is being displayed or render over a frame that is already in progress which can cause screen tearing.",
+    "Variables": [
+        {
+            "Name": "instance",
+            "Type": "SwapChain*",
+            "Description": "Static instance for the singleton design pattern."
+        },
+        {
+            "Name": "MAX_FRAMES_IN_FLIGHT",
+            "Type": "const int",
+            "Description": "Keeps track of the maximum number of frames that can be rendered to at once. This number is one less than the total number of frames to ensure that the frame that is being displayed is not being rendered to."
+        },
+    ],
+    "Methods": [
+        {
+            "Name": "Method Name",
+            "Description": "Description of the purpose and usage of the method",
+            "Parameters": [
+                {
+                    "Name": "Parameter Name",
+                    "Type": "Parameter Type (int, string, char, etc.)",
+                    "Description": "Description of the use of the parameter"
+                }
+            ],
+            "Returns": {
+                "Type": "Return Type (int, string, char, etc.)",
+                "Description": "Description of the return variable"
+            }
+        }
+    ]
+}

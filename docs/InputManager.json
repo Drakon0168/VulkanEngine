@@ -8,41 +8,165 @@
             "Description": "The static instance of the InputManager for the singleton design pattern."
         },
         {
-            "Name": "Variable Name",
-            "Type": "Variable Type (int, string, char, etc.)",
-            "Description": "Description of the purpose of the variable"
+            "Name": "controls",
+            "Type": "std::vector<Input>",
+            "Description": "List of the Input (button) inputs that are being listened for by the input manager."
         },
         {
-            "Name": "Variable Name",
-            "Type": "Variable Type (int, string, char, etc.)",
-            "Description": "Description of the purpose of the variable"
+            "Name": "axes",
+            "Type": "std::vector<InputAxis>",
+            "Description": "List of all of the Axis (float) inputs listened for by the input manager. This would be things like analog sticks or the mouse wheel that have more states than just pressed and released."
         },
         {
-            "Name": "Variable Name",
-            "Type": "Variable Type (int, string, char, etc.)",
-            "Description": "Description of the purpose of the variable"
+            "Name": "mousePosition",
+            "Type": "glm::vec2",
+            "Description": "The position of the mouse in window space, the top left of the window is (0,0) the bottom right is (windowWidth, windowHeight)."
         },
         {
-            "Name": "Variable Name",
-            "Type": "Variable Type (int, string, char, etc.)",
-            "Description": "Description of the purpose of the variable"
+            "Name": "deltaMouse",
+            "Type": "glm::vec2",
+            "Description": "The change in position of the mouse between the last and current updates."
         }
     ],
     "Methods": [
         {
-            "Name": "Method Name",
-            "Description": "Description of the purpose and usage of the method",
+            "Name": "GetInstance",
+            "Description": "Returns the static instance of this class for the singleton design pattern.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "InputManager*",
+                "Description": "The static instance of the InputManager class for the singleton design pattern"
+            }
+        },
+        {
+            "Name": "InputManager (Constructor)",
+            "Description": "Sets the controls to listen for and adds them to the controls and axes lists.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "GetControls",
+            "Description": "Returns the list of Inputs used by the input manager.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "std::vector<Input>",
+                "Description": "The list of controls used by the input manager. This list contains all of the button controls, controls which have pressed and released states."
+            }
+        },
+        {
+            "Name": "GetAxes",
+            "Description": "Returns the list of InputAxis used by the input manager.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "std::vector<InputAxis>",
+                "Description": "The list of input axes used by the input manager. This list contains all of the axis controls, controls that have a floating pooint value."
+            }
+        },
+        {
+            "Name": "GetMousePosition",
+            "Description": "Returns the position of the mouse in window space.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "glm::vec2",
+                "Description": "The mouse's position in window space, the origin is in the top left corner, the bottom right is position (windowWidth, windowHeight)."
+            }
+        },
+        {
+            "Name": "GetDeltaMouse",
+            "Description": "Returns the change in mouse position between this update and the last. The change is in pixels.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "glm::vec2",
+                "Description": "The change in mouse position in pixels, between this update and the last."
+            }
+        },
+        {
+            "Name": "GetKey",
+            "Description": "Returns whether or not the specified key is in the down or pressed state.",
             "Parameters": [
                 {
-                    "Name": "Parameter Name",
-                    "Type": "Parameter Type (int, string, char, etc.)",
-                    "Description": "Description of the use of the parameter"
+                    "Name": "key",
+                    "Type": "Controls::Controls",
+                    "Description": "The value in the Controls enum for the key to check."
                 }
             ],
             "Returns": {
-                "Type": "Return Type (int, string, char, etc.)",
-                "Description": "Description of the return variable"
+                "Type": "Bool",
+                "Description": "True if the specified key is in the down or pressed state."
             }
+        },
+        {
+            "Name": "GetKeyPressed",
+            "Description": "Returns whether or not the specified key is in the pressed state, keys go into the pressed state on the first frame that they are down, and transition into the down state on the second frame they are held down.",
+            "Parameters": [
+                {
+                    "Name": "key",
+                    "Type": "Controls::Controls",
+                    "Description": "The value in the Controls enum for the key to check."
+                }
+            ],
+            "Returns": {
+                "Type": "Bool",
+                "Description": "True if the specified key is in the pressed state."
+            }
+        },
+        {
+            "Name": "GetKeyReleased",
+            "Description": "Returns whether or not the specified key is in the released state, keys go to the released state on the first frame that they are up and transition into the up state on the second frame they stay up.",
+            "Parameters": [
+                {
+                    "Name": "key",
+                    "Type": "Controls::Controls",
+                    "Description": "The value in the Controls enum for the key to check."
+                }
+            ],
+            "Returns": {
+                "Type": "Bool",
+                "Description": "True if the key is in the released state."
+            }
+        },
+        {
+            "Name": "GetKeyState",
+            "Description": "Returns the current state of the specified key.",
+            "Parameters": [
+                {
+                    "Name": "key",
+                    "Type": "Controls::Controls",
+                    "Description": "The value in the Controls enum for the key to check."
+                }
+            ],
+            "Returns": {
+                "Type": "InputStates",
+                "Description": "The current state of the specified key."
+            }
+        },
+        {
+            "Name": "GetAxis",
+            "Description": "Returns the value of the specified axis.",
+            "Parameters": [
+                {
+                    "Name": "axis",
+                    "Type": "Controls::InputAxes",
+                    "Description": "The value in the InputAxes enum for the axis to check."
+                }
+            ],
+            "Returns": {
+                "Type": "Float",
+                "Description": "The current value of the specified axis."
+            }
+        },
+        {
+            "Name": "Update",
+            "Description": "Updates the values of the inputs, mouse position, and delta mouse values.",
+            "Parameters": [
+            ],
+            "Returns": {}
         }
     ]
 }

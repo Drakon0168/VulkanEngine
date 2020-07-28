@@ -72,7 +72,7 @@ public:
 	void DetectCollisions();
 
 	/// <summary>
-	/// Checks forr a collision between two physics objects
+	/// Checks for a collision between two physics objects
 	/// </summary>
 	/// <param name="physicsObject1">The first object to check</param>
 	/// <param name="physicsObject2">The second object to check</param>

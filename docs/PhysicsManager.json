@@ -1,0 +1,135 @@
+{
+    "Name": "Physics Manager",
+    "Description": "Handles all of the physics in the application, checks for collisions and handles collision resolution.",
+    "Variables": [
+        {
+            "Name": "instance",
+            "Type": "PhysicsManager*",
+            "Description": "Static instance of the physics manager for the singleton design pattern."
+        },
+        {
+            "Name": "gravity",
+            "Type": "float",
+            "Description": "The magnitude of the force of gravity used by the simulation."
+        },
+        {
+            "Name": "gravityDirection",
+            "Type": "glm::vec3",
+            "Description": "The direction of the force of gravity used by the simulation."
+        },
+        {
+            "Name": "physicsObjects",
+            "Type": "std::vector<std::vector<std::shared_ptr<PhysicsObject>>>",
+            "Description": "A list of all of the physics objects being simulated. This is a two dimensional list the first dimension is the physics layer that the object is in, the second contains the pointers to the physics objects. The first dimension can be indexed by the PhysicsLayers enum."
+        }
+    ],
+    "Methods": [
+        {
+            "Name": "GetGravity",
+            "Description": "Returns the strength of the gravitational forcce used by the physics manager.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "float",
+                "Description": "The strength of the gravitational forcce used by the physics manager."
+            }
+        },
+        {
+            "Name": "SetGravity",
+            "Description": "Sets the strength of the gravitational force used by the physics manager.",
+            "Parameters": [
+                {
+                    "Name": "value",
+                    "Type": "float",
+                    "Description": "The value to set the gravitational force to."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "GetGravityDirection",
+            "Description": "Returns the direction of the gravitational force used by the physics manager.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "glm::vec3",
+                "Description": "The direction of the gravitational force used by the physics manager."
+            }
+        },
+        {
+            "Name": "SetGravityDirection",
+            "Description": "Sets the direction of the gravitational force used by the physics manager.",
+            "Parameters": [
+                {
+                    "Name": "value",
+                    "Type": "glm::vec3",
+                    "Description": "The direction to set the gravitational force to."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "AddPhysicsObject",
+            "Description": "Adds an object to the simulation.",
+            "Parameters": [
+                {
+                    "Name": "object",
+                    "Type": "std::shared_ptr<PhysicsObject>",
+                    "Description": "The object to add."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "Update",
+            "Description": "Updates dynamic objects and checks for collisions between objects.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "DetectCollisions",
+            "Description": "Detects collisions between objects based on physics layers. Dynamic objects are checked against all objects in the simulation, Static objects are checked against dynamic objects and triggers, triggers are checked against dyanmic and static objects.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "CheckCollision",
+            "Description": "Checks for a collision between two specific objects.",
+            "Parameters": [
+                {
+                    "Name": "physicsObject1",
+                    "Type": "std::shared_ptr<PhysicsObject>",
+                    "Description": "The first object to check."
+                },
+                {
+                    "Name": "physicsObject2",
+                    "Type": "std::shared_ptr<PhysicsObject>",
+                    "Description": "The second object to check."
+                }
+            ],
+            "Returns": {
+                "Type": "Bool",
+                "Description": "True if the objects are colliding."
+            }
+        },
+        {
+            "Name": "ResolveCollision",
+            "Description": "Resolves a collision between two objects applying the appropriate translations and forces to move the objects out of the collision.",
+            "Parameters": [
+                {
+                    "Name": "physicsObject1",
+                    "Type": "std::shared_ptr<PhysicsObject>",
+                    "Description": "The first object in collision."
+                },
+                {
+                    "Name": "physicsObject2",
+                    "Type": "std::shared_ptr<PhysicsObject>",
+                    "Description": "The second object in collision."
+                }
+            ],
+            "Returns": {}
+        }
+    ]
+}
