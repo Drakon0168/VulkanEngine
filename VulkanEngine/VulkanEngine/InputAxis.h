@@ -11,7 +11,11 @@ public:
 
 #pragma region Constructor
 
+
 	InputAxis(float min = 0.0f, float max = 1.0f);
+
+	//InputAxis(float min, float max);
+
 
 #pragma endregion
 

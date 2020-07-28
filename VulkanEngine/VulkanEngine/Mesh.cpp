@@ -107,6 +107,8 @@ void Mesh::Cleanup()
 
 void Mesh::UpdateInstanceBuffer()
 {
+	instanceBuffer = std::make_shared<Buffer>(VkBuffer(), VkDeviceMemory());
+	instanceBuffer->Cleanup();
 	//Get Data as TransformData
 	std::vector<std::shared_ptr<Transform>> activeInstances = GetActiveInstances();
 	std::vector<TransformData> bufferData(activeInstanceCount);
@@ -116,7 +118,7 @@ void Mesh::UpdateInstanceBuffer()
 	}
 
 	VkDeviceSize bufferSize = sizeof(TransformData) * bufferData.size();
-
+	Buffer::CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, *instanceBuffer);
 	//Copy Data
 	void* data;
 	vkMapMemory(logicalDevice, instanceBuffer->GetBufferMemory(), 0, bufferSize, 0, &data);
