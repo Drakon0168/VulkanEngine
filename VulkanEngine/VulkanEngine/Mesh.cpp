@@ -107,8 +107,13 @@ void Mesh::Cleanup()
 
 void Mesh::UpdateInstanceBuffer()
 {
-	instanceBuffer = std::make_shared<Buffer>(VkBuffer(), VkDeviceMemory());
-	instanceBuffer->Cleanup();
+	//If a new object has been spawned or deleted the instance buffer must be re-created to the correct size
+	if (instanceBufferDirty) {
+		vkQueueWaitIdle(VulkanManager::GetInstance()->GetGraphicsQueue());
+		instanceBuffer->Cleanup();
+		instanceBuffer = std::make_shared<Buffer>(VkBuffer(), VkDeviceMemory());
+	}
+
 	//Get Data as TransformData
 	std::vector<std::shared_ptr<Transform>> activeInstances = GetActiveInstances();
 	std::vector<TransformData> bufferData(activeInstanceCount);
@@ -117,8 +122,20 @@ void Mesh::UpdateInstanceBuffer()
 		bufferData[i] = TransformData::LoadMat4(activeInstances[i]->GetModelMatrix());
 	}
 
-	VkDeviceSize bufferSize = sizeof(TransformData) * bufferData.size();
-	Buffer::CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, *instanceBuffer);
+	//Ensure that buffer size is not 0
+	VkDeviceSize bufferSize;
+	if (bufferData.size() > 0) {
+		bufferSize = sizeof(TransformData) * bufferData.size();
+	}
+	else {
+		bufferSize = sizeof(TransformData);
+	}
+
+	//Create the buffer if necessary
+	if (instanceBufferDirty) {
+		Buffer::CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, *instanceBuffer);
+	}
+
 	//Copy Data
 	void* data;
 	vkMapMemory(logicalDevice, instanceBuffer->GetBufferMemory(), 0, bufferSize, 0, &data);
@@ -166,6 +183,7 @@ void Mesh::UpdateIndexBuffer()
 
 	//Cleanup staging buffer
 	stagingBuffer.Cleanup();
+	instanceBufferDirty = false;
 }
 
 #pragma endregion
@@ -286,6 +304,7 @@ int Mesh::AddInstance(std::shared_ptr<Transform> value)
 	}
 
 	instances[freeIndex] = value;
+	instanceBufferDirty = true;
 	return freeIndex;
 }
 
@@ -301,6 +320,7 @@ void Mesh::RemoveInstance(int instanceId)
 
 	activeInstanceCount--;
 	instances[instanceId] = nullptr;
+	instanceBufferDirty = true;
 }
 
 #pragma endregion

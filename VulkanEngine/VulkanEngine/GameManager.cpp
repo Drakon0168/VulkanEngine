@@ -108,7 +108,15 @@ void GameManager::Update()
     }
 
     if (InputManager::GetInstance()->GetKeyPressed(Controls::Jump)) {
-        gameObjects[2]->GetPhysicsObject()->ApplyForce(glm::vec3(0.0f, 10000.0f, 0.0f));
+        //gameObjects[2]->GetPhysicsObject()->ApplyForce(glm::vec3(0.0f, 10000.0f, 0.0f));
+
+        std::shared_ptr<GameObject> newObject = std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Sphere]);
+        gameObjects.push_back(newObject);
+
+        newObject->SetTransform(std::make_shared<Transform>(glm::vec3(0.0f, 2.5f, 0.0f)));
+        newObject->SetPhysicsObject(std::make_shared<PhysicsObject>(newObject->GetTransform(), PhysicsLayers::Dynamic, 1.0f, true, true));
+
+        newObject->Spawn();
     }
 }
 
