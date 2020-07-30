@@ -1,0 +1,63 @@
+{
+    "Name": "VulkanManager",
+    "Description": "Manager class that handles the Vulkan instance and interfaces with the physical device.",
+    "Variables": [
+        {
+            "Name": "instance",
+            "Type": "VulkanManager*",
+            "Description": "Static instance of the Vulkan Manager for the singleton design pattern."
+        },
+        {
+            "Name": "vulkanInstance",
+            "Type": "VkInstance",
+            "Description": "The Vulkan instance, this is what Vulkan uses to refrence the application itself. It stores information about the application such as the name, version, engine, etc."
+        },
+        {
+            "Name": "physicalDevice",
+            "Type": "VkPhysicalDevice",
+            "Description": "The physical device is what Vulkan calls the hardware that the application is running on this is the CPU or Graphics card that is used by the application."
+        },
+        {
+            "Name": "logicalDevice",
+            "Type": "VkDevice",
+            "Description": "The logical device is what Vulkan uses to allow us to interface with the physical device."
+        },
+        {
+            "Name": "surface",
+            "Type": "VkSurfaceKHR",
+            "Description": "The surface is what Vulkan calls the monitor that the application is displayed on."
+        },
+        {
+            "Name": "graphicsQueue",
+            "Type": "VkQueue",
+            "Description": "The graphics queue is where we send draw commands to tell the graphics card what to display to the window."
+        },
+        {
+            "Name": "presentQueue",
+            "Type": "VkQueue",
+            "Description": "The present queue is where we send the finished render in order to actually display it on the screen."
+        },
+        {
+            "Name": "deviceExtensions",
+            "Type": "std::vector<const char*>",
+            "Description": "This is the list of device extensions that we want to use in our application. This is used to make sure that the computer the application runs on is capable of all of the various device features we might want to use."
+        }
+    ],
+    "Methods": [
+        {
+            "Name": "Method Name",
+            "Description": "Description of the purpose and usage of the method",
+            "Parameters": [
+                {
+                    "Name": "Parameter Name",
+                    "Type": "Parameter Type (int, string, char, etc.)",
+                    "Description": "Description of the use of the parameter"
+                }
+            ],
+            "Returns": {
+                "Type": "Return Type (int, string, char, etc.)",
+                "Description": "Description of the return variable"
+            }
+        }
+    ]
+}
