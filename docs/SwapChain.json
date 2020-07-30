@@ -12,21 +12,473 @@
             "Type": "const int",
             "Description": "Keeps track of the maximum number of frames that can be rendered to at once. This number is one less than the total number of frames to ensure that the frame that is being displayed is not being rendered to."
         },
+        {
+            "Name": "imageAvailableSemaphores",
+            "Type": "std::vector<VkSemaphore>",
+            "Description": "List of semaphores that are used to keep track of which images are available for rendering."
+        },
+        {
+            "Name": "renderFinishedSemaphores",
+            "Type": "std::vector<VkSemaphore>",
+            "Description": "List of semaphores that are used to keep track of which images are finished rendering."
+        },
+        {
+            "Name": "inFlightFences",
+            "Type": "std::vector<VkFence>",
+            "Description": "List of fences used to keep track of which frames are currently 'in flight' or being rendered to. This is sized to the max number of frames in flight and may refer to different images based on which ones are being used."
+        },
+        {
+            "Name": "imagesInFlight",
+            "Type": "std::vector<VkFence>",
+            "Description": "List of fences used to keep track of which frames are currently 'in flight' or being rendered to. This is sized to the number of swap chain images and will always refer to the same image so that we can check if a specific image is being used."
+        },
+        {
+            "Name": "currentFrame",
+            "Type": "size_t",
+            "Description": "The index of the image that is being rendered to."
+        },
+        {
+            "Name": "frameBufferResized",
+            "Type": "bool",
+            "Description": "Set to true if the window has been resized and the swap chain needs to be re-created."
+        },
+        {
+            "Name": "swapChain",
+            "Type": "VkSwapChainKHR",
+            "Description": "The swap chain used by the application."
+        },
+        {
+            "Name": "images",
+            "Type": "std::vector<VKImage>",
+            "Description": "List of VkImages that are rendered to by the application and swapped in and out by the swap chain."
+        },
+        {
+            "Name": "imageViews",
+            "Type": "std::vector<VkImageView>",
+            "Description": "List of the image views used to display the swap chain images."
+        },
+        {
+            "Name": "frameBuffers",
+            "Type": "std::vector<VkFrameBuffer>",
+            "Description": "List of the frame buffers used by the swap chain."
+        },
+        {
+            "Name": "imageFormat",
+            "Type": "VkFormat",
+            "Description": "The image format used by the swap chain images. The format refers to the number of color channels used and the size of those channels."
+        },
+        {
+            "Name": "extent",
+            "Type": "VkExtent2D",
+            "Description": "The extent of the window that it being drawn to."
+        },
+        {
+            "Name": "renderPass",
+            "Type": "VkRenderPass",
+            "Description": "Used by the command buffers to render to an image."
+        },
+        {
+            "Name": "commandPool",
+            "Type": "VkCommandPool",
+            "Description": "The command pool allocates the data for all of the command buffers."
+        },
+        {
+            "Name": "commandBuffers",
+            "Type": "std::vector<VkCommandBuffer>",
+            "Description": "The command buffers are used to submit draw commands to the graphics card."
+        },
+        {
+            "Name": "uniformBuffers",
+            "Type": "std::vector<Buffer>",
+            "Description": "The uniform buffers are used to store the view and projection matrices that get passed into the shaders in order to convert from world space to screen space."
+        },
+        {
+            "Name": "depthImage",
+            "Type": "Image",
+            "Description": "The depth image stores depth data on everything that is drawn in a frame (position between the camera's near and far clipping planes). This data is used to decide whether or not an object gets drawn based on whether it is in front of all other objects that use the same fragment."
+        }
     ],
     "Methods": [
         {
-            "Name": "Method Name",
-            "Description": "Description of the purpose and usage of the method",
+            "Name": "GetInstance",
+            "Description": "Returns the singleton instance of the swap chain.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "SwapChain*",
+                "Description": "The static instance of the swap chain for the singleton design pattern."
+            }
+        },
+        {
+            "Name": "GetExtents",
+            "Description": "Returns the extents of the application's window. This is used to set the image size of the swap chain images, and frame buffers, as well as to set the camera's aspect ratio.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "VkExtent2D",
+                "Description": "The extents of the application's window."
+            }
+        },
+        {
+            "Name": "GetRenderPass",
+            "Description": "Returns the render pass used by the swaap chain. The render pass is used by the command buffers in order to render a frame.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "VkRenderPass",
+                "Description": "The render pass that is used by the swap chain."
+            }
+        },
+        {
+            "Name": "GetUniformBuffers",
+            "Description": "Returns the uniform buffers that are used by the application. The uniform buffers are passed into the shaders in order to convert from world space to screen space.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "std::vector<Buffer>",
+                "Description": "A list of the buffers used by the application."
+            }
+        },
+        {
+            "Name": "GetDepthImage",
+            "Description": "Returns the depth image used by the application. The depth image is drawn to in order to store the depth of each object. THe depth values are stored as values from 0 to 1 where 0 refers to objects on the near clipping plane, and 1 refers to objects on the far clipping plane. These values are used to decide which objects get drawn in a given fragment by comparing the current object to the one that is stored in the depth image and will only draw the closer object.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "Image",
+                "Description": "The depth image that is used by the application."
+            }
+        },
+        {
+            "Name": "GetImages",
+            "Description": "Returns the list of images used by the swap chain. These images get drawn to each frame and are swapped out with each other once they are finished being rendered to.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "std::vector<VkImage>",
+                "Description": "The list images used by the swap chain."
+            }
+        },
+        {
+            "Name": "GetImageViews",
+            "Description": "Returns the image views that are used by the swap chain to display the swap chain images.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "std::vector<VkImageView>",
+                "Description": "The list of image views used by the swap chain."
+            }
+        },
+        {
+            "Name": "GetFrameBuffers",
+            "Description": "Returns the list of frame buffers used by the swap chain.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "std::vector<VkFrameBuffer>",
+                "Description": "The list of frame buffers used by the swap chain."
+            }
+        },
+        {
+            "Name": "GetFormat",
+            "Description": "Returns the image format used by the swap chain. THe image format refers to the number and size of the color channels used to store pixel data. For instance a format of R32G32B32A32 stores four 32 bit values.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "VkFormat",
+                "Description": "Returns the image format used by the swap chain images."
+            }
+        },
+        {
+            "Name": "GetFrameBufferResized",
+            "Description": "Returns the frameBufferResized variable which should be true when the frame buffer has been resized and the swap chain needs to be re-created.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "Bool",
+                "Description": "True if the frame buffer has been resized since the last draw."
+            }
+        },
+        {
+            "Name": "SetFrameBufferResized",
+            "Description": "Sets the frameBufferResized variable to the specified value.",
             "Parameters": [
                 {
-                    "Name": "Parameter Name",
-                    "Type": "Parameter Type (int, string, char, etc.)",
-                    "Description": "Description of the use of the parameter"
+                    "Name": "value",
+                    "Type": "Bool",
+                    "Description": "The value to set the frameBufferResized variable to."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "GetCommandPool",
+            "Description": "Returns the command pool used by the application. The command pool handles memory allocation for all of the command buffers.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "VkCommandPool",
+                "Description": "The command pool used by the application"
+            }
+        },
+        {
+            "Name": "GetCommandBuffers",
+            "Description": "Returns the list of command buffers used by the swap chain. The command buffers are used to submit draw commands to the graphics card in order to tell it to draw objects.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "std::vector<VkCommandBuffer>",
+                "Description": "The list of command buffers used by the swap chain"
+            }
+        },
+        {
+            "Name": "GetCommandBuffer",
+            "Description": "Returns the command buffer at the specified index.",
+            "Parameters": [
+                {
+                    "Name": "index",
+                    "Type": "uint32_t",
+                    "Description": "The index of the command buffer to retrieve."
                 }
             ],
             "Returns": {
-                "Type": "Return Type (int, string, char, etc.)",
-                "Description": "Description of the return variable"
+                "Type": "VkCommandBuffer*",
+                "Description": "The command buffer at the specified index."
+            }
+        },
+        {
+            "Name": "CreateSwapChainResources",
+            "Description": "Creates and allocates the swap chain and all associated resources. Associated resources include any resource that the swap chain relies on to function. This includes the EntityManager's Materials and Meshes which the SwapChain's command buffers rely on.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "CreateSwapChain",
+            "Description": "Creates and allocates the VkSwapChain",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "RecreateSwapChain",
+            "Description": "Modified version of CreateSwapChainResources, this version is used when the swap chain needs to be re-created while the application is running due to a window resize.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "Cleanup",
+            "Description": "Cleans up certain swap chain resources that must be cleaned up in order to re-create the swap chain for a window resize. This does not clean up all swap chain resources, to clean up all resources call FullCleanup.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "FullCleanup",
+            "Description": "Cleans up all swap chain resources. This should be used when the application is closing, not when the swap chain needs to be recreated. If the swap chain is going to be recreated afterwards use Cleanup.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "CreateImageViews",
+            "Description": "Creates and allocates the VkImageViews used by the swap chain.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "CreateFrameBuffers",
+            "Description": "Creates and allocates the frame buffers used by the swap chain.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "CreateDepthResources",
+            "Description": "Creates and allocates the resources used for the depth buffer. This includes a VkFormat for the depth image, the depth image itself and the image view associated with it.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "CreateSyncObjects",
+            "Description": "Creates and allocates the fences and semaphores used to manage swap chain synchronization. These keep track of which images are available to render to, which are currently being presented, and which are finished rendering.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "CreateRenderPass",
+            "Description": "Creates and allocates the render pass used by the swap chain.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "CreateUniformBuffers",
+            "Description": "Creates and allocates the uniform buffers used by the application.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "CreateCommandPool",
+            "Description": "Creates and allocates the command pool used by the application.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "CreateCommandBuffers",
+            "Description": "Creates and allocates the command buffers used by the swap chain.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "UpdateUniformBuffers",
+            "Description": "Called once per draw, this method updates the uniform buffer of the current frame before it is submitted to the graphics queue for rendering.",
+            "Parameters": [
+                {
+                    "Name": "index",
+                    "Type": "uint32_t",
+                    "Description": "The index of the current frame."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "BeginDraw",
+            "Description": "Begins the draw loop. This method finds the next available frame to render to and begins the render process.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "uint32_t",
+                "Description": "The index of the frame being rendered to."
+            }
+        },
+        {
+            "Name": "EndDraw",
+            "Description": "Submits the current frame to the graphics queue for rendering and then to the present queue to display it.",
+            "Parameters": [
+                {
+                    "Name": "imageIndex",
+                    "Type": "uint32_t",
+                    "Description": "The index of the current frame."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "FindSupportedFormat",
+            "Description": "Finds an image format suitable for the depth image that is supported by the user's computer.",
+            "Parameters": [
+                {
+                    "Name": "candidates",
+                    "Type": "const std::vector<VkFormat>",
+                    "Description": "List of possible depth image formats."
+                },
+                {
+                    "Name": "tiling",
+                    "Type": "VkImageTiling",
+                    "Description": "The tiling type to use for the depth image."
+                },
+                {
+                    "Name": "features",
+                    "Type": "VkFormatFeatureFlags",
+                    "Description": "The format features needed for the depth image."
+                }
+            ],
+            "Returns": {
+                "Type": "VkFormat",
+                "Description": "A suitable image format to use for the depth image."
+            }
+        },
+        {
+            "Name": "FindDepthFormat",
+            "Description": "Returns the image format to use for the depth image.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "VkFormat",
+                "Description": "The image format to use for the depth image."
+            }
+        },
+        {
+            "Name": "HasDepthStencil",
+            "Description": "Checks if the specified image format supports a depth stencil.",
+            "Parameters": [
+                {
+                    "Name": "format",
+                    "Type": "VkFormat",
+                    "Description": "The format to check."
+                }
+            ],
+            "Returns": {
+                "Type": "Bool",
+                "Description": "True if the specified format supports a depth stencil."
+            }
+        },
+        {
+            "Name": "QuerySwapChainSupport",
+            "Description": "Populates a SwapChainSupportDetails struct from the specified physical device.",
+            "Parameters": [
+                {
+                    "Name": "physicalDevice",
+                    "Type": "VkPhysicalDevice",
+                    "Description": "The physical device to check."
+                }
+            ],
+            "Returns": {
+                "Type": "SwapChainSupportDetails",
+                "Description": "The struct that was populated by this method."
+            }
+        },
+        {
+            "Name": "ChooseSwapSurfaceFormat",
+            "Description": "Chooses a surface format to use for the swap chain.",
+            "Parameters": [
+                {
+                    "Name": "availableFormats",
+                    "Type": "const std::vector<VkSurfaceFormatKHR>",
+                    "Description": "List of possible formats to choose from."
+                }
+            ],
+            "Returns": {
+                "Type": "VkSurfaceFormatKHR",
+                "Description": "The format to use for the surface."
+            }
+        },
+        {
+            "Name": "ChooseSwapSurfacePresentMode",
+            "Description": "Chooses a suitable present mode to use for the swap chain.",
+            "Parameters": [
+                {
+                    "Name": "availablePresentModes",
+                    "Type": "const std::vector<VkPresentModeKHR>",
+                    "Description": "List of possible present modes to choose from."
+                }
+            ],
+            "Returns": {
+                "Type": "VkPresentModeKHR",
+                "Description": "The present mode to use for the swap chain."
+            }
+        },
+        {
+            "Name": "ChooseSwapExtent",
+            "Description": "Sets the extents of the swap chain, matching the window resolution if possible.",
+            "Parameters": [
+                {
+                    "Name": "surfaceCapabilities",
+                    "Type": "const VkSurfaceCapabilitiesKHR",
+                    "Description": "The capabilities of the surface, used to set a min and max size for the extent."
+                }
+            ],
+            "Returns": {
+                "Type": "VkExtent2D",
+                "Description": "The extents to use for the swap chain."
             }
         }
     ]
