@@ -26,6 +26,7 @@ export const app = new Vue({
                 if(file.readyState == 4){
                     if(file.status == 200 || file.status == 0){
                         let text = file.responseText;
+                        console.log(text.substr(8977));
                         this.currentClass = JSON.parse(text);
                     }
                 }
