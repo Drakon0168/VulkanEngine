@@ -10,6 +10,8 @@ class VulkanManager
 private:
 	static VulkanManager* instance;
 
+
+
 	VkInstance vulkanInstance = VK_NULL_HANDLE;
 	VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
 	VkDevice logicalDevice = VK_NULL_HANDLE;

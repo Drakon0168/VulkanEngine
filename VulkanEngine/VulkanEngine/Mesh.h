@@ -28,7 +28,6 @@ private:
 	//Material
 	std::shared_ptr<Material> material;
 
-	const std::string TEXTURE_PATH = "textures/room.jpg";
 
 	bool instanceBufferDirty = true;
 public:

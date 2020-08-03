@@ -8,6 +8,11 @@ private:
 	VkImage image;
 	VkImageView view;
 	VkDeviceMemory memory;
+
+	static VkImage textureImage;
+	VkDeviceMemory textureImageMemory;
+
+	const std::string TEXTURE_PATH = "textures/room.jpg";
 public:
 
 #pragma region Memory Management
@@ -104,5 +109,9 @@ public:
 	/// <returns>A format that has the required features and is supported by the physical device</returns>
 	static  VkFormat FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
 
+
+	static void LoadTexture(const std::string texturePath);
+
+	static void LoadAll();
 #pragma endregion
 };

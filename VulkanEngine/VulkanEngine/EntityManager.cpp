@@ -3,7 +3,7 @@
 
 #include "VulkanManager.h"
 #include "SwapChain.h"
-
+#include "Image.h"
 #pragma region Singleton
 
 EntityManager* EntityManager::instance = nullptr;

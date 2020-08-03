@@ -130,6 +130,8 @@ void SwapChain::CreateSwapChainResources()
 	//Create the Command Buffers
 	CreateCommandBuffers();
 
+	//textures?
+
 	//Create the Semaphores and Fences
 	CreateSyncObjects();
 }
