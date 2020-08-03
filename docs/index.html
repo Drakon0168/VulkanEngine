@@ -120,7 +120,22 @@
                 <li>Fork or Download the Git Repository</li>
                 <li>Make sure you have Vulkan installed and that it can run on your computer</li>
                 <li>Make sure that the path to the Vulkan SDK is correct in project settings</li>
+                <li>Download the models folder</li>
             </ol>
+            <h2>Git Repository</h2>
+            <p>If you haven't already, Fork or download the github repository <a href="https://github.com/Drakon0168/VulkanEngine">here</a></p>
+            <h2>Install Vulkan</h2>
+            <p>Make sure you have the Vulkan SDK installed, it can be found at Khronos' website <a href="https://www.khronos.org/vulkan/">here</a> the engine was written with VulkanSDK version 1.2.135.0, if you are using a different version and run into issues try using that version of Vulkan instead. Once the Vulkan SDK is installed try running the vkcube.exe found in the VulkanSDK/1.2.135.0/Bin folder to ensure that vulkan is compatible with your computer.</p>
+            <h2>Project Settings</h2>
+            <p>Once you have vulkan installed and have verified that it runs on your computer you may need to change the path to the VulkanSDK in the project settings of the Visual Studio project. In Visual Studio go to Project>VulkanEngineProperties, to open project properties or right click VulkanEngine in the solution explorer window and click properties. Make sure that the configuration is set to All Configurations and the platform is x64. Go to ConfigurationProperties>C/C++>General and edit Additional Include Directories, check that the path to the VUlkanSDK Include folder set in Additional Include Directories matches the path on your computer. Go to ConfigurationProperties>Linker>General and edit Additional Library Directories, check that the path to the VUlkanSDK Lib folder set in Additional Library Directories matches the path on your computer.</p>
+            <h2>Download the Test Models</h2>
+            <p>Due to file size the folder with the test models for the engine was unable to be uploaded to github, this folder should be given seperately if you do not have access to this folder there will be separate instructions belot.</p>
+            <h3>With the models folder</h3>
+            <p>Paste the models folder into the project directory the project directory is the folder with all of the .ccp and .h files (VulkanEngine\VulkanEngine\VulkanEngine).</p>
+            <h3>Without the models folder</h3>
+            <p>If you do not have access to the models folder, you must make your own. Go to the project directory and create a folder named "models", the project directory is the folder with the .cpp and .h files (VulkanEngine\VulkanEngine\VulkanEngine). Add a model to test to the folder you just created. The model must be a .obj file as other model types are not currently supported. Now that the model has been added we have to change the EntityManager class to use the new model, open EntityManager.cpp in VisualStudio. Go to the LoadMeshes method and change the path to the last model to the path to the model you just added ("models/testmodel.obj").</p>
+            <h2>Run the Engine</h2>
+            <p>Make sure you are set to build in x64 and run the project you should be able to run without errors.</p>
         </div>
         <div v-if="page == 2" id="Systems" class="container-fluid">
         </div>
