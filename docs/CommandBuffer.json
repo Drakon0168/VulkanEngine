@@ -1,0 +1,30 @@
+{
+    "Name": "Command Buffer",
+    "Description": "Helper class with methods used for command buffer management.",
+    "Variables": [
+    ],
+    "Methods": [
+        {
+            "Name": "BeginSingleTimeCommand",
+            "Description": "Starts a command buffer that will only be used once.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "VkCommandBuffer",
+                "Description": "The single time command buffer that was created."
+            }
+        },
+        {
+            "Name": "EndSingleTimeCommand",
+            "Description": "Ends and submits a command buffer that will only be used once.",
+            "Parameters": [
+                {
+                    "Name": "commandBuffer",
+                    "Type": "VkCommandBuffer",
+                    "Description": "The command buffer to end."
+                }
+            ],
+            "Returns": {}
+        }
+    ]
+}

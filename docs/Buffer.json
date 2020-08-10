@@ -1,0 +1,111 @@
+{
+    "Name": "Buffer",
+    "Description": "This class is used to store the Vulkan resources associated with a buffer, this should be used for any type of buffer aside from Command Buffers and Frame Buffers as those are totally different resources. Buffers are used to pass data to the graphics card, for instance we use a vertex buffer to pass information on the vertices of our meshes into the shaders so that they can use them to render.",
+    "Variables": [
+        {
+            "Name": "buffer",
+            "Type": "VkBuffer",
+            "Description": "The buffer used by vulkan to pass data to the graphics card."
+        },
+        {
+            "Name": "bufferMemory",
+            "Type": "VkDeviceMemory",
+            "Description": "The device memory that stores the actual data used by the buffer."
+        }
+    ],
+    "Methods": [
+        {
+            "Name": "GetBuffer",
+            "Description": "Returns the VkBuffer used by this buffer.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "VkBuffer",
+                "Description": "The VkBuffer used by this buffer."
+            }
+        },
+        {
+            "Name": "SetBuffer",
+            "Description": "Sets the VkBuffer used by this buffer.",
+            "Parameters": [
+                {
+                    "Name": "value",
+                    "Type": "VkBuffer",
+                    "Description": "Sets the VkBuffer to use."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "GetBufferMemory",
+            "Description": "Returns the VkDeviceMemory used by this buffer.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "VkDeviceMemory",
+                "Description": "The VkDeviceMemory used by this buffer."
+            }
+        },
+        {
+            "Name": "SetBufferMemory",
+            "Description": "Sets the VkDeviceMemory used by this buffer.",
+            "Parameters": [
+                {
+                    "Name": "value",
+                    "Type": "VkDeviceMemory",
+                    "Description": "Sets the VkDeviceMemory to use."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "CreateBuffer",
+            "Description": "Static method that creates and allocates the resources used by this buffer.",
+            "Parameters": [
+                {
+                    "Name": "size",
+                    "Type": "VkDeviceSize",
+                    "Description": "The amount of memory required by the buffer."
+                },
+                {
+                    "Name": "usage",
+                    "Type": "VkBufferUsageFlags",
+                    "Description": "The usage of the buffer, this is where you specify the type of buffer that is being created, vertex, index, uniform, etc."
+                },
+                {
+                    "Name": "properties",
+                    "Type": "VkMemoryPropertyFlags",
+                    "Description": "The memory properties required by the buffer this specifies how we are going to interact with the data stored by the buffer"
+                },
+                {
+                    "Name": "buffer",
+                    "Type": "Buffer",
+                    "Description": "A reference to the Buffer class that is being created. After creating and allocating the buffer resources we pass handles for them to the buffer that is created."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "CopyBuffer",
+            "Description": "Copies data from a source buffer to a destination buffer. We use this method when allocating buffer memory with a staging buffer.",
+            "Parameters": [
+                {
+                    "Name": "srcBuffer",
+                    "Type": "VkBuffer",
+                    "Description": "The source buffer with the memory we want to copy."
+                },
+                {
+                    "Name": "dstBuffer",
+                    "Type": "VkBuffer",
+                    "Description": "The destination buffer that we want to copy data to."
+                },
+                {
+                    "Name": "size",
+                    "Type": "VkDeviceSize",
+                    "Description": "The amount of space required for the data."
+                }
+            ],
+            "Returns": {}
+        }
+    ]
+}

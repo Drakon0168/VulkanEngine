@@ -1,0 +1,22 @@
+{
+    "Name": "Physics Layers",
+    "Description": "The physics layers enum is used by the physics manager to keep track of the different physics layers used by the application. Different physics layers can be indexed through the PhysicsLayers enum (ex. PhysicsManager::physicsObjects[PhysicsLayers::Dynamic]). New Layers should be added to this enum as needed by the application, new layers should be added before the PhysicsLayerCount placeholder mesh type which is used by the physics manager to keep track of the total number of layers.",
+    "EnumStates": [
+        {
+            "Name": "Static",
+            "Description": "The static layer is used for objects that can collide with other objects but cannot be moved by physics, this would be objects such as terrain, platforms, elevators etc, that may be moved explicitly through code and can interact with other objects but are not affected by physics themselves."
+        },
+        {
+            "Name": "Dynamic",
+            "Description": "The dynamic layer is for objects that can move and collide with other objects as well as be moved by the physics system."
+        },
+        {
+            "Name": "Trigger",
+            "Description": "The trigger layer is for objects that need to detect collisions but are not affected by the physics system. For example a pressure plate that needs to detect when another object is on top of it but does not need to move or be moved by that object."
+        },
+        {
+            "Name": "PhysicsLayerCount",
+            "Description": "PhysicsLayerCount should be the last value in the PhysicsLayers enum as it is used by the Physics Manager to keep track of the total number of layers."
+        }
+    ]
+}

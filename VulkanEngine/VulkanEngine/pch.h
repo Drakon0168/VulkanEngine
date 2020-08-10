@@ -32,6 +32,7 @@
 #include "Time.h"
 
 //Structs
+#include "Light.h"
 #include "QueueFamilyIndices.h"
 #include "SwapChainSupportDetails.h"
 #include "UniformBufferObject.h"

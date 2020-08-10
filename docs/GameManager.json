@@ -16,6 +16,11 @@
             "Name": "cameraSpeed",
             "Type": "float",
             "Description": "Float controlling the move speed of the camera in units per second."
+        },
+        {
+            "Name": "lockCamera",
+            "Type": "bool",
+            "Description": "Keeps track of whether or not to rotate the camera based on mouse movement. Right click to toggle by default."
         }
     ],
     "Methods": [

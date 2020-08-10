@@ -1,0 +1,10 @@
+{
+    "Name": "Input Axes",
+    "Description": "The input axes enum is used by the input manager to index the list of input axes. The input manager stores input axes in a list that can be indexed through the InputAxes enum (ex. InputManager::GetAxes()[InputAxes::Horizontal]) ensure that you are using the Controls namespace in order to access the InputAxes enum. Axes should be added to this enum as needed by the application, any axes should be added before the AxisCount placeholder axis which is used by the Input Manager to keep track of the total number of axes.",
+    "EnumStates": [
+        {
+            "Name": "AxisCount",
+            "Description": "This should always be left as the last element in the InputAxes enum this way we can get the number of axes in the enum by reading the value of InputAxes::AxisCOunt."
+        }
+    ]
+}

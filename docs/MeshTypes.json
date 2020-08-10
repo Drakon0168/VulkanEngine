@@ -1,0 +1,22 @@
+{
+    "Name": "Mesh Types",
+    "Description": "The mesh types enum is used by the entity manager to keep track of the different types of meshes used by the application. Different types of meshes can be indexed through the Mesh Types enum (ex. EntityManager::GetMeshes()[MeshTypes::Sphere]). Meshes should be added to this enum as needed by the application and then loaded in the EntityManager's LoadMeshes method, meshes should be added before the MeshTypeCount placeholder mesh type which is used by the entity manager to keep track of the total number of meshes.",
+    "EnumStates": [
+        {
+            "Name": "Plane",
+            "Description": "The Plane value refers to the Mesh that was used to generate a plane."
+        },
+        {
+            "Name": "Cube",
+            "Description": "The Cube value refers to the Mesh that was used to generate a cube."
+        },
+        {
+            "Name": "Sphere",
+            "Description": "The Sphere value refers to the Mesh that was used to generate a sphere."
+        },
+        {
+            "Name": "MeshTypeCount",
+            "Description": "MeshTypeCount should be the last value in the MeshTypes enum as it is used by the Entity Manager to keep track of the total number of meshes."
+        }
+    ]
+}

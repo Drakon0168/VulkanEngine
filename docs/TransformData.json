@@ -1,0 +1,73 @@
+{
+    "Name": "Transform Data",
+    "Description": "Struct that stores a transform's model matrix as 4 glm::vec4's in order to transfer the data to the shader. The transform data struct also creates binding and attribute descriptions for the transform.",
+    "Variables": [
+        {
+            "Name": "row1",
+            "Type": "glm::vec4",
+            "Description": "The first row of the transform's model matrix."
+        },
+        {
+            "Name": "row2",
+            "Type": "glm::vec4",
+            "Description": "The second row of the transform's model matrix."
+        },
+        {
+            "Name": "row3",
+            "Type": "glm::vec4",
+            "Description": "The third row of the transform's model matrix."
+        },
+        {
+            "Name": "row4",
+            "Type": "glm::vec4",
+            "Description": "The fourth row of the transform's model matrix."
+        }
+    ],
+    "Methods": [
+        {
+            "Name": "GetBindingDescription",
+            "Description": "Creates and returns a VkVertexInputBindingDescription for the TransformData.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "VkVertexInputBindingDescription",
+                "Description": "The binding description for the transform data."
+            }
+        },
+        {
+            "Name": "GetBindingDescription",
+            "Description": "Static method that creates and returns a binding description used by the descriptor sets to describe the data that is being passed into the shaders.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "VkVertexInputBindingDescription",
+                "Description": "The binding description for the transform data."
+            }
+        },
+        {
+            "Name": "GetAttributeDescriptions",
+            "Description": "Static method that creates and returns an array of attribute descriptions used by the descriptor sets to describe the type and layout of the data being passed into the shader.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "std::array<VkVertexInputAttributeDescription, 4>",
+                "Description": "The list of attribute descriptions to use for the TransformData."
+            }
+        },
+        {
+            "Name": "LoadMat4",
+            "Description": "Static mehtod that converts a glm::mat4 to a TransformData struct.",
+            "Parameters": [
+                {
+                    "Name": "value",
+                    "Type": "glm::mat4",
+                    "Description": "The matrix that will be converted to a TransformData struct."
+                }
+            ],
+            "Returns": {
+                "Type": "TransformData",
+                "Description": "The TransformData that was created from the matrix."
+            }
+        }
+    ]
+}

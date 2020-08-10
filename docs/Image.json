@@ -1,0 +1,235 @@
+{
+    "Name": "Image",
+    "Description": "The Image class stores and manages the vulkan resources required to create and use images.",
+    "Variables": [
+        {
+            "Name": "image",
+            "Type": "VkImage",
+            "Description": "The vulkan image used to represent the image data."
+        },
+        {
+            "Name": "view",
+            "Type": "VkImageView",
+            "Description": "The image view used by vulkan to figure out how the image data should be used."
+        },
+        {
+            "Name": "memory",
+            "Type": "VkDeviceMemory",
+            "Description": "The device memory used to store the image data."
+        }
+    ],
+    "Methods": [
+        {
+            "Name": "Cleanup",
+            "Description": "Cleans up the vulkan resources used by the image.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "GetImage",
+            "Description": "Returns the VkImage used by this image.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "VkImage*",
+                "Description": "The VkImage used by this image."
+            }
+        },
+        {
+            "Name": "SetImage",
+            "Description": "Sets the VkImage used by this image.",
+            "Parameters": [
+                {
+                    "Name": "value",
+                    "Type": "VkImage",
+                    "Description": "The VkImage to be used by this image."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "GetView",
+            "Description": "Returns the VkImageView used by this image.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "VkImageView*",
+                "Description": "The VkImageView used by this image."
+            }
+        },
+        {
+            "Name": "GetMemory",
+            "Description": "Returns the VkDeviceMemory used by this image.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "VkDeviceMemory*",
+                "Description": "The VkDeviceMemory used by this image."
+            }
+        },
+        {
+            "Name": "CreateImage",
+            "Description": "Creates and allocates the VkImage and VkDeviceMemory associated with the given image.",
+            "Parameters": [
+                {
+                    "Name": "width",
+                    "Type": "uint32_t",
+                    "Description": "The width in pixels of the image."
+                },
+                {
+                    "Name": "height",
+                    "Type": "uint32_t",
+                    "Description": "The height in pixels of the image."
+                },
+                {
+                    "Name": "format",
+                    "Type": "VkFormat",
+                    "Description": "The pixel format used by the image."
+                },
+                {
+                    "Name": "tiling",
+                    "Type": "VkImageTiling",
+                    "Description": "The tiling format to use for the image."
+                },
+                {
+                    "Name": "usage",
+                    "Type": "VkImageUsageFlags",
+                    "Description": "The usage type of the image, this describes the purpose that this image is being used for in the application."
+                },
+                {
+                    "Name": "properties",
+                    "Type": "VkMemoryPropertyFlags",
+                    "Description": "The memory properties of the VkDeviceMemory used by the image."
+                },
+                {
+                    "Name": "image",
+                    "Type": "Image",
+                    "Description": "A reference to the image that will be created."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "CreateImageView",
+            "Description": "Creates and allocates the image view associated with the given image.",
+            "Parameters": [
+                {
+                    "Name": "image",
+                    "Type": "Image*",
+                    "Description": "The image that we will attach the image view to."
+                },
+                {
+                    "Name": "format",
+                    "Type": "VkFormat",
+                    "Description": "The pixel format to use for the image view."
+                },
+                {
+                    "Name": "aspectFlags",
+                    "Type": "VkImageAspectFlags",
+                    "Description": "The aspect flag that defines the usage of the image."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "CreateImageView",
+            "Description": "Creates and allocates an image view for the given image.",
+            "Parameters": [
+                {
+                    "Name": "image",
+                    "Type": "VkImage",
+                    "Description": "The image that we will make the image view for."
+                },
+                {
+                    "Name": "format",
+                    "Type": "VkFormat",
+                    "Description": "The pixel format to use for the image view."
+                },
+                {
+                    "Name": "aspectFlags",
+                    "Type": "VkImageAspectFlags",
+                    "Description": "The aspect flag that defines the usage of the image."
+                }
+            ],
+            "Returns": {
+                "Type": "VkImageView*",
+                "Description": "The VkImage view that was created."
+            }
+        },
+        {
+            "Name": "TransitionImageLayout",
+            "Description": "Creates and allocates the image view associated with the given image.",
+            "Parameters": [
+                {
+                    "Name": "image",
+                    "Type": "Image",
+                    "Description": "The image to change the layout of."
+                },
+                {
+                    "Name": "oldLayout",
+                    "Type": "VkImageLayout",
+                    "Description": "The image layout to transfer from."
+                },
+                {
+                    "Name": "newLayout",
+                    "Type": "VkImageLayout",
+                    "Description": "The image layout to transfer to."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "CopyBufferToImage",
+            "Description": "Copies data stored in a buffer to an image.",
+            "Parameters": [
+                {
+                    "Name": "buffer",
+                    "Type": "VkBuffer",
+                    "Description": "The buffer that stores the data to transfer."
+                },
+                {
+                    "Name": "image",
+                    "Type": "Image",
+                    "Description": "The image to transfer the data to."
+                },
+                {
+                    "Name": "imageWidth",
+                    "Type": "uint32_t",
+                    "Description": "The width of the image."
+                },
+                {
+                    "Name": "imageHeight",
+                    "Type": "uint32_t",
+                    "Description": "The height of the image."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "FindSupportedFormat",
+            "Description": "Checks the physical device for supported image formats.",
+            "Parameters": [
+                {
+                    "Name": "candidates",
+                    "Type": "const std::vector<VkFormat>",
+                    "Description": "The VkFormats to check for hardware support."
+                },
+                {
+                    "Name": "tiling",
+                    "Type": "VkImageTiling",
+                    "Description": "Image tiling formats to check for support."
+                },
+                {
+                    "Name": "features",
+                    "Type": "VkFormatFeatureFlags",
+                    "Description": "The image features to check for support."
+                }
+            ],
+            "Returns": {
+                "Type": "VkFormat",
+                "Description": "A format from the candidates list that is supported by the physical device."
+            }
+        }
+    ]
+}

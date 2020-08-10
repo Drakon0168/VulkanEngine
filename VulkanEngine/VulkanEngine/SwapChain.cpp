@@ -3,6 +3,7 @@
 
 #include "VulkanManager.h"
 #include "EntityManager.h"
+#include "GameManager.h"
 #include "WindowManager.h"
 #include "Camera.h"
 
@@ -477,7 +478,16 @@ void SwapChain::UpdateUniformBuffer(uint32_t imageIndex)
 	ubo.view = Camera::GetMainCamera()->GetView();
 	ubo.projection = Camera::GetMainCamera()->GetProjection();
 	ubo.cameraPosition = Camera::GetMainCamera()->GetTransform()->GetPosition();
-	ubo.totalTime = Time::GetTotalTime();
+
+	std::vector<std::shared_ptr<Light>> lights = GameManager::GetInstance()->GetLights();
+	for (int i = 0; i < lights.size(); i++) {
+		if (i >= 5) {
+			break;
+		}
+
+		ubo.lights[i] = *lights[i];
+	}
+
 
 	void* data;
 	vkMapMemory(logicalDevice, uniformBuffers[imageIndex].GetBufferMemory(), 0, sizeof(ubo), 0, &data);

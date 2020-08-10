@@ -1,0 +1,271 @@
+{
+    "Name": "Camera",
+    "Description": "The camera stores information on the projection and view matrices of a camera and can be used to render to the screen.",
+    "Variables": [
+        {
+            "Name": "mainCamera",
+            "Type": "Camera*",
+            "Description": "Static reference to the main camera / the camera that is currently being used to render."
+        },
+        {
+            "Name": "projection",
+            "Type": "glm::mat4",
+            "Description": "Matrix representing the projection used by the camera. This matrix stores data on the projection type, FOV, aspect ratio, and clipping planes."
+        },
+        {
+            "Name": "view",
+            "Type": "glm::mat4",
+            "Description": "Matrix representing the view used by the camera. This matrix stores data on camera position and orientation."
+        },
+        {
+            "Name": "transform",
+            "Type": "std::shared_ptr<Transform>",
+            "Description": "The camera's transform used to store information on position and orientation, also used to apply transformations to the camera."
+        },
+        {
+            "Name": "projectionDirty",
+            "Type": "bool",
+            "Description": "Boolean used to keep track of the projection's variables in order to know when the projection matrix needs to be regenerated. The projection matrix is a combination of many variables and must be re-created if any of those variables are changed. This bool is set to true when any of the projection's variables are changed and set to false when the projection matrix is generated. This way we know we only need to generate a new projection matrix when this variable is true avoiding unnecessary generations."
+        },
+        {
+            "Name": "viewDirty",
+            "Type": "bool",
+            "Description": "Boolean used to keep track of the view's variables in order to know when the view matrix needs to be regenerated. The view matrix is a combination of many variables and must be re-created if any of those variables are changed. This bool is set to true when any of the view's variables are changed and set to false when the view matrix is generated. This way we know we only need to generate a new view matrix when this variable is true avoiding unnecessary generations."
+        },
+        {
+            "Name": "perspective",
+            "Type": "bool",
+            "Description": "Whether or not the camera should have a perspective or orthographic projection."
+        },
+        {
+            "Name": "FOV",
+            "Type": "float",
+            "Description": "The field of view of the camera. This decides how much the camera can see to either side as an angle in radians."
+        },
+        {
+            "Name": "orthographicSize",
+            "Type": "float",
+            "Description": "The orthographic size is half of the height fo the viewing area in world space units when the camera is in orthographic mmode."
+        },
+        {
+            "Name": "aspectRatio",
+            "Type": "float",
+            "Description": "The aspect ratio of the camera this number is equal to the width divided by the height."
+        },
+        {
+            "Name": "nearPlane",
+            "Type": "float",
+            "Description": "The near clipping plane of the camera, objects closer to the camera than this distance will not be drawn."
+        },
+        {
+            "Name": "farPlane",
+            "Type": "float",
+            "Description": "The far clipping plane of the camera, objects further from the camera than this distance will not be drawn."
+        }
+    ],
+    "Methods": [
+        {
+            "Name": "GetMainCamera",
+            "Description": "Static method that returns a reference to the camera that is currently being used to render.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "Camera*",
+                "Description": "Description of the return variable"
+            }
+        },
+        {
+            "Name": "SetMainCamera",
+            "Description": "Sets a camera as the main camera.",
+            "Parameters": [
+                {
+                    "Name": "value",
+                    "Type": "Camera*",
+                    "Description": "The camera to set as the main camera."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "GetProjection",
+            "Description": "Returns the projection matrix for the camera, updating it if necessary.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "glm::mat4",
+                "Description": "The updated projection matrix for the camera."
+            }
+        },
+        {
+            "Name": "GetView",
+            "Description": "Returns the view matrix for the camera, updating it if necessary.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "glm::mat4",
+                "Description": "The updated view matrix for the camera."
+            }
+        },
+        {
+            "Name": "GetTransform",
+            "Description": "Returns the transform used by the camera.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "std::shared_ptr<Transform>",
+                "Description": "The transform used by this camera."
+            }
+        },
+        {
+            "Name": "GetPerspective",
+            "Description": "Returns whether or not the camera is in perspective mode.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "bool",
+                "Description": "True if the camera is set to use a perspective projection."
+            }
+        },
+        {
+            "Name": "SetPerspective",
+            "Description": "Sets the camera to use either perspective or orthographic projection. True for perspective false for orthographic.",
+            "Parameters": [
+                {
+                    "Name": "value",
+                    "Type": "bool",
+                    "Description": "True to set the camera to use a perspective projection false for orthographic."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "GetFOV",
+            "Description": "Returns the field of view of the camera. This is an angle in radians describing the width of a perspective projection.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "float",
+                "Description": "The angle in radians of the camera's field of view."
+            }
+        },
+        {
+            "Name": "SetFOV",
+            "Description": "Sets the field of view of the cammera.",
+            "Parameters": [
+                {
+                    "Name": "value",
+                    "Type": "float",
+                    "Description": "The value to set the FOV to."
+                },
+                {
+                    "Name": "degrees",
+                    "Type": "bool",
+                    "Description": "Whether the input value was in degrees or radians, set to degrees by default. True for degrees false for radians."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "GetOrthographicSize",
+            "Description": "Returns the orthographic size of the camera in orthographic mode. The orthographic size is half of the height of the camera's orthographic projection.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "float",
+                "Description": "The orthographic size of the camera in orthographic mode."
+            }
+        },
+        {
+            "Name": "SetOrthographicSize",
+            "Description": "Sets the orthographic size of the camera. The orthographic size is half of the height of the camera in orthographic mode.",
+            "Parameters": [
+                {
+                    "Name": "value",
+                    "Type": "float",
+                    "Description": "The value to set the orthographic size to."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "GetAspectRatio",
+            "Description": "Returns the aspect ratio of the camera. The aspect ratio is equal to the camera's width divided by its height.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "float",
+                "Description": "The camera's aspect ratio."
+            }
+        },
+        {
+            "Name": "SetAspectRatio",
+            "Description": "Sets the camera's aspect ratio. The aspect ratio should be equal to the window's width divided by it's height.",
+            "Parameters": [
+                {
+                    "Name": "value",
+                    "Type": "float",
+                    "Description": "The value to set the aspect ratio to."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "GetNearPlane",
+            "Description": "Returns the camera's near clipping plane. Any objects closer to the camera than this distance will not be drawn to the screen.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "float",
+                "Description": "The camera's near clipping plane."
+            }
+        },
+        {
+            "Name": "SetNearPlane",
+            "Description": "Sets the camera's near clipping plane. Any objects closer to the camera than this distance will not be drawn to the screen.",
+            "Parameters": [
+                {
+                    "Name": "value",
+                    "Type": "float",
+                    "Description": "The value to set the near clipping plane to."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "GetFarPlane",
+            "Description": "Returns the camera's far clipping plane. Any objects further from the camera than this distance will not be drawn to the screen.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "float",
+                "Description": "The camera's far clipping plane."
+            }
+        },
+        {
+            "Name": "SetFarPlane",
+            "Description": "Sets the camera's far clipping plane. Any objects further from the camera than this distance will not be drawn to the screen.",
+            "Parameters": [
+                {
+                    "Name": "value",
+                    "Type": "float",
+                    "Description": "The value to set the far clipping plane to."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "UpdateProjection",
+            "Description": "Generates a new projection matrix based on the relevant variables.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "UpdateView",
+            "Description": "Generates a new view matrix based on the relevant variables.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        }
+    ]
+}

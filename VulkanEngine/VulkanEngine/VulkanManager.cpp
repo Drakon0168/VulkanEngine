@@ -374,6 +374,11 @@ void VulkanManager::MainLoop()
 
 		Update();
 		Draw();
+
+		//Exit the application when the exit key is pressed
+		if (InputManager::GetInstance()->GetKeyPressed(Controls::Exit)) {
+			break;
+		}
 	}
 
 	vkDeviceWaitIdle(logicalDevice);

@@ -20,12 +20,25 @@ GameManager* GameManager::GetInstance()
 
 #pragma endregion
 
+#pragma region Accessors
+
+std::vector<std::shared_ptr<Light>> GameManager::GetLights()
+{
+    return lights;
+}
+
+#pragma endregion
+
 #pragma region Game Loop
 
 void GameManager::Init()
 {
     //Reset time so that it doesn't include initialization in totalTime
     Time::Reset();
+
+    //Setup Lights
+    lights.push_back(std::make_shared<Light>(glm::vec3(1.5f, 1.1f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), 5.0f));
+    lights.push_back(std::make_shared<Light>(glm::vec3(0.0f, 2.0f, -1.5f), glm::vec3(1.0f, 0.988f, 0.769f), 3.0f));
 
     //gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Model]));
     gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Plane]));
@@ -64,15 +77,23 @@ void GameManager::Init()
 void GameManager::Update()
 {
     //Rotate Camera
-    glm::vec2 deltaMouse = InputManager::GetInstance()->GetDeltaMouse();
-    if (deltaMouse.x != 0 || deltaMouse.y != 0) {
-        deltaMouse = glm::normalize(deltaMouse);
+    //  Toggle camera lock on right click
+    if (InputManager::GetInstance()->GetKeyPressed(Controls::RightClick)) {
+        lockCamera = !lockCamera;
     }
 
-    glm::quat orientation = Camera::GetMainCamera()->GetTransform()->GetOrientation();
-    glm::vec3 rotation = orientation * glm::vec3(deltaMouse.y, 0.0f, 0.0f) + glm::vec3(0.0f, -deltaMouse.x, 0.0f);
+    //  Rotate camera if not locked
+    if (!lockCamera) {
+        glm::vec2 deltaMouse = InputManager::GetInstance()->GetDeltaMouse();
+        if (deltaMouse.x != 0 || deltaMouse.y != 0) {
+            deltaMouse = glm::normalize(deltaMouse);
+        }
 
-    Camera::GetMainCamera()->GetTransform()->Rotate(rotation);
+        glm::quat orientation = Camera::GetMainCamera()->GetTransform()->GetOrientation();
+        glm::vec3 rotation = orientation * glm::vec3(deltaMouse.y, 0.0f, 0.0f) + glm::vec3(0.0f, -deltaMouse.x, 0.0f);
+
+        Camera::GetMainCamera()->GetTransform()->Rotate(rotation);
+    }
 
     //Move Camera
     glm::vec3 moveDirection = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -102,14 +123,20 @@ void GameManager::Update()
 
     Camera::GetMainCamera()->GetTransform()->Translate(moveDirection * cameraSpeed * Time::GetDeltaTime(), true);
 
+    //Update Lights
+    float scaledTime = Time::GetTotalTime() / 2.5f;
+    lights[0]->position = glm::vec3(0.0f, 1.1f, 0.0f) + glm::vec3(cos(scaledTime), 0.0f, sin(scaledTime)) * 1.5f;
+
     //Update Game Objects
     for (size_t i = 0; i < gameObjects.size(); i++) {
         gameObjects[i]->Update();
     }
 
     if (InputManager::GetInstance()->GetKeyPressed(Controls::Jump)) {
-        //gameObjects[2]->GetPhysicsObject()->ApplyForce(glm::vec3(0.0f, 10000.0f, 0.0f));
+        gameObjects[2]->GetPhysicsObject()->ApplyForce(glm::vec3(0.0f, 5000.0f, 0.0f));
 
+        //Spawn Object Sample Code:
+        /*
         std::shared_ptr<GameObject> newObject = std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Sphere]);
         gameObjects.push_back(newObject);
 
@@ -117,6 +144,7 @@ void GameManager::Update()
         newObject->SetPhysicsObject(std::make_shared<PhysicsObject>(newObject->GetTransform(), PhysicsLayers::Dynamic, 1.0f, true, true));
 
         newObject->Spawn();
+        */
     }
 }
 

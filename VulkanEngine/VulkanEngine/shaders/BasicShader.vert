@@ -11,7 +11,7 @@ layout(binding = 0) uniform UniformBufferObject{
 	mat4 view;
 	mat4 projection;
 	vec3 cameraPosition;
-	float totalTime;
+	Light[5] lights;
 } ubo;
 
 layout(location = 0) in vec3 inPosition;
@@ -40,9 +40,7 @@ void main(){
 	position = (model * vec4(inPosition, 1.0f)).xyz;
 
 	//Pass variables through to fragment shader
-	float scaledTime = ubo.totalTime / 2.5f;
-	lights[0] = Light(vec3(0.0f, 1.1f, 0.0f) + vec3(cos(scaledTime), 0.0f, sin(scaledTime)) * 1.5f, vec3(1.0f, 1.0f, 1.0f), 3.0f);
-	lights[1] = Light(vec3(0.0f, 2.0f, -1.5f), vec3(1.0f, 0.988f, 0.769f), 3.0f);
+	lights = ubo.lights;
 	vertColor = inColor;
 	normal = inNormal;
 	uv = texCoord;

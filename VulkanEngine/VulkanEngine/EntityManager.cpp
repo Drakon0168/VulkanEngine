@@ -55,7 +55,7 @@ void EntityManager::Init()
 
 void EntityManager::LoadMeshes()
 {
-    meshes.resize(MeshTypes::Count);
+    meshes.resize(MeshTypes::MeshTypeCount);
  
    //meshes.resize(MeshTypes::Count);
 

@@ -1,0 +1,26 @@
+{
+    "Name": "Uniform Buffer Object",
+    "Description": "Description of the class' purpose and correct usage",
+    "Variables": [
+        {
+            "Name": "view",
+            "Type": "glm::mat4",
+            "Description": "The view matrix used by this uniform buffer, this is used to convert between world and screen space in the shader."
+        },
+        {
+            "Name": "projection",
+            "Type": "glm::mat4",
+            "Description": "The projection matrix used by this uniform buffer, this is used to convert between world and screen space in the shader."
+        },
+        {
+            "Name": "cameraPosition",
+            "Type": "glm::mat4",
+            "Description": "The position of the rendering camera in world space, this is used for lighting calculations."
+        },
+        {
+            "Name": "lights",
+            "Type": "std::shared_ptr<Light>[5]",
+            "Description": "Array of lights in the scene, the length of this array is hard coded to match the size of the array in the shaders, if the size of the Uniform Buffer Object's light array is larger than the size of the light array in the shader then some lights will not render. If you need more than the given number of lights increase the size of the array in the fragment and vertex shaders to the size of the maximum number of lights needed."
+        }
+    ]
+}

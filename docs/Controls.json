@@ -1,0 +1,54 @@
+{
+    "Name": "Controls",
+    "Description": "The controls enum lists the controls used by the input manager. The input manager stores inputs in a list that can be indexed through the controls enum (ex. InputManager::GetControls()[Controls::Up])  ensure that you are using the Controls namespace in order to access the Controls enum. Controls should be added to this enum as needed by the application, any controls should be added before the ControlCount placeholder control which is used by the Input Manager to keep track of the total number of controls.",
+    "EnumStates": [
+        {
+            "Name": "Up",
+            "Description": "This control is set in the input manager to correspond to the key for 'Up'."
+        },
+        {
+            "Name": "Down",
+            "Description": "This control is set in the input manager to correspond to the key for 'Down'."
+        },
+        {
+            "Name": "Forward",
+            "Description": "This control is set in the input manager to correspond to the key for 'Forward'."
+        },
+        {
+            "Name": "Back",
+            "Description": "This control is set in the input manager to correspond to the key for 'Back'."
+        },
+        {
+            "Name": "Left",
+            "Description": "This control is set in the input manager to correspond to the key for 'Left'."
+        },
+        {
+            "Name": "Right",
+            "Description": "This control is set in the input manager to correspond to the key for 'Right'."
+        },
+        {
+            "Name": "Jump",
+            "Description": "This control is set in the input manager to correspond to the key for 'Jump'."
+        },
+        {
+            "Name": "Sprint",
+            "Description": "This control is set in the input manager to correspond to the key for 'Sprint'."
+        },
+        {
+            "Name": "Exit",
+            "Description": "This control is set in the input manager to correspond to the key for 'Exit'."
+        },
+        {
+            "Name": "LeftClick",
+            "Description": "This control is set in the input manager to correspond to the left mouse button."
+        },
+        {
+            "Name": "RightClick",
+            "Description": "This control is set in the input manager to correspond to the right mouse button."
+        },
+        {
+            "Name": "ControlCount",
+            "Description": "This should always be left as the last element in the controls enum this way we can get the number of controls in the enum by reading the value of Controls::ControlCount."
+        }
+    ]
+}

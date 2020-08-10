@@ -21,6 +21,7 @@
             <li data-value="CLASSES" v-on:click="ChangePage(0)">Classes</li>
             <li id="CurrentPage" data-value="HOME" v-on:click="ChangePage(1)">Home</li>
             <li data-value="SYSTEMS" v-on:click="ChangePage(2)">Systems</li>
+            <li data-value="TUTORIALS" v-on:click="ChangePage(3)">Tutorials</li>
         </ul>
         <div v-if="page == 0" id="Classes" class="container-fluid row">
             <div id="ClassList" class="col-2">
@@ -39,25 +40,25 @@
                 </ul>
                 <h2>Components</h2>
                 <ul>
-                    <li>Buffer</li>
-                    <li>Camera</li>
-                    <li>Command Buffer</li>
-                    <li>Game Object</li>
-                    <li>Image</li>
-                    <li>Input</li>
+                    <li v-on:click="DisplayClass('Buffer')">Buffer</li>
+                    <li v-on:click="DisplayClass('Camera')">Camera</li>
+                    <li v-on:click="DisplayClass('CommandBuffer')">Command Buffer</li>
+                    <li v-on:click="DisplayClass('GameObject')">Game Object</li>
+                    <li v-on:click="DisplayClass('Image')">Image</li>
+                    <li v-on:click="DisplayClass('Input')">Input</li>
                     <li>Input Axis</li>
                     <li>Material</li>
                     <li>Mesh</li>
                     <li>Physics Object</li>
-                    <li>Transform</li>
+                    <li v-on:click="DisplayClass('Transform')">Transform</li>
                 </ul>
                 <h2>Structs</h2>
                 <ul>
-                    <li>Light</li>
-                    <li>Queue Family Indices</li>
-                    <li>Swap Chain Support Details</li>
-                    <li>Transform Data</li>
-                    <li>Uniform Buffer Object</li>
+                    <li v-on:click="DisplayClass('Light')">Light</li>
+                    <li v-on:click="DisplayClass('QueueFamilyIndices')">Queue Family Indices</li>
+                    <li v-on:click="DisplayClass('SwapChainSupportDetails')">Swap Chain Support Details</li>
+                    <li v-on:click="DisplayClass('TransformData')">Transform Data</li>
+                    <li v-on:click="DisplayClass('UniformBufferObject')">Uniform Buffer Object</li>
                     <li v-on:click="DisplayClass('Vertex')">Vertex</li>
                 </ul>
                 <h2>Shaders</h2>
@@ -66,15 +67,25 @@
                 </ul>
                 <h2>Enums</h2>
                 <ul>
-                    <li>Controls</li>
-                    <li>Input States</li>
-                    <li>Mesh Types</li>
-                    <li>Physics Layers</li>
+                    <li v-on:click="DisplayClass('Controls')">Controls</li>
+                    <li v-on:click="DisplayClass('InputAxes')">Input Axes</li>
+                    <li v-on:click="DisplayClass('InputStates')">Input States</li>
+                    <li v-on:click="DisplayClass('MeshTypes')">Mesh Types</li>
+                    <li v-on:click="DisplayClass('PhysicsLayers')">Physics Layers</li>
                 </ul>
             </div>
             <div id="ClassContent" v-if="currentClass" class="col">
                 <h2>{{currentClass.Name}}</h2>
                 <p>{{currentClass.Description}}</p>
+                <div v-if="currentClass.EnumStates">
+                    <h3>Enum States</h3>
+                    <ul>
+                        <li v-for="state in currentClass.EnumStates">
+                            <h4>{{state.Name}}</h4>
+                            <p>{{state.Description}}</p>
+                        </li>
+                    </ul>
+                </div>
                 <div v-if="currentClass.Variables">
                     <h3>Variables</h3>
                     <ul>
@@ -138,6 +149,8 @@
             <p>Make sure you are set to build in x64 and run the project you should be able to run without errors.</p>
         </div>
         <div v-if="page == 2" id="Systems" class="container-fluid">
+        </div>
+        <div v-if="page == 3" id="Tutorials" class="container-fluid">
         </div>
     </div>
 </body>
