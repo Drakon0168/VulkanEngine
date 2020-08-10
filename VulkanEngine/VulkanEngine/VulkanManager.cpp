@@ -292,7 +292,7 @@ void VulkanManager::CreateLogicalDevice()
 
 	//Set used device features
 	VkPhysicalDeviceFeatures deviceFeatures = {};
-
+	deviceFeatures.samplerAnisotropy = VK_TRUE;
 	//Setup Logical Device
 	VkDeviceCreateInfo createInfo = {};
 	createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;

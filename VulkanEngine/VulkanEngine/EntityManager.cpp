@@ -46,7 +46,7 @@ void EntityManager::Init()
     for (std::shared_ptr<Material> material : materials) {
         entities.insert(std::pair <std::shared_ptr<Material>, std::vector<std::shared_ptr<Mesh>>>(material, std::vector<std::shared_ptr<Mesh>>()));
     }
-
+  
     //  Populate Mesh Lists
     for (std::shared_ptr<Mesh> mesh : meshes) {
         entities[mesh->GetMaterial()].push_back(mesh);

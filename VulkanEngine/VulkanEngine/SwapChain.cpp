@@ -5,6 +5,7 @@
 #include "EntityManager.h"
 #include "WindowManager.h"
 #include "Camera.h"
+#include "TextureImages.h"
 
 #define logicalDevice VulkanManager::GetInstance()->GetLogicalDevice()
 #define physicalDevice VulkanManager::GetInstance()->GetPhysicalDevice()
@@ -131,6 +132,8 @@ void SwapChain::CreateSwapChainResources()
 	CreateCommandBuffers();
 
 	//textures?
+	/*TextureImages::GetInstance()->LoadAll();
+	TextureImages::GetInstance()->CreateTextureImageView();*/
 
 	//Create the Semaphores and Fences
 	CreateSyncObjects();
@@ -234,6 +237,7 @@ void SwapChain::RecreateSwapChain()
 
 void SwapChain::Cleanup()
 {
+
 	//Destroy Frame Buffers
 	for (auto frameBuffer : frameBuffers) {
 		vkDestroyFramebuffer(logicalDevice, frameBuffer, nullptr);
@@ -263,10 +267,19 @@ void SwapChain::Cleanup()
 
 	//Cleanup Depth Image
 	depthImage.Cleanup();
+	//TESTING HERE
+
+	vkDestroySampler(logicalDevice, TextureImages::GetInstance()->GetSampler(), nullptr);
+	vkDestroyImageView(logicalDevice, TextureImages::GetInstance()->GetTextureImageView(), nullptr);
+
+	vkDestroyImage(logicalDevice, TextureImages::GetInstance()->TextureImageImage(), nullptr);
+	vkFreeMemory(logicalDevice, TextureImages::GetInstance()->TextureImageMemory(), nullptr);
+	//end tresting
 }
 
 void SwapChain::FullCleanup()
 {
+	
 	Cleanup();
 
 	//Destroy Command Pool
@@ -278,6 +291,7 @@ void SwapChain::FullCleanup()
 		vkDestroySemaphore(logicalDevice, renderFinishedSemaphores[i], nullptr);
 		vkDestroyFence(logicalDevice, inFlightFences[i], nullptr);
 	}
+
 }
 
 void SwapChain::CreateImageViews()
@@ -288,6 +302,7 @@ void SwapChain::CreateImageViews()
 	for (size_t i = 0; i < images.size(); i++) {
 		imageViews[i] = Image::CreateImageView(images[i], imageFormat, VK_IMAGE_ASPECT_COLOR_BIT);
 	}
+	
 }
 
 void SwapChain::CreateFrameBuffers()

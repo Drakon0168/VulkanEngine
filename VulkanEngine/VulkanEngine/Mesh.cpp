@@ -7,6 +7,7 @@
 //Tiny OBJ Loader
 #define TINYOBJLOADER_IMPLEMENTATION 
 #include <TinyObjLoader/tiny_obj_loader.h>
+#include "TextureImages.h"
 
 #define logicalDevice VulkanManager::GetInstance()->GetLogicalDevice()
 
@@ -33,6 +34,8 @@ Mesh::Mesh(std::shared_ptr<Material> material, std::vector<Vertex> vertices, std
 
 void Mesh::Init()
 {
+	//TextureImages::GetInstance()->LoadAll();
+	//TextureImages::GetInstance()->CreateTextureImageView();
 	CreateVertexBuffer();
 	CreateIndexBuffer();
 	CreateInstanceBuffer();
@@ -135,8 +138,6 @@ void Mesh::UpdateInstanceBuffer()
 	if (instanceBufferDirty) {
 		Buffer::CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, *instanceBuffer);
 	}
-
-	Image::LoadAll();
 	//Copy Data
 	void* data;
 	vkMapMemory(logicalDevice, instanceBuffer->GetBufferMemory(), 0, bufferSize, 0, &data);

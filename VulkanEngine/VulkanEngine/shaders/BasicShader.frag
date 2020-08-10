@@ -7,8 +7,10 @@ struct Light{
 	float range;
 };
 
+ 
 layout(location = 0) in vec3 position;
 layout(location = 1) in vec3 vertColor;
+layout(binding = 1) uniform sampler2D texSampler;
 layout(location = 2) in vec3 normal;
 layout(location = 3) in vec3 cameraPosition;
 layout(location = 4) in vec2 uv;
@@ -41,4 +43,5 @@ void main(){
 	finalColor += vec3(0.015f, 0.015f, 0.015f);
 
 	outColor = vec4(finalColor * vertColor, 1.0f);
+    outColor = texture(texSampler, uv);
 }

@@ -4,6 +4,7 @@
 #include "VulkanManager.h"
 #include "FileManager.h"
 #include "SwapChain.h"
+#include "TextureImages.h"
 
 #define logicalDevice VulkanManager::GetInstance()->GetLogicalDevice()
 #define swapChainImages SwapChain::GetInstance()->GetImages()
@@ -25,6 +26,9 @@ Material::Material(std::string vertexShaderPath, std::string fragmentShaderPath)
 
 void Material::Init()
 {
+	TextureImages::GetInstance()->LoadAll();
+	TextureImages::GetInstance()->CreateTextureImageView();
+	TextureImages::GetInstance()->CreateTextureSampler();
 	CreateDescriptorSetLayout();
 
 	CreateGraphicsPipeline();
@@ -232,15 +236,21 @@ void Material::CreateGraphicsPipeline()
 
 void Material::CreateDescriptorSetLayout()
 {
-	std::vector<VkDescriptorSetLayoutBinding> bindings(1);
+	/*std::vector<VkDescriptorSetLayoutBinding> bindings(1);
 
 	bindings[0] = {};
 	bindings[0].binding = 0;
 	bindings[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 	bindings[0].descriptorCount = 1;
 	bindings[0].stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
-	bindings[0].pImmutableSamplers = nullptr;
+	bindings[0].pImmutableSamplers = nullptr;*/
+	VkDescriptorSetLayoutBinding uboLayoutBinding = {};
+	uboLayoutBinding.binding = 0;
 
+	uboLayoutBinding.descriptorCount = 1; //pg 184
+	uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+	uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+	uboLayoutBinding.pImmutableSamplers = nullptr; // Optional
 	/// <summary>
 	/// newwwww
 	/// </summary>
@@ -250,14 +260,14 @@ void Material::CreateDescriptorSetLayout()
 	samplerLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 	samplerLayoutBinding.pImmutableSamplers = nullptr;
 	samplerLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
-	std::array<VkDescriptorSetLayoutBinding, 2> bdgs = { bindings[0], samplerLayoutBinding };
+	std::array<VkDescriptorSetLayoutBinding, 2> bdgs = { uboLayoutBinding/*bindings[0]*/, samplerLayoutBinding };
 	/// <summary>
 	/// /new end
 	/// </summary>
 
 	VkDescriptorSetLayoutCreateInfo createInfo = {};
 	createInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-	createInfo.bindingCount = 1;
+	createInfo.bindingCount = static_cast<uint32_t>(bdgs.size());
 	createInfo.pBindings = bdgs.data();
 
 
@@ -267,7 +277,7 @@ void Material::CreateDescriptorSetLayout()
 	VkDescriptorSetLayoutCreateInfo layoutInfo = {};
 	layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
 
-	layoutInfo.pBindings = &bindings[0];
+	layoutInfo.pBindings = &uboLayoutBinding;//&bindings[0];
 	layoutInfo.bindingCount = static_cast<uint32_t>(bdgs.size());
 	layoutInfo.pBindings = bdgs.data();
 	/// <summary>
@@ -280,14 +290,21 @@ void Material::CreateDescriptorSetLayout()
 
 void Material::CreateDescriptorPool()
 {
+	std::array<VkDescriptorPoolSize, 2> poolSizes = {};
+	poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+	poolSizes[0].descriptorCount = static_cast<uint32_t>(swapChainImages.size());
+	poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+	poolSizes[1].descriptorCount = static_cast<uint32_t>(swapChainImages.size());
+
+
 	VkDescriptorPoolSize poolSize = {};
 	poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 	poolSize.descriptorCount = static_cast<uint32_t>(swapChainImages.size());
 
 	VkDescriptorPoolCreateInfo createInfo = {};
 	createInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-	createInfo.poolSizeCount = 1;
-	createInfo.pPoolSizes = &poolSize;
+	createInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());//1;
+	createInfo.pPoolSizes = poolSizes.data();//&poolSize;
 	createInfo.maxSets = static_cast<uint32_t>(swapChainImages.size());
 
 	if (vkCreateDescriptorPool(logicalDevice, &createInfo, nullptr, &descriptorPool)) {
@@ -316,7 +333,12 @@ void Material::CreateDescriptorSets()
 		bufferInfo.offset = 0;
 		bufferInfo.range = sizeof(UniformBufferObject);
 
-		VkWriteDescriptorSet descriptorWrite = {};
+		VkDescriptorImageInfo imageInfo = {};
+		imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+		imageInfo.imageView = TextureImages::GetInstance()->GetTextureImageView();
+		imageInfo.sampler = TextureImages::GetInstance()->GetSampler();
+
+		/*VkWriteDescriptorSet descriptorWrite = {};
 		descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 		descriptorWrite.dstSet = descriptorSets[i];
 		descriptorWrite.dstBinding = 0;
@@ -327,7 +349,26 @@ void Material::CreateDescriptorSets()
 		descriptorWrite.pImageInfo = nullptr;
 		descriptorWrite.pTexelBufferView = nullptr;
 
-		vkUpdateDescriptorSets(logicalDevice, 1, &descriptorWrite, 0, nullptr);
+		vkUpdateDescriptorSets(logicalDevice, 1, &descriptorWrite, 0, nullptr);*/
+
+		std::array<VkWriteDescriptorSet, 2> descriptorWrites = {};
+		descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		descriptorWrites[0].dstSet = descriptorSets[i];
+		descriptorWrites[0].dstBinding = 0;
+		descriptorWrites[0].dstArrayElement = 0;
+		descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		descriptorWrites[0].descriptorCount = 1;
+		descriptorWrites[0].pBufferInfo = &bufferInfo;
+
+		descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		descriptorWrites[1].dstSet = descriptorSets[i];
+		descriptorWrites[1].dstBinding = 1;
+		descriptorWrites[1].dstArrayElement = 0;
+		descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+		descriptorWrites[1].descriptorCount = 1;
+		descriptorWrites[1].pImageInfo = &imageInfo;
+
+		vkUpdateDescriptorSets(logicalDevice, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
 	}
 }
 

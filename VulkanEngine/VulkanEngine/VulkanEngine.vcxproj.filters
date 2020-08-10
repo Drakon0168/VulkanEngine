@@ -105,6 +105,9 @@
     <ClCompile Include="PhysicsObject.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
+    <ClCompile Include="TextureImages.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -201,6 +204,9 @@
       <Filter>Header Files\Enums</Filter>
     </ClInclude>
     <ClInclude Include="PhysicsObject.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureImages.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
   </ItemGroup>
