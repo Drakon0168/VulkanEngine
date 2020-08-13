@@ -296,7 +296,7 @@ void SwapChain::CreateImageViews()
 
 	//Create Image Views
 	for (size_t i = 0; i < images.size(); i++) {
-		imageViews[i] = Image::CreateImageView(images[i], imageFormat, VK_IMAGE_ASPECT_COLOR_BIT);
+		imageViews[i] = Image::CreateImageView(images[i], imageFormat, VK_IMAGE_ASPECT_COLOR_BIT,1);
 	}
 	
 }
@@ -332,14 +332,14 @@ void SwapChain::CreateDepthResources()
 {
 	VkFormat depthFormat = FindDepthFormat();
 
-	Image::CreateImage(extent.width, extent.height,
+	Image::CreateImage(1,extent.width, extent.height,
 		depthFormat,
 		VK_IMAGE_TILING_OPTIMAL,
 		VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
 		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
 		depthImage);
 
-	Image::CreateImageView(&depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT);
+	Image::CreateImageView(&depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT,1);
 }
 
 void SwapChain::CreateSyncObjects()

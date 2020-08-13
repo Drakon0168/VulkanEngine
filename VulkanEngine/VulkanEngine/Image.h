@@ -60,7 +60,7 @@ public:
 	/// <param name="usage">The usage type of the image</param>
 	/// <param name="properties">The memory properties of the image</param>
 	/// <param name="image">The image that is being allocated</param>
-	static void CreateImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, Image& image);
+	static void CreateImage(uint32_t mipLevels, uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, Image& image);
 
 	/// <summary>
 	/// Creates an image view for the supplied image
@@ -68,7 +68,7 @@ public:
 	/// <param name="image">The image to attach the image view to</param>
 	/// <param name="format">The format of the image</param>
 	/// <param name="aspectFlags">The aspect flag defining the use of the image</param>
-	static void CreateImageView(Image* image, VkFormat format, VkImageAspectFlags aspectFlags);
+	static void CreateImageView(Image* image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels);
 
 	/// <summary>
 	/// Creates an image view forr the specified image
@@ -77,7 +77,7 @@ public:
 	/// <param name="format">The format of the image</param>
 	/// <param name="aspectFlags">The aspect flag defining the use of the image</param>
 	/// <returns>The image view that was created</returns>
-	static VkImageView CreateImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags);
+	static VkImageView CreateImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels);
 
 	/// <summary>
 	/// Changes the layout of the image
@@ -85,7 +85,7 @@ public:
 	/// <param name="image">The image to change the layout of</param>
 	/// <param name="oldLayout">The layout to transition from</param>
 	/// <param name="newLayout">The layout to transition to</param>
-	static void TransitionImageLayout(Image image, VkImageLayout oldLayout, VkImageLayout newLayout);
+	static void TransitionImageLayout(Image image, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels);
 
 	/// <summary>
 	/// Copies the data stored in a buffer to an image

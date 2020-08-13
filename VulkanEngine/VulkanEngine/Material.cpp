@@ -375,6 +375,7 @@ void Material::CreateDescriptorSets()
 
 void Material::Cleanup()
 {
+
 	vkDestroyPipeline(logicalDevice, pipeline, nullptr);
 	vkDestroyPipelineLayout(logicalDevice, pipelineLayout, nullptr);
 

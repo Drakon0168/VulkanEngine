@@ -42,7 +42,7 @@ VkDeviceMemory* Image::GetMemory()
 
 #pragma region Helper Methods
 
-void Image::CreateImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, Image& image)
+void Image::CreateImage(uint32_t mipLevels, uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, Image& image)
 {
 	VkImageCreateInfo createInfo = {};
 	createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
@@ -50,7 +50,7 @@ void Image::CreateImage(uint32_t width, uint32_t height, VkFormat format, VkImag
 	createInfo.extent.width = width;
 	createInfo.extent.height = height;
 	createInfo.extent.depth = 1;
-	createInfo.mipLevels = 1;
+	createInfo.mipLevels = mipLevels;
 	createInfo.arrayLayers = 1;
 	createInfo.format = format;
 	createInfo.tiling = tiling;
@@ -78,7 +78,7 @@ void Image::CreateImage(uint32_t width, uint32_t height, VkFormat format, VkImag
 	vkBindImageMemory(VulkanManager::GetInstance()->GetLogicalDevice(), *image.GetImage(), *image.GetMemory(), 0);
 }
 
-void Image::CreateImageView(Image* image, VkFormat format, VkImageAspectFlags aspectFlags)
+void Image::CreateImageView(Image* image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels)
 {
 	//TextureImages::GetInstance()->LoadAll();
 	VkImageViewCreateInfo createInfo = {};
@@ -88,7 +88,7 @@ void Image::CreateImageView(Image* image, VkFormat format, VkImageAspectFlags as
 	createInfo.format = format;
 	createInfo.subresourceRange.aspectMask = aspectFlags;
 	createInfo.subresourceRange.baseMipLevel = 0;
-	createInfo.subresourceRange.levelCount = 1;
+	createInfo.subresourceRange.levelCount = mipLevels;
 	createInfo.subresourceRange.baseArrayLayer = 0;
 	createInfo.subresourceRange.layerCount = 1;
 
@@ -97,7 +97,7 @@ void Image::CreateImageView(Image* image, VkFormat format, VkImageAspectFlags as
 	}
 }
 
-VkImageView Image::CreateImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags)
+VkImageView Image::CreateImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels)
 {
 	VkImageViewCreateInfo createInfo = {};
 	createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -106,7 +106,7 @@ VkImageView Image::CreateImageView(VkImage image, VkFormat format, VkImageAspect
 	createInfo.format = /*VK_FORMAT_R8G8B8A8_UNORM;//*/format;
 	createInfo.subresourceRange.aspectMask = aspectFlags;
 	createInfo.subresourceRange.baseMipLevel = 0;
-	createInfo.subresourceRange.levelCount = 1;
+	createInfo.subresourceRange.levelCount = mipLevels;
 	createInfo.subresourceRange.baseArrayLayer = 0;
 	createInfo.subresourceRange.layerCount = 1;
 
@@ -118,10 +118,10 @@ VkImageView Image::CreateImageView(VkImage image, VkFormat format, VkImageAspect
 	return imageView;
 }
 
-void Image::TransitionImageLayout(Image image, VkImageLayout oldLayout, VkImageLayout newLayout)
+void Image::TransitionImageLayout(Image image, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels)
 {
 	VkCommandBuffer commandBuffer = CommandBuffer::BeginSingleTimeCommand();
-
+	
 	VkImageMemoryBarrier barrier = {};
 	barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
 	barrier.oldLayout = oldLayout;
@@ -131,7 +131,7 @@ void Image::TransitionImageLayout(Image image, VkImageLayout oldLayout, VkImageL
 	barrier.image = *image.GetImage();
 	barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 	barrier.subresourceRange.baseMipLevel = 0;
-	barrier.subresourceRange.levelCount = 1;
+	barrier.subresourceRange.levelCount = mipLevels;
 	barrier.subresourceRange.baseArrayLayer = 0;
 	barrier.subresourceRange.layerCount = 1;
 
