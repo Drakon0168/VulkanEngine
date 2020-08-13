@@ -131,10 +131,6 @@ void SwapChain::CreateSwapChainResources()
 	//Create the Command Buffers
 	CreateCommandBuffers();
 
-	//textures?
-	/*TextureImages::GetInstance()->LoadAll();
-	TextureImages::GetInstance()->CreateTextureImageView();*/
-
 	//Create the Semaphores and Fences
 	CreateSyncObjects();
 }

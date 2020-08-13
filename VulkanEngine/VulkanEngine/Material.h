@@ -14,12 +14,13 @@ protected:
 	VkDescriptorPool descriptorPool;
 	VkDescriptorSetLayout descriptorSetLayout;
 	std::vector<VkDescriptorSet> descriptorSets;
+	std::string matPath;
 
 public:
 
 #pragma region Memory Management
 
-	Material(std::string vertexShaderPath, std::string fragmentShaderPath);
+	Material(std::string vertexShaderPath, std::string fragmentShaderPath, std::string materialPath);
 
 	/// <summary>
 	/// Creates and allocates Material resources

@@ -24,10 +24,10 @@ void TextureImages::LoadAll() {
 void TextureImages::LoadTexture(const std::string texturePath) {
 
 	int texWidth, texHeight, texChannels;
-	if (TEXTURE_PATH.c_str() == NULL) {
+	if (texturePath.c_str() == NULL) {
 		throw std::runtime_error("path is null");
 	}
-	stbi_uc* pixels = stbi_load(TEXTURE_PATH.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+	stbi_uc* pixels = stbi_load(texturePath.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
 	VkDeviceSize imageSize = texWidth * texHeight * 4;
 	//mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texWidth, texHeight)))) + 1;
 
@@ -55,7 +55,6 @@ void TextureImages::LoadTexture(const std::string texturePath) {
 	vkFreeMemory(VulkanManager::GetInstance()->GetLogicalDevice(), stagingBuffer.GetBufferMemory(), nullptr);
 	//generateMipmaps(textureImage, VK_FORMAT_R8G8B8A8_UNORM, texWidth, texHeight, mipLevels);
 
-	//Image::CreateImageView(&textureImage, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_ASPECT_DEPTH_BIT);
 
 }
 

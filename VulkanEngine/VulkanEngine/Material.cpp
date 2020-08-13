@@ -11,8 +11,9 @@
 
 #pragma region Memory Management
 
-Material::Material(std::string vertexShaderPath, std::string fragmentShaderPath)
+Material::Material(std::string vertexShaderPath, std::string fragmentShaderPath, std::string materialPath)
 {
+	this->matPath = materialPath;
 	this->vertexShaderPath = vertexShaderPath;
 	this->fragmentShaderPath = fragmentShaderPath;
 
@@ -26,7 +27,7 @@ Material::Material(std::string vertexShaderPath, std::string fragmentShaderPath)
 
 void Material::Init()
 {
-	TextureImages::GetInstance()->LoadAll();
+	TextureImages::GetInstance()->LoadTexture(matPath);
 	TextureImages::GetInstance()->CreateTextureImageView();
 	TextureImages::GetInstance()->CreateTextureSampler();
 	CreateDescriptorSetLayout();

@@ -16,7 +16,7 @@ private:
 
 	VkSampler textureSampler;
 
-	const std::string TEXTURE_PATH = "textures/room.png";
+	
 public:
 #pragma region Singleton 
 	static TextureImages* GetInstance();
@@ -30,8 +30,7 @@ public:
 	void CreateTextureImageView();
 
 	void CreateTextureSampler();
-	//static VkImageView CreateImageView(VkImage image);
-	//static VkImageView CreateImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags);
+	
 #pragma endregion
 
 #pragma region Accessors

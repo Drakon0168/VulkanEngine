@@ -41,40 +41,44 @@ void EntityManager::Init()
 
     LoadMeshes();
 
+    int count = 0;
+
     //Setup entity list
     //  Add Materials and Mesh Lists
     for (std::shared_ptr<Material> material : materials) {
         entities.insert(std::pair <std::shared_ptr<Material>, std::vector<std::shared_ptr<Mesh>>>(material, std::vector<std::shared_ptr<Mesh>>()));
+        count++;
     }
   
     //  Populate Mesh Lists
     for (std::shared_ptr<Mesh> mesh : meshes) {
         entities[mesh->GetMaterial()].push_back(mesh);
+       
     }
+    std::cout << count;
 }
 
 void EntityManager::LoadMeshes()
 {
     meshes.resize(MeshTypes::Count);
- 
-   //meshes.resize(MeshTypes::Count);
 
     meshes[MeshTypes::Plane] = std::make_shared<Mesh>(materials[0]);
     meshes[MeshTypes::Plane]->GeneratePlane();
 
-    meshes[MeshTypes::Cube] = std::make_shared<Mesh>(materials[0]);
+    meshes[MeshTypes::Cube] = std::make_shared<Mesh>(materials[1]);
     meshes[MeshTypes::Cube]->GenerateCube();
 
     meshes[MeshTypes::Sphere] = std::make_shared<Mesh>(materials[0]);
     meshes[MeshTypes::Sphere]->GenerateSphere(50);
 
-    meshes[MeshTypes::Model] = std::make_shared<Mesh>(materials[0]);
+    meshes[MeshTypes::Model] = std::make_shared<Mesh>(materials[1]);
     meshes[MeshTypes::Model]->LoadModel("models/room.obj");
 }
 
 void EntityManager::LoadMaterials()
 {
-    materials.push_back(std::make_shared<Material>("shaders/vert.spv", "shaders/frag.spv"));
+    materials.push_back(std::make_shared<Material>("shaders/vert.spv", "shaders/frag.spv", "textures/frog.jpg"));
+    materials.push_back(std::make_shared<Material>("shaders/vert.spv", "shaders/frag.spv", "textures/room.png"));
 }
 
 #pragma endregion
@@ -161,6 +165,7 @@ void EntityManager::CreateMaterialResources()
 {
     for (size_t i = 0; i < materials.size(); i++) {
         materials[i]->Init();
+        std::cout << materials.size();
     }
 }
 

@@ -34,8 +34,6 @@ Mesh::Mesh(std::shared_ptr<Material> material, std::vector<Vertex> vertices, std
 
 void Mesh::Init()
 {
-	//TextureImages::GetInstance()->LoadAll();
-	//TextureImages::GetInstance()->CreateTextureImageView();
 	CreateVertexBuffer();
 	CreateIndexBuffer();
 	CreateInstanceBuffer();
