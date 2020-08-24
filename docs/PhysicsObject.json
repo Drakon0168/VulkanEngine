@@ -1,0 +1,207 @@
+{
+    "Name": "Physics Object",
+    "Description": "This class stores physics variables and handles physics based movement for an object in the application.",
+    "Variables": [
+        {
+            "Name": "transform",
+            "Type": "std::shared_ptr<Transform>",
+            "Description": "The transform used by this object."
+        },
+        {
+            "Name": "mass",
+            "Type": "float",
+            "Description": "The mass of the object, used when applying forces."
+        },
+        {
+            "Name": "velocity",
+            "Type": "glm::vec3",
+            "Description": "The velocity of the object, this is how fast the unit moves in units per second."
+        },
+        {
+            "Name": "acceleration",
+            "Type": "glm::vec3",
+            "Description": "The change in velocity per second."
+        },
+        {
+            "Name": "affectedByGravity",
+            "Type": "bool",
+            "Description": "Whether or not gravity should be applied to the physics object."
+        },
+        {
+            "Name": "alive",
+            "Type": "bool",
+            "Description": "Whether or not the object should participate in physics."
+        },
+        {
+            "Name": "physicsLayer",
+            "Type": "PhysicsLayer",
+            "Description": "The physics layer of this object this will decide how the object resolves collisions and what collisions it can detect."
+        }
+    ],
+    "Methods": [
+        {
+            "Name": "PhysicsObject (Constructor)",
+            "Description": "Sets initial values for the physics object.",
+            "Parameters": [
+                {
+                    "Name": "transform",
+                    "Type": "std::shared_ptr<Transform>",
+                    "Description": "The transform used by the object."
+                },
+                {
+                    "Name": "physicsLayer",
+                    "Type": "PhysicsLayer",
+                    "Description": "The physics layer of this object this will decide how the object resolves collisions and what collisions it can detect. Set to Dynamic by default."
+                },
+                {
+                    "Name": "mass",
+                    "Type": "float",
+                    "Description": "The mass of the object, used when applying forces. Set to 1.0 by default."
+                },
+                {
+                    "Name": "affectedByGravity",
+                    "Type": "bool",
+                    "Description": "Whether or not gravity should be applied to the physics object. True by default."
+                },
+                {
+                    "Name": "alive",
+                    "Type": "bool",
+                    "Description": "Whether or not the object should participate in physics. False by default."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "GetMass",
+            "Description": "Returns the mass of the physics object.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "float",
+                "Description": "The object's mass."
+            }
+        },
+        {
+            "Name": "SetMass",
+            "Description": "Sets the mass of the physics object.",
+            "Parameters": [
+                {
+                    "Name": "value",
+                    "Type": "float",
+                    "Description": "The value to set the mass of the object to."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "GetAcceleration",
+            "Description": "Returns the acceleration of the physics object.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "glm::vec3",
+                "Description": "The object's acceleration."
+            }
+        },
+        {
+            "Name": "GetVelocity",
+            "Description": "Returns the velocity of the physics object.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "glm::vec3",
+                "Description": "The object's velocity."
+            }
+        },
+        {
+            "Name": "SetVelocity",
+            "Description": "Sets the velocity of the physics object.",
+            "Parameters": [
+                {
+                    "Name": "value",
+                    "Type": "glm::vec3",
+                    "Description": "The value to set the velocity of the object to."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "GetPhysicsLayer",
+            "Description": "Returns the physics layer that the object is on.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "PhysicsLayer",
+                "Description": "The object's physics layer."
+            }
+        },
+        {
+            "Name": "GetTransform",
+            "Description": "Returns the transform used by the physics object.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "std::shared_ptr<Transform>",
+                "Description": "The object's transform."
+            }
+        },
+        {
+            "Name": "SetTransform",
+            "Description": "Sets the transform used by the physics object.",
+            "Parameters": [
+                {
+                    "Name": "value",
+                    "Type": "std::shared_ptr<Transform>",
+                    "Description": "The transform to use with this physics object."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "GetAlive",
+            "Description": "Returns whether or not the object is set as alive. If the objectis alive it will check for and resolve collisions, if not it will not participate in the physics simulation.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "bool",
+                "Description": "True if the object is alive, false if not."
+            }
+        },
+        {
+            "Name": "SetAlive",
+            "Description": "Sets whether or not the object is alive. If the objectis alive it will check for and resolve collisions, if not it will not participate in the physics simulation.",
+            "Parameters": [
+                {
+                    "Name": "value",
+                    "Type": "bool",
+                    "Description": "The value to set alive to."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "ApplyForce",
+            "Description": "Applies a force to the object in order to move it through physics.",
+            "Parameters": [
+                {
+                    "Name": "force",
+                    "Type": "glm::vec3",
+                    "Description": "The force to apply to the object."
+                },
+                {
+                    "Name": "applyMass",
+                    "Type": "bool",
+                    "Description": "Whether or not the force should take the object's mass into account, set to true by default."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "Update",
+            "Description": "Updates the object's velocity and then moves the transform by that velocity.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        }
+    ]
+}

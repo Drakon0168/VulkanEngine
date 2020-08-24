@@ -81,7 +81,7 @@ void PhysicsObject::ApplyForce(glm::vec3 force, bool applyMass)
 		force /= mass;
 	}
 
-	acceleration += force * Time::GetDeltaTime();
+	acceleration += force;
 }
 
 #pragma endregion
@@ -96,7 +96,7 @@ void PhysicsObject::Update()
 		}
 
 		//Apply acceleration
-		velocity += acceleration;
+		velocity += acceleration * Time::GetDeltaTime();
 		acceleration = glm::vec3(0.0f, 0.0f, 0.0f);
 
 		//Apply velocity

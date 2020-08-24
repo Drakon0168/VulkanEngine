@@ -1,0 +1,398 @@
+{
+    "Name": "Mesh",
+    "Description": "The mesh class stores information on the vertices used by a model and the order that they are connected in order to create triangles, it also keeps track of the different instances of the mesh.",
+    "Variables": [
+        {
+            "Name": "vertices",
+            "Type": "std::vector<Vertex>",
+            "Description": "A list of the vertices that make up the mesh."
+        },
+        {
+            "Name": "vertexBufferOffset",
+            "Type": "uint32_t",
+            "Description": "The offset into the vertex buffer that this mesh's data is stored at. This is used if multiple meshes share a single vertex buffer in order to differentiate their data."
+        },
+        {
+            "Name": "vertexBuffer",
+            "Type": "std::shared_ptr<Buffer>",
+            "Description": "The vertex buffer used to pass vertex data to the shader."
+        },
+        {
+            "Name": "indices",
+            "Type": "std::vector<uint16_t>",
+            "Description": "A list of the indices of the vertices used to create triangles."
+        },
+        {
+            "Name": "indexBufferOffset",
+            "Type": "uint32_t",
+            "Description": "The offset into the index buffer that this mesh's data is stored at. This is used if multiple meshes share a single index buffer in order to differentiate their data."
+        },
+        {
+            "Name": "indexBuffer",
+            "Type": "std::shared_ptr<Buffer>",
+            "Description": "The index buffer used to pass index data to the shader."
+        },
+        {
+            "Name": "instances",
+            "Type": "std::vector<std::shared_ptr<Transform>>",
+            "Description": "A list of the instances of the mesh, essentially just the position rotation and scale of any copies of the mesh in the application."
+        },
+        {
+            "Name": "activeInstanceCount",
+            "Type": "uint32_t",
+            "Description": "The total number of active instances in the instances list, and instance is considered active if it should be rendered."
+        },
+        {
+            "Name": "instanceBuffer",
+            "Type": "std::shared_ptr<Buffer>",
+            "Description": "The instance buffer is used to tell the graphics queue how many copies of a mesh to render and where to put them."
+        },
+        {
+            "Name": "material",
+            "Type": "std::shared_ptr<Material>",
+            "Description": "The material used by this mesh."
+        },
+        {
+            "Name": "instanceBufferDirty",
+            "Type": "bool",
+            "Description": "Boolean that keeps track of changes to the number of instances in order to know when the instance buffer needs to be re-created. The instance buffer should be re-created whenever the number of active instances changes and the size of the data no longer matches the size of the buffer."
+        }
+    ],
+    "Methods": [
+        {
+            "Name": "Mesh (Constructor)",
+            "Description": "Sets initial values for the mesh's variables.",
+            "Parameters": [
+                {
+                    "Name": "Material",
+                    "Type": "std::shared_ptr<Material>",
+                    "Description": "The material to use for this mesh."
+                },
+                {
+                    "Name": "vertices",
+                    "Type": "std::vector<Vertex>",
+                    "Description": "The vertices that make up the mesh."
+                },
+                {
+                    "Name": "indices",
+                    "Type": "std::vector<uint16_t>",
+                    "Description": "The indices that make up the mesh."
+                },
+                {
+                    "Name": "vertexBuffer",
+                    "Type": "std::shared_ptr<Buffer>",
+                    "Description": "The vertex buffer to use for this mesh."
+                },
+                {
+                    "Name": "vertexBufferOffset",
+                    "Type": "uint32_t",
+                    "Description": "The offset into the vertex buffer where this mesh's data is stored."
+                },
+                {
+                    "Name": "indexBuffer",
+                    "Type": "std::shared_ptr<Buffer>",
+                    "Description": "The index buffer to use for this mesh."
+                },
+                {
+                    "Name": "indexBufferOffset",
+                    "Type": "uint32_t",
+                    "Description": "The offset into the index buffer where this mesh's data is stored."
+                },
+                {
+                    "Name": "instances",
+                    "Type": "std::vector<std::shared_ptr<Transform>>",
+                    "Description": "The transforms of the instances of the mesh."
+                },
+                {
+                    "Name": "instanceBuffer",
+                    "Type": "std::shared_ptr<Buffer>",
+                    "Description": "The instance buffer to use for this mesh."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "Init",
+            "Description": "Creates and allocates the vertex, index, and instance buffers used by the mesh.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "CreateInstanceBuffer",
+            "Description": "Creates and allocates the instance buffer used by the mesh.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "CreateVertexBuffer",
+            "Description": "Creates and allocates the vertex buffer used by the mesh.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "CreateIndexBuffer",
+            "Description": "Creates and allocates the index buffer used by the mesh.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "Cleanup",
+            "Description": "Cleans up the mesh's buffers.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "UpdateInstanceBuffer",
+            "Description": "Updates the data stored in the mesh's instance buffer.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "UpdateVertexBuffer",
+            "Description": "Updates the data stored in the mesh's vertex buffer.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "UpdateIndexBuffer",
+            "Description": "Updates the data stored in the mesh's index buffer.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "GetVertices",
+            "Description": "Returns the list of vertices used by this mesh.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "std::vector<Vertex>",
+                "Description": "The list of vertices used by the mesh."
+            }
+        },
+        {
+            "Name": "SetVertices",
+            "Description": "Sets the list of vertices used by this mesh.",
+            "Parameters": [
+                {
+                    "Name": "value",
+                    "Type": "std::vector<Vertex>",
+                    "Description": "The vertices to set this mesh's vertex list to."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "GetVertexBuffer",
+            "Description": "Returns the vertex buffer used by this mesh.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "std::shared_ptr<Buffer>",
+                "Description": "The vertex buffer used by the mesh."
+            }
+        },
+        {
+            "Name": "SetVertexBuffer",
+            "Description": "Sets the vertex buffer used by this mesh.",
+            "Parameters": [
+                {
+                    "Name": "value",
+                    "Type": "std::shared_ptr<Buffer>",
+                    "Description": "The buffer to set this mesh's vertex buffer to."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "GetVertexBufferOffset",
+            "Description": "Returns the offset into the vertex buffer of the mesh's data.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "uint32_t",
+                "Description": "The offset into the vertex buffer of this mesh's data."
+            }
+        },
+        {
+            "Name": "GetIndices",
+            "Description": "Returns the list of indices used by this mesh.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "std::vector<uint16_t>",
+                "Description": "The list of indices used by the mesh."
+            }
+        },
+        {
+            "Name": "SetIndices",
+            "Description": "Sets the list of indices used by this mesh.",
+            "Parameters": [
+                {
+                    "Name": "value",
+                    "Type": "std::vector<uint16_t>",
+                    "Description": "The indices to set this mesh's index list to."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "GetIndexBuffer",
+            "Description": "Returns the index buffer used by this mesh.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "std::shared_ptr<Buffer>",
+                "Description": "The index buffer used by the mesh."
+            }
+        },
+        {
+            "Name": "SetIndexBuffer",
+            "Description": "Sets the index buffer used by this mesh.",
+            "Parameters": [
+                {
+                    "Name": "value",
+                    "Type": "std::shared_ptr<Buffer>",
+                    "Description": "The buffer to set this mesh's index buffer to."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "GetIndexBufferOffset",
+            "Description": "Returns the offset into the index buffer of the mesh's data.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "uint32_t",
+                "Description": "The offset into the index buffer of this mesh's data."
+            }
+        },
+        {
+            "Name": "GetActiveInstanceCount",
+            "Description": "Returns the number of active instances of this mesh, an instance is considered active if it has data and should be rendered.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "uint32_t",
+                "Description": "The number of active instances of this mesh."
+            }
+        },
+        {
+            "Name": "GetInstanceBuffer",
+            "Description": "Returns the instance buffer used by this mesh.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "std::shared_ptr<Buffer>",
+                "Description": "The instance buffer used by the mesh."
+            }
+        },
+        {
+            "Name": "SetInstanceBuffer",
+            "Description": "Sets the instance buffer used by this mesh.",
+            "Parameters": [
+                {
+                    "Name": "value",
+                    "Type": "std::shared_ptr<Buffer>",
+                    "Description": "The buffer to set this mesh's instance buffer to."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "GetMaterial",
+            "Description": "Returns the material used by this mesh.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "std::shared_ptr<Material>",
+                "Description": "The material used by the mesh."
+            }
+        },
+        {
+            "Name": "SetMaterial",
+            "Description": "Sets the material used by this mesh.",
+            "Parameters": [
+                {
+                    "Name": "value",
+                    "Type": "std::shared_ptr<Material>",
+                    "Description": "The material to use for this mesh."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "AddInstance",
+            "Description": "Adds the given transform to the mesh's list of instances and returns it's index / instanceId.",
+            "Parameters": [
+                {
+                    "Name": "value",
+                    "Type": "std::shared_ptr<Transform>",
+                    "Description": "The transform to add."
+                }
+            ],
+            "Returns": {
+                "Type": "int",
+                "Description": "The instanceId of the instance that was added, the instanceId refers to the index in the instance list of the transform and is used when removing a transform from the list."
+            }
+        },
+        {
+            "Name": "RemoveInstance",
+            "Description": "Removes the instance with the specified instanceId from the list of instances.",
+            "Parameters": [
+                {
+                    "Name": "instanceId",
+                    "Type": "int",
+                    "Description": "The instanceId of the instance to remove."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "GeneratePlane",
+            "Description": "Generates the vertices and indices for a plane mesh. The plane has a width and length of one.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "GenerateCube",
+            "Description": "Generates the vertices and indices for a cube mesh. The cube has a width, height, and length of one.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "GenerateSphere",
+            "Description": "Generates the vertices and indices for a sphere mesh. The sphere has a radius of one.",
+            "Parameters": [
+                {
+                    "Name": "resolution",
+                    "Type": "int",
+                    "Description": "The resolution of the sphere controls the number of subdivisions on the surface of the sphere, the higher the resolution the smoother the sphere. This has a minimum value of three, if a number lower than three is passed into this method it will be changed to three in the method."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "LoadModel",
+            "Description": "Generates the vertices and indices for a mesh from an OBJ file.",
+            "Parameters": [
+                {
+                    "Name": "modelPath",
+                    "Type": "const std::string",
+                    "Description": "The file path of the OBJ file to load."
+                }
+            ],
+            "Returns": {}
+        }
+    ]
+}
