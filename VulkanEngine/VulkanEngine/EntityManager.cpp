@@ -165,7 +165,6 @@ void EntityManager::CreateMaterialResources()
 {
     for (size_t i = 0; i < materials.size(); i++) {
         materials[i]->Init();
-        std::cout << materials.size();
     }
 }
 
