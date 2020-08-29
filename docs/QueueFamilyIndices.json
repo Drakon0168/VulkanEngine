@@ -1,0 +1,28 @@
+{
+    "Name": "Queue Family Indices",
+    "Description": "The queue family indices class keeps track of the queue families that we will call commands on in order to render objects and present them to the window.",
+    "Variables": [
+        {
+            "Name": "graphicsFamily",
+            "Type": "std::optional<uint32_t>",
+            "Description": "The index of the graphics queue which will be used to preform rendering objects."
+        },
+        {
+            "Name": "presentFamily",
+            "Type": "std::optional<uint32_t>",
+            "Description": "The index of the present queue which will be used to present immages to the window."
+        }
+    ],
+    "Methods": [
+        {
+            "Name": "IsComplete",
+            "Description": "Returns whether or not we have found the indices of all of the necessary queues.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "bool",
+                "Description": "True if we have values for the required queue families."
+            }
+        }
+    ]
+}

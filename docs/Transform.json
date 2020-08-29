@@ -1,0 +1,218 @@
+{
+    "Name": "Transform",
+    "Description": "The transform is used to keep track of the position, rotation, and scale  of objects. It also has methods for for many different types of transformations",
+    "Variables": [
+        {
+            "Name": "position",
+            "Type": "glm::vec3",
+            "Description": "The position of the transform in world space."
+        },
+        {
+            "Name": "scale",
+            "Type": "glm::vec3",
+            "Description": "The scale of the transform."
+        },
+        {
+            "Name": "orientation",
+            "Type": "glm::quat",
+            "Description": "Quaternion representing the orientation of the transform."
+        },
+        {
+            "Name": "model",
+            "Type": "glm::mat4",
+            "Description": "The model matrix of the transform. This is passed into the shader when drawing an object so that it will be drawn in the correct position. It can also be used to convert between the transform's local space and world space."
+        },
+        {
+            "Name": "isDirty",
+            "Type": "bool",
+            "Description": "Boolean used to track whether any of the variables used by the model matrix have changed since the last time the model matrix was updated. This is done to avoid unnecessary creations of the model matrix so that we only generate a new matrix when necessary rather than every time the model matrix is accessed."
+        }
+    ],
+    "Methods": [
+        {
+            "Name": "Transform (Constructor)",
+            "Description": "The transform class' constructor, used when creating a new Transform.",
+            "Parameters": [
+                {
+                    "Name": "position",
+                    "Type": "glm::vec3",
+                    "Description": "The position to set the new transform to, (0,0,0) by default."
+                },
+                {
+                    "Name": "orientation",
+                    "Type": "glm::quat",
+                    "Description": "The orientation to set the transform to, set to 0 in all axis by default. Note that glm::quat() is an invalid quaternion to set the quaternion to 0 in all axis use glm::quat(glm::vec3(0,0,0)) instead."
+                },
+                {
+                    "Name": "scale",
+                    "Type": "glm::vec3",
+                    "Description": "The scale to set the new transform to, (1.0, 1.0, 1.0) by default."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "GetPosition",
+            "Description": "Returns the transform's position in world space.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "glm::vec3",
+                "Description": "The position of the transform in world space."
+            }
+        },
+        {
+            "Name": "SetPosition",
+            "Description": "Sets the transform's position in world space.",
+            "Parameters": [
+                {
+                    "Name": "value",
+                    "Type": "glm::vec3",
+                    "Description": "The position to move the transform to."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "GetOrientation",
+            "Description": "Returns the transform's orientation.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "glm::quat",
+                "Description": "The orientation of the transform."
+            }
+        },
+        {
+            "Name": "SetOrientation",
+            "Description": "Sets the transform's orientation to the specified value.",
+            "Parameters": [
+                {
+                    "Name": "value",
+                    "Type": "glm::quat",
+                    "Description": "The value to set the orientation to."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "SetOrientation",
+            "Description": "Sets the transform's orientation to the specified value in Euler angles.",
+            "Parameters": [
+                {
+                    "Name": "value",
+                    "Type": "glm::vec3",
+                    "Description": "The value to set the orientation to in Euler angles."
+                },
+                {
+                    "Name": "degrees",
+                    "Type": "bool",
+                    "Description": "Whether the value is in degrees or radians, set to degrees by default. True for degrees false for radians."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "GetScale",
+            "Description": "Returns the transform's scale.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "glm::vec3",
+                "Description": "The scale of the transform."
+            }
+        },
+        {
+            "Name": "SetScale",
+            "Description": "Sets the transform's scale.",
+            "Parameters": [
+                {
+                    "Name": "value",
+                    "Type": "glm::vec3",
+                    "Description": "The value to set the scale to."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "GetMatrix",
+            "Description": "Returns the transform's model matrix. The model matrix can be used to convert between local and world space.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "glm::mat4",
+                "Description": "The model matrix of the transform."
+            }
+        },
+        {
+            "Name": "Translate",
+            "Description": "Moves the transform the by the specified translation.",
+            "Parameters": [
+                {
+                    "Name": "translation",
+                    "Type": "glm::vec3",
+                    "Description": "The amount to move the transform by."
+                },
+                {
+                    "Name": "localSpace",
+                    "Type": "bool",
+                    "Description": "Whether to move in local or global space. When moving in local space the calculation takes the transform's orientation into account."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "Rotate",
+            "Description": "Rotates the transform by the specified amount.",
+            "Parameters": [
+                {
+                    "Name": "rotation",
+                    "Type": "glm::quat",
+                    "Description": "The amount to rotate the transform by."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "Rotate",
+            "Description": "Rotates the transform the by the specified amount in euler angles.",
+            "Parameters": [
+                {
+                    "Name": "eulerRotation",
+                    "Type": "glm::vec3",
+                    "Description": "The amount to rotate by in euler angles."
+                },
+                {
+                    "Name": "degrees",
+                    "Type": "bool",
+                    "Description": "Whether the value is in degrees or radians, set to degrees by default. True for degrees false for radians."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "LookAt",
+            "Description": "Rotates the transform so that its z-axis is pointed towards the specified position.",
+            "Parameters": [
+                {
+                    "Name": "target",
+                    "Type": "glm::vec3",
+                    "Description": "The position to look towards."
+                },
+                {
+                    "Name": "up",
+                    "Type": "glm::vec3",
+                    "Description": "Used to decide the roll of the transform when looking at a position, this is the direction to point the transform's y-axis when rotated. Set to the global y-axis (0,1,0) by default."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "GenerateModelMatrix",
+            "Description": "Generates a new model matrix based on the current position, orientation, and scale.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        }
+    ]
+}

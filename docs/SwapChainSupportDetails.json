@@ -1,0 +1,21 @@
+{
+    "Name": "Swap Chain Support Details",
+    "Description": "Stores information on the capabilities of the physical device that can be used by the swap chain.",
+    "Variables": [
+        {
+            "Name": "capabilities",
+            "Type": "VkSurfaceCapabilitiesKHR",
+            "Description": "The surface capabilities of the physical device that was checked."
+        },
+        {
+            "Name": "formats",
+            "Type": "std::vector<VkSurfaceFormatKHR>",
+            "Description": "List of the surface formats of the physical device that was checked."
+        },
+        {
+            "Name": "presentModes",
+            "Type": "std::vector<VkPresentModeKHR>",
+            "Description": "List of the present modes of the physical device that was checked."
+        }
+    ]
+}

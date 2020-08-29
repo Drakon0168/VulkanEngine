@@ -63,7 +63,7 @@ public:
 	/// <summary>
 	/// Returns the list of uniform buffers storing current camera position
 	/// </summary>
-	/// <returns>std::vector<Buffer> of the uniform buffers</returns>
+	/// <returns>Buffer vector of the uniform buffers</returns>
 	std::vector<Buffer> GetUniformBuffers();
 
 	/// <summary>
@@ -75,19 +75,19 @@ public:
 	/// <summary>
 	/// Returns the list of swap chain images
 	/// </summary>
-	/// <returns>std::vector<VkImage> of the images used by the swap chain</returns>
+	/// <returns>VkImage vector of the images used by the swap chain</returns>
 	std::vector<VkImage> GetImages();
 
 	/// <summary>
 	/// Returns the vector of swap chain image views
 	/// </summary>
-	/// <returns>std::vector<VkImageView> of the image views used by the swap chain</returns>
+	/// <returns>VkImageView vector of the image views used by the swap chain</returns>
 	std::vector<VkImageView> GetImageViews();
 
 	/// <summary>
 	/// Returns the frame buffers used by the swap chain
 	/// </summary>
-	/// <returns>std::vector<VkFrameBuffer> of the frame buffers used by the swap chain</returns>
+	/// <returns>VkFrameBuffer vector of the frame buffers used by the swap chain</returns>
 	std::vector<VkFramebuffer> GetFrameBuffers();
 
 	/// <summary>

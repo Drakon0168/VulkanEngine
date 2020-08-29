@@ -1,0 +1,140 @@
+{
+    "Name": "Game Object",
+    "Description": "The GameObject class stores a reference to the mesh, transform, and physics object that are used to represent an entity in the game world. Any specific objects should inherit from the gameobject class, for instance a bullet class would inherit from GameObject",
+    "Variables": [
+        {
+            "Name": "transform",
+            "Type": "std::shared_ptr<Transform>",
+            "Description": "The transform used by this game object's physics object and mesh."
+        },
+        {
+            "Name": "physicsObject",
+            "Type": "std::shared_ptr<PhysicsObject>",
+            "Description": "The physics object used by this game object to control physics based movement."
+        },
+        {
+            "Name": "mesh",
+            "Type": "std::shared_ptr<Mesh>",
+            "Description": "The mesh used by this game object in order to render."
+        },
+        {
+            "Name": "instanceId",
+            "Type": "int",
+            "Description": "The index of the game object's instance in the mesh's instance list."
+        },
+        {
+            "Name": "active",
+            "Type": "bool",
+            "Description": "Boolean used to show if this game object is being used as part of the simulation, this will be turned on when a gameobject is spawned in and turned off when despawned."
+        }
+    ],
+    "Methods": [
+        {
+            "Name": "GameObject (Constructor)",
+            "Description": "The game object's constructor used to give initial values to the components that make up the game object.",
+            "Parameters": [
+                {
+                    "Name": "mesh",
+                    "Type": "std::shared_ptr<Mesh>",
+                    "Description": "The mesh to use for this game object."
+                },
+                {
+                    "Name": "transform",
+                    "Type": "std::shared_ptr<Transform>",
+                    "Description": "The transform to use for this game object."
+                },
+                {
+                    "Name": "physicsObject",
+                    "Type": "std::shared_ptr<PhysicsObject>",
+                    "Description": "The physics object to use for this game object."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "GetTransform",
+            "Description": "Returns the transform that is used by the game object.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "std::shared_ptr<Transform>",
+                "Description": "The transform used by the game object."
+            }
+        },
+        {
+            "Name": "SetTransform",
+            "Description": "Sets the transform to be used by the game object.",
+            "Parameters": [
+                {
+                    "Name": "value",
+                    "Type": "std::shared_ptr<Transform>",
+                    "Description": "The transform to use for this game object."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "GetPhysicsObject",
+            "Description": "Returns the physics object that is used by the game object.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "std::shared_ptr<PhysicsObject>",
+                "Description": "The physics object used by the game object."
+            }
+        },
+        {
+            "Name": "SetPhysicsObject",
+            "Description": "Sets the physics object to be used by the game object.",
+            "Parameters": [
+                {
+                    "Name": "value",
+                    "Type": "std::shared_ptr<PhysicsObject>",
+                    "Description": "The physics object to use for this game object."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "GetMesh",
+            "Description": "Returns the mesh that is used by the game object.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "std::shared_ptr<Mesh>",
+                "Description": "The mesh used by the game object."
+            }
+        },
+        {
+            "Name": "GetActive",
+            "Description": "Returns whether or not the game object is active.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "bool",
+                "Description": "True if the mesh is active."
+            }
+        },
+        {
+            "Name": "Spawn",
+            "Description": "Sets the game object as active so that it renders and participates in physics. This method can be overriden in order to add on spawn effects.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "Despawn",
+            "Description": "Sets the game object as inactive so that it no longer renders or participates in physics. This method can be overriden in order to add despacen effects.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "Update",
+            "Description": "Called once per frame this method handles updating, this will most likely need to be overriden in any child classes of GameObject in order to add unique functionality to them.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        }
+    ]
+}

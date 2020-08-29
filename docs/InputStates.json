@@ -1,0 +1,22 @@
+{
+    "Name": "Input States",
+    "Description": "The InputStates enum is used to keep track of the state of a button type input. On the hardware button inputs can be in one of two states, up or down, this enum however keeps track of two more states, pressed or released. The pressed and released states are set only on the first frame that an input is held down or up.",
+    "EnumStates": [
+        {
+            "Name": "Up",
+            "Description": "This state signifies that the key is up and will be true from the second frame a key is up to the first frame that it is down."
+        },
+        {
+            "Name": "Down",
+            "Description": "This state signifies that the key is being held down and will be true from the second frame a key is down to the first frame that it is up."
+        },
+        {
+            "Name": "Pressed",
+            "Description": "This state signifies that the key is down and will only be set on the first frame that the key is pressed down."
+        },
+        {
+            "Name": "Released",
+            "Description": "This state signifies that the key is up and will only be set on the first frame that the key is released."
+        }
+    ]
+}

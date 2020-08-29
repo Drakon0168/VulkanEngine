@@ -3,6 +3,7 @@
 
 #include "VulkanManager.h"
 #include "EntityManager.h"
+#include "GameManager.h"
 #include "WindowManager.h"
 #include "Camera.h"
 #include "TextureImages.h"
@@ -490,7 +491,16 @@ void SwapChain::UpdateUniformBuffer(uint32_t imageIndex)
 	ubo.view = Camera::GetMainCamera()->GetView();
 	ubo.projection = Camera::GetMainCamera()->GetProjection();
 	ubo.cameraPosition = Camera::GetMainCamera()->GetTransform()->GetPosition();
-	ubo.totalTime = Time::GetTotalTime();
+
+	std::vector<std::shared_ptr<Light>> lights = GameManager::GetInstance()->GetLights();
+	for (int i = 0; i < lights.size(); i++) {
+		if (i >= 5) {
+			break;
+		}
+
+		ubo.lights[i] = *lights[i];
+	}
+
 
 	void* data;
 	vkMapMemory(logicalDevice, uniformBuffers[imageIndex].GetBufferMemory(), 0, sizeof(ubo), 0, &data);
@@ -514,12 +524,9 @@ uint32_t SwapChain::BeginDraw()
 	else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
 		throw std::runtime_error("Failed to aquire next swap chain image!");
 	}
+
 	//Update uniform buffers
 	UpdateUniformBuffer(imageIndex);
-	//Make sure the image is not already in use
-	if (imagesInFlight[imageIndex] != VK_NULL_HANDLE) {
-		vkWaitForFences(logicalDevice, 1, &imagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);
-	}
 
 	//Mark the image as being in use
 	imagesInFlight[imageIndex] = inFlightFences[currentFrame];
@@ -545,6 +552,11 @@ void SwapChain::EndDraw(uint32_t imageIndex)
 	VkSemaphore signalSemaphores[] = { renderFinishedSemaphores[currentFrame] };
 	submitInfo.signalSemaphoreCount = 1;
 	submitInfo.pSignalSemaphores = signalSemaphores;
+
+	//Make sure the image is not already in use before submitting it
+	if (imagesInFlight[imageIndex] != VK_NULL_HANDLE) {
+		vkWaitForFences(logicalDevice, 1, &imagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);
+	}
 
 	//Reset fence
 	vkResetFences(logicalDevice, 1, &inFlightFences[currentFrame]);

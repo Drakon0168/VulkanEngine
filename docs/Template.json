@@ -1,6 +1,12 @@
 {
     "Name": "Class Name",
     "Description": "Description of the class' purpose and correct usage",
+    "EnumStates": [
+        {
+            "Name": "State Name",
+            "Description": "Description of the purpose of the state"
+        }
+    ],
     "Variables": [
         {
             "Name": "Variable Name",

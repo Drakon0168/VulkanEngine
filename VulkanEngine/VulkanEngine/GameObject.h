@@ -68,12 +68,12 @@ public:
 	/// <summary>
 	/// Sets the object to active and spawns it into the entity manager
 	/// </summary>
-	void Spawn();
+	virtual void Spawn();
 
 	/// <summary>
 	/// Sets the object as inactive and despawns it with the entity manager
 	/// </summary>
-	void Despawn();
+	virtual void Despawn();
 
 #pragma endregion
 
@@ -82,7 +82,7 @@ public:
 	/// <summary>
 	/// Updates this objects variables once per frame
 	/// </summary>
-	void Update();
+	virtual void Update();
 
 #pragma endregion
 };

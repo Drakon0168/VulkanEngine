@@ -1,0 +1,69 @@
+{
+    "Name": "Input",
+    "Description": "The Input class is used by the InputManager to represent a button input. It stores the key to check for and the current state of that key.",
+    "Variables": [
+        {
+            "Name": "state",
+            "Type": "InputStates",
+            "Description": "The current state of the key, can be either up, down, pressed, or released. Pressed and release will only be set on the first frame that the key is up or down."
+        },
+        {
+            "Name": "keyCode",
+            "Type": "int",
+            "Description": "The integer representation of the key to check, for letter or number keys these codes correspond to the char code for instance 'keyCode = 'Q'' will set the input to track the state of the 'Q' key. For more information on keycodes go to Microsoft's documentation page on Virtual Key Codes (https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes)."
+        }
+    ],
+    "Methods": [
+        {
+            "Name": "Input (Constructor)",
+            "Description": "Sets the key to check for input and the initial keystate.",
+            "Parameters": [
+                {
+                    "Name": "keyCode",
+                    "Type": "int",
+                    "Description": "The key to check for input."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "GetState",
+            "Description": "Returns the current state of the key.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "InputStates",
+                "Description": "The key's current state."
+            }
+        },
+        {
+            "Name": "GetKeyCode",
+            "Description": "Returns the the key that this input is listening for.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "int",
+                "Description": "The input's keycode."
+            }
+        },
+        {
+            "Name": "SetKeyCode",
+            "Description": "Sets the key to listen to for input.",
+            "Parameters": [
+                {
+                    "Name": "value",
+                    "Type": "int",
+                    "Description": "The integer representation of the key to check, for letter or number keys these codes correspond to the char code for instance 'SetKeyCode('Q')' will set the input to track the state of the 'Q' key. For more information on keycodes go to Microsoft's documentation page on Virtual Key Codes (https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes)."
+                }
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "Update",
+            "Description": "Checks the current state of the key and updates the Input's state to match.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        }
+    ]
+}

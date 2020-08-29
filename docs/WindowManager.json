@@ -1,0 +1,77 @@
+{
+    "Name": "Window Manager",
+    "Description": "Stores information on the window that the application is being displayed on.",
+    "Variables": [
+        {
+            "Name": "WINDOW_WIDTH",
+            "Type": "uint32_t",
+            "Description": "The width of the window in pixels."
+        },
+        {
+            "Name": "WINDOW_HEIGHT",
+            "Type": "uint32_t",
+            "Description": "The height of the window in pixels."
+        },
+        {
+            "Name": "instance",
+            "Type": "WindowManager*",
+            "Description": "The static instance of the window manager for the singleton design pattern."
+        },
+        {
+            "Name": "window",
+            "Type": "GLFWwindow*",
+            "Description": "The window that the application is runnign on."
+        }
+    ],
+    "Methods": [
+        {
+            "Name": "GetInstance",
+            "Description": "Returns the static instance of the WindowManager for the singleton design pattern.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "WindowManager*",
+                "Description": "The singleton instance of the WindowManager"
+            }
+        },
+        {
+            "Name": "GetWindow",
+            "Description": "Returns the window that the application is being displayed on.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "GLFWwindow*",
+                "Description": "The window that the application is being displayed on."
+            }
+        },
+        {
+            "Name": "InitWindow",
+            "Description": "Initializes GLFW, creates a window for the application, and sets up the frame buffer resized callback for when the window gets resized.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "FrameBufferResizedCallback",
+            "Description": "This method is called by GLFW whenever the window is resized.",
+            "Parameters": [
+                {
+                    "Name": "window",
+                    "Type": "GLFWwindow*",
+                    "Description": "The window that was resized."
+                },
+                {
+                    "Name": "width",
+                    "Type": "int",
+                    "Description": "The width of the window."
+                },
+                {
+                    "Name": "height",
+                    "Type": "int",
+                    "Description": "The height of the window."
+                }
+            ],
+            "Returns": {}
+        }
+    ]
+}

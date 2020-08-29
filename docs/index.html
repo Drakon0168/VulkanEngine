@@ -21,6 +21,7 @@
             <li data-value="CLASSES" v-on:click="ChangePage(0)">Classes</li>
             <li id="CurrentPage" data-value="HOME" v-on:click="ChangePage(1)">Home</li>
             <li data-value="SYSTEMS" v-on:click="ChangePage(2)">Systems</li>
+            <li data-value="TUTORIALS" v-on:click="ChangePage(3)">Tutorials</li>
         </ul>
         <div v-if="page == 0" id="Classes" class="container-fluid row">
             <div id="ClassList" class="col-2">
@@ -33,31 +34,31 @@
                     <li v-on:click="DisplayClass('InputManager')">Input Manager</li>
                     <li v-on:click="DisplayClass('PhysicsManager')">Physics Manager</li>
                     <li v-on:click="DisplayClass('SwapChain')">Swap Chain</li>
-                    <li>Time</li>
-                    <li>Vulkan Manager</li>
-                    <li>Window Manager</li>
+                    <li v-on:click="DisplayClass('Time')">Time</li>
+                    <li v-on:click="DisplayClass('VulkanManager')">Vulkan Manager</li>
+                    <li v-on:click="DisplayClass('WindowManager')">Window Manager</li>
                 </ul>
                 <h2>Components</h2>
                 <ul>
-                    <li>Buffer</li>
-                    <li>Camera</li>
-                    <li>Command Buffer</li>
-                    <li>Game Object</li>
-                    <li>Image</li>
-                    <li>Input</li>
+                    <li v-on:click="DisplayClass('Buffer')">Buffer</li>
+                    <li v-on:click="DisplayClass('Camera')">Camera</li>
+                    <li v-on:click="DisplayClass('CommandBuffer')">Command Buffer</li>
+                    <li v-on:click="DisplayClass('GameObject')">Game Object</li>
+                    <li v-on:click="DisplayClass('Image')">Image</li>
+                    <li v-on:click="DisplayClass('Input')">Input</li>
                     <li>Input Axis</li>
                     <li>Material</li>
-                    <li>Mesh</li>
+                    <li v-on:click="DisplayClass('Mesh')">Mesh</li>
                     <li>Physics Object</li>
-                    <li>Transform</li>
+                    <li v-on:click="DisplayClass('Transform')">Transform</li>
                 </ul>
                 <h2>Structs</h2>
                 <ul>
-                    <li>Light</li>
-                    <li>Queue Family Indices</li>
-                    <li>Swap Chain Support Details</li>
-                    <li>Transform Data</li>
-                    <li>Uniform Buffer Object</li>
+                    <li v-on:click="DisplayClass('Light')">Light</li>
+                    <li v-on:click="DisplayClass('QueueFamilyIndices')">Queue Family Indices</li>
+                    <li v-on:click="DisplayClass('SwapChainSupportDetails')">Swap Chain Support Details</li>
+                    <li v-on:click="DisplayClass('TransformData')">Transform Data</li>
+                    <li v-on:click="DisplayClass('UniformBufferObject')">Uniform Buffer Object</li>
                     <li v-on:click="DisplayClass('Vertex')">Vertex</li>
                 </ul>
                 <h2>Shaders</h2>
@@ -66,15 +67,25 @@
                 </ul>
                 <h2>Enums</h2>
                 <ul>
-                    <li>Controls</li>
-                    <li>Input States</li>
-                    <li>Mesh Types</li>
-                    <li>Physics Layers</li>
+                    <li v-on:click="DisplayClass('Controls')">Controls</li>
+                    <li v-on:click="DisplayClass('InputAxes')">Input Axes</li>
+                    <li v-on:click="DisplayClass('InputStates')">Input States</li>
+                    <li v-on:click="DisplayClass('MeshTypes')">Mesh Types</li>
+                    <li v-on:click="DisplayClass('PhysicsLayers')">Physics Layers</li>
                 </ul>
             </div>
             <div id="ClassContent" v-if="currentClass" class="col">
                 <h2>{{currentClass.Name}}</h2>
                 <p>{{currentClass.Description}}</p>
+                <div v-if="currentClass.EnumStates">
+                    <h3>Enum States</h3>
+                    <ul>
+                        <li v-for="state in currentClass.EnumStates">
+                            <h4>{{state.Name}}</h4>
+                            <p>{{state.Description}}</p>
+                        </li>
+                    </ul>
+                </div>
                 <div v-if="currentClass.Variables">
                     <h3>Variables</h3>
                     <ul>
@@ -120,10 +131,109 @@
                 <li>Fork or Download the Git Repository</li>
                 <li>Make sure you have Vulkan installed and that it can run on your computer</li>
                 <li>Make sure that the path to the Vulkan SDK is correct in project settings</li>
+                <li>Download the models folder</li>
             </ol>
-        </div>
+            <h2>Git Repository</h2>
+            <p>If you haven't already, Fork or download the github repository <a href="https://github.com/Drakon0168/VulkanEngine">here</a></p>
+            <h2>Install Vulkan</h2>
+            <p>Make sure you have the Vulkan SDK installed, it can be found at Khronos' website <a href="https://www.khronos.org/vulkan/">here</a> the engine was written with VulkanSDK version 1.2.135.0, if you are using a different version and run into issues try using that version of Vulkan instead. Once the Vulkan SDK is installed try running the vkcube.exe found in the VulkanSDK/1.2.135.0/Bin folder to ensure that vulkan is compatible with your computer.</p>
+            <h2>Project Settings</h2>
+            <p>Once you have vulkan installed and have verified that it runs on your computer you may need to change the path to the VulkanSDK in the project settings of the Visual Studio project. In Visual Studio go to Project>VulkanEngineProperties, to open project properties or right click VulkanEngine in the solution explorer window and click properties. Make sure that the configuration is set to All Configurations and the platform is x64. Go to ConfigurationProperties>C/C++>General and edit Additional Include Directories, check that the path to the VUlkanSDK Include folder set in Additional Include Directories matches the path on your computer. Go to ConfigurationProperties>Linker>General and edit Additional Library Directories, check that the path to the VUlkanSDK Lib folder set in Additional Library Directories matches the path on your computer.</p>
+            <h2>Download the Test Models</h2>
+            <p>Due to file size the folder with the test models for the engine was unable to be uploaded to github, this folder should be given seperately if you do not have access to this folder there will be separate instructions belot.</p>
+            <h3>With the models folder</h3>
+            <p>Paste the models folder into the project directory the project directory is the folder with all of the .ccp and .h files (VulkanEngine\VulkanEngine\VulkanEngine).</p>
+            <h3>Without the models folder</h3>
+            <p>If you do not have access to the models folder, you must make your own. Go to the project directory and create a folder named "models", the project directory is the folder with the .cpp and .h files (VulkanEngine\VulkanEngine\VulkanEngine). Add a model to test to the folder you just created. The model must be a .obj file as other model types are not currently supported. Now that the model has been added we have to change the EntityManager class to use the new model, open EntityManager.cpp in VisualStudio. Go to the LoadMeshes method and change the path to the last model to the path to the model you just added ("models/testmodel.obj").</p>
+            <h2>Run the Engine</h2>
+            <p>Make sure you are set to build in x64 and run the project you should be able to run without errors.</p>
+           
+            <h2>Getting Started</h2>
+            <p>Here are some basic steps to get you started with our Engine and with Vulkan as well!</p>
+            <h2>Step One: Download the Vulkan SDK</h2>
+            <p>
+            In our engine, we have included most of the dependencies you would otherwise need to download and set up yourself, but you will still need to download the Vulkan SDK on your machine. To find it, click <a href="https://vulkan.lunarg.com/sdk/home">here</a>.  In our engine, we use Vulkan SDK version 1.2.135, but as long as you use the newest version, you should be fine. Proceed with installation and be mindful of where it installs. My Vulkan SDK is in my C drive in a folder called VulkanSDK.  I suggest you save it to the same place to make things easier for yourself while setting up your project!
+            </p>
+            <br>
+            <p>Time to check if Vulkan was installed correctly!  This next step will ensure that installation was successful and your graphics card and driver supports Vulkan. Pro tip: make sure your graphics card driver is FULLY up to date.</p>
+            <br>
+            <p>Go to the directory of which you installed Vulkan, open the Bin folder, and click on vkcube.exe. Do you see this?</p>
+            <img src="images/vkcube.png" alt="a cube with LunarG written on it.">
+            <br>
+            <p>If you see this cube spinning about, you are on the right track! If not, be sure your drivers are up to date and that <a href="https://vulkan.gpuinfo.org/">your graphics card is supported</a> by Vulkan</p>
+            <br>
+            <h2>Step Two: Link it Up!</h2>
+            <br>
+            <p>Open up the visual studio project! Most of this should be set up, but I will go through it just in case!  Right click on the project and open up properties.</p>
+            <br>
+            <img src="images/properties.png" alt="arrow on the property tab at the bottom of the drop down">
+            <br>
+            <p>Make sure all configurations and x64 are selected up top! This is so we are using the same dependencies whether we are in release or debug mode. </p>
+            <br>
+            <img src="images/propertypages.png" alt="the top of the property page ensuring this is in x64 and all configurations">
+            <p>Head to C/C++ - > General and select Additional Include Directories.</p>
+            <img src="images/additionalincludedirectories.png" alt="the properties page, include additional directories tab">
+            <br>
+            <p>Select Edit. Here you will see our additional include directories. For you, There should be one for your Vulkan SDK include path and one that says $(SolutionDir)Include. $(SolutionDir)Include lets us get all of the files we need from that folder</p>
+            <br>
+            <img src="images/includefiles.png" alt="the include files necessary">
+            <p>If the path you created for your Vulkan SDK is different, please either change the path or edit it here. </p>
+            <h2>What's in the Include Folder?</h2>
+            <p>Let’s take a look!  Please note this is just an explanation of each of these libraries!</p>
+            <table>
+            <tr>
+               <td> GLFW </td>
+                <td>This library helps us create a window! GLFW supports Windows, Linux, and MacOS! By using this, we can benefit from the cross platform advantages of Vulkan</td>
+                </tr>
+                <tr>
+                <td>GLM </td>
+                    <td>Linear algebra operations so we do not have to recreate them ourselves</td>
+                </tr>
+                <tr>
+                <td>STB</td>
+                    <td>used to load images like textures!</td>
+                </tr>
+                <tr>
+                <td>TinyObjLoader</td>
+                    <td>loads vertices and faces from an OBJ file. Much easier than creating one ourselves! </td>
+                </tr>
+            </table>
+            <p>If Visual Studio tells you any of these files are not found, go back into Additional Include Directories and add the path of the file that’s giving you trouble. Visual studio wasn’t recognizing I had the STB folder in my directory, so I added the absolute path. For example : C:\Users\Name\Documents\VulkanEngine\include\stb.  You should not have to do this though. </p>
+            
+            <h2>Finishing Complte setup (non engine specific)</h2>
+            <p>Here is the rest of our setup. This is already set up for you, but if you are interested in the complete setup, stay tuned! </p>
+            <br>
+            <p>Head to Linker -> General, and select edit on Additional Library Directories. Add the file paths for the Vulkan and GLFW object files:</p>
+            <img src="images/libs.png" alt="library files">
+            <p>Here you should include the Lib folder for VulkanSDK and the lib folder for GLFW. When you first download GLFW, your Lib folder is not separate and may look like this path instead: </p>
+            <img src="images/vc19.png" alt="vc19">
+            <br>
+            <p>Next, head to Linker -> Input, and click “edit” on Additional Dependencies. Enter the names of the Vulkan and GLFW object files! </p>
+            <img src ="images/libdependent.png" alt="VULKAN and GLFW object files!">
+            <br>
+            <p>Finally, head to C/C++ -> Language Standard and make sure the the compiler supports C++17 features:</p>
+             <img src ="images/cppstandard.png" alt="ISO C++ standard">
+            <br>
+            <p>Great job! You’re done! Now make sure you’re always compiling in 64 bit mode since that’s what we set up for.  This is found at the top of your screen in Visual Studio: </p>
+            <img src="images/VSdebug.png" alt="you should be in x64">
+            <p>You’re all set!</p>
+            
+            <h2>Step Three: Add Necessary Folders</h2>
+            <p>Your Visual Studio project should be all set up! If you run it now, it will not run and it will tell you it’s missing the file models/room.obj. The reason for this is because we could not include the obj file in the repo. </p>
+            <br>
+            <p>Open the path of where you are storing our engine and create a folder called “models.” Do the same for a “textures” folder, too.</p>
+            <img src="images/path.png" alt="path where the models and shaders files should be">
+            <p>Inside of it, we will put the model. We are using <a href="https://sketchfab.com/3d-models/viking-room-a49f1b8e4f5c4ecf9e1fe7d81915ad38">"Viking Room"</a>  by nigelgoh for the sake of this tutorial but any OBJ should do.  Here is the <a href="https://vulkan-tutorial.com/resources/viking_room.obj">OBJ file</a> and <a href="https://vulkan-tutorial.com/resources/viking_room.png">material.</a>  As you can guess, the OBJ file goes in the models folder and the material goes in the textures folder. If you are testing for us, please try as many 3d models as possible! </p>
+            <br>
+            <p>Run again and see what happens! You should see something like this : </p>
+            
+            <br>
+            <p>Congratulations! You have now set up our engine and are ready to go!</p>
         <div v-if="page == 2" id="Systems" class="container-fluid">
         </div>
+        <div v-if="page == 3" id="Tutorials" class="container-fluid">
+        </div>
+    </div>
     </div>
 </body>
 </html>

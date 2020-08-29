@@ -11,12 +11,12 @@ namespace Controls {
 		Jump,
 		Sprint,
 		Exit,
+		LeftClick,
+		RightClick,
 		ControlCount
 	};
 
 	enum InputAxes {
-		Horizontal,
-		Vertical,
 		AxisCount
 	};
 }

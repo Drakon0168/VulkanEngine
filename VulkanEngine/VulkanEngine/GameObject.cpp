@@ -75,6 +75,7 @@ void GameObject::Spawn()
 	}
 
 	instanceId = mesh->AddInstance(transform);
+	physicsObject->SetAlive(true);
 	active = true;
 }
 
@@ -82,6 +83,7 @@ void GameObject::Despawn()
 {
 	mesh->RemoveInstance(instanceId);
 	instanceId = -1;
+	physicsObject->SetAlive(false);
 	active = false;
 }
 

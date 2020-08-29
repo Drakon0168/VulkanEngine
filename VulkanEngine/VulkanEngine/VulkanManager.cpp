@@ -372,16 +372,13 @@ void VulkanManager::MainLoop()
 	while (!glfwWindowShouldClose(WindowManager::GetInstance()->GetWindow())) {
 		glfwPollEvents();
 
-		//Calculate time change per frame
-		Time::Update();
-
-		//std::cout << "FPS: " << 1.0f / Time::GetDeltaTime() << std::endl;
-
-		//Update Inputs
-		InputManager::GetInstance()->Update();
-
 		Update();
 		Draw();
+
+		//Exit the application when the exit key is pressed
+		if (InputManager::GetInstance()->GetKeyPressed(Controls::Exit)) {
+			break;
+		}
 	}
 
 	vkDeviceWaitIdle(logicalDevice);
@@ -401,6 +398,10 @@ void VulkanManager::Draw()
 
 void VulkanManager::Update()
 {
+	Time::Update();
+
+	InputManager::GetInstance()->Update();
+
 	GameManager::GetInstance()->Update();
 
 	PhysicsManager::GetInstance()->Update();

@@ -1,0 +1,45 @@
+{
+    "Name": "Light",
+    "Description": "Struct used to store data on the lights in the scene.",
+    "Variables": [
+        {
+            "Name": "position",
+            "Type": "glm::vec3",
+            "Description": "The position of the light in world space."
+        },
+        {
+            "Name": "color",
+            "Type": "glm::vec3",
+            "Description": "The color of the light."
+        },
+        {
+            "Name": "range",
+            "Type": "float",
+            "Description": "The maximum distance that the light can affect objects."
+        }
+    ],
+    "Methods": [
+        {
+            "Name": "Light (Constructor)",
+            "Description": "Sets initial values for Light variables.",
+            "Parameters": [
+                {
+                    "Name": "position",
+                    "Type": "glm::vec3",
+                    "Description": "The position of the light in world space, set to the origin by default."
+                },
+                {
+                    "Name": "color",
+                    "Type": "glm::vec3",
+                    "Description": "The color of the light, set to the black by default and must be changed for the light to affect anything."
+                },
+                {
+                    "Name": "range",
+                    "Type": "float",
+                    "Description": "The range of the light, this affects how far away an surface can be and still be affected by the light, set to 0.0f by default and must be changed for the light to affect anything."
+                }
+            ],
+            "Returns": {}
+        }
+    ]
+}

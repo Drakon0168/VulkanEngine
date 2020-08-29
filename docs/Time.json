@@ -1,0 +1,62 @@
+{
+    "Name": "Time",
+    "Description": "Manager class that keeps track of the total time passed since the application started, and the time passed between the current and last update.",
+    "Variables": [
+        {
+            "Name": "currentTime",
+            "Type": "std::chrono::steady_clock::time_point",
+            "Description": "The current time, updated once per frame when Time's Update method is called."
+        },
+        {
+            "Name": "lastTime",
+            "Type": "std::chrono::steady_clock::time_point",
+            "Description": "The previous time, updated once per frame and used to calculate deltaTime."
+        },
+        {
+            "Name": "totalTime",
+            "Type": "float",
+            "Description": "The total time in seconds since the application was started or Time's Reset method was last called."
+        },
+        {
+            "Name": "deltaTime",
+            "Type": "float",
+            "Description": "The time between this frame and the last in seconds."
+        }
+    ],
+    "Methods": [
+        {
+            "Name": "GetTotalTime",
+            "Description": "Returns the total time in seconds since the application was started or the Time's Reset method was last called.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "Float",
+                "Description": "Total time in seconds since the application was started or the Time's Reset method was last called."
+            }
+        },
+        {
+            "Name": "GetDeltaTime",
+            "Description": "Returns the time between this frame and the last in seconds.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "Float",
+                "Description": "Returns the time between this frame and the last in seconds."
+            }
+        },
+        {
+            "Name": "Update",
+            "Description": "Updates totalTime and deltaTime, called once per frame.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "Reset",
+            "Description": "Resets totalTime to measure from the point that this was last called rather than the start of the application.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        }
+    ]
+}

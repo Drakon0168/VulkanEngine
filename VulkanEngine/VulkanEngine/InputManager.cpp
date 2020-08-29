@@ -3,7 +3,8 @@
 
 #include "WindowManager.h"
 
-//#include <Windows.h>
+//Windows Includes
+#include <Windows.h>
 
 #pragma region Singleton
 
@@ -40,8 +41,10 @@ InputManager::InputManager()
     controls[Controls::Left].SetKeyCode('A');
     controls[Controls::Right].SetKeyCode('D');
     controls[Controls::Jump].SetKeyCode(' ');
-    //controls[Controls::Sprint].SetKeyCode(VK_LSHIFT);
-    //controls[Controls::Exit].SetKeyCode(VK_ESCAPE);
+    controls[Controls::Sprint].SetKeyCode(VK_LSHIFT);
+    controls[Controls::Exit].SetKeyCode(VK_ESCAPE);
+    controls[Controls::LeftClick].SetKeyCode(VK_LBUTTON);
+    controls[Controls::RightClick].SetKeyCode(VK_RBUTTON);
 }
 
 #pragma endregion

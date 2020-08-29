@@ -1,0 +1,283 @@
+{
+    "Name": "VulkanManager",
+    "Description": "Manager class that handles the Vulkan instance and interfaces with the physical device.",
+    "Variables": [
+        {
+            "Name": "instance",
+            "Type": "VulkanManager*",
+            "Description": "Static instance of the Vulkan Manager for the singleton design pattern."
+        },
+        {
+            "Name": "vulkanInstance",
+            "Type": "VkInstance",
+            "Description": "The Vulkan instance, this is what Vulkan uses to refrence the application itself. It stores information about the application such as the name, version, engine, etc."
+        },
+        {
+            "Name": "physicalDevice",
+            "Type": "VkPhysicalDevice",
+            "Description": "The physical device is what Vulkan calls the hardware that the application is running on this is the CPU or Graphics card that is used by the application."
+        },
+        {
+            "Name": "logicalDevice",
+            "Type": "VkDevice",
+            "Description": "The logical device is what Vulkan uses to allow us to interface with the physical device."
+        },
+        {
+            "Name": "surface",
+            "Type": "VkSurfaceKHR",
+            "Description": "The surface is what Vulkan calls the monitor that the application is displayed on."
+        },
+        {
+            "Name": "graphicsQueue",
+            "Type": "VkQueue",
+            "Description": "The graphics queue is where we send draw commands to tell the graphics card what to display to the window."
+        },
+        {
+            "Name": "presentQueue",
+            "Type": "VkQueue",
+            "Description": "The present queue is where we send the finished render in order to actually display it on the screen."
+        },
+        {
+            "Name": "deviceExtensions",
+            "Type": "std::vector<const char*>",
+            "Description": "This is the list of device extensions that we want to use in our application. This is used to make sure that the computer the application runs on is capable of all of the various device features we might want to use."
+        }
+    ],
+    "Methods": [
+        {
+            "Name": "GetInstance",
+            "Description": "Returns the static instance of the vulkan manager for the singleton design pattern.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "VulkanManager*",
+                "Description": "Static instance of the vulkan manager for the singleton design pattern."
+            }
+        },
+        {
+            "Name": "GetVulkanInstance",
+            "Description": "Returns the application instance.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "VkInstance",
+                "Description": "The vulkan application instance for this application."
+            }
+        },
+        {
+            "Name": "GetPhysicalDevice",
+            "Description": "Returns the physical device used by the application. The physical device represents the CPU or graphics card that the application is being run on, we use it to check for device features and specifications of the hardware.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "VkPhysicalDevice",
+                "Description": "The physical device used by this application."
+            }
+        },
+        {
+            "Name": "GetLogicalDevice",
+            "Description": "Returns the logical device used by this application. The logical device is used to allocate memory and interface with the physical device.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "VkDevice",
+                "Description": "The logical device used by this application."
+            }
+        },
+        {
+            "Name": "GetSurface",
+            "Description": "Returns the surface that is displaying the application.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "VkSurfaceKHR",
+                "Description": "The surface that is being used to display the application."
+            }
+        },
+        {
+            "Name": "GetGraphicsQueue",
+            "Description": "Returns the graphics queue used by the application. The graphics queue is used to draw objects.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "VkQueue",
+                "Description": "The graphics queue used by this application."
+            }
+        },
+        {
+            "Name": "GetPresentQueue",
+            "Description": "Returns the present queue used by this application. The present queue is used to display images to the surface.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "VkQueue",
+                "Description": "The present queue used by this application."
+            }
+        },
+        {
+            "Name": "FindMemoryType",
+            "Description": "Checks for support for the specified memory type.",
+            "Parameters": [
+                {
+                    "Name": "typeFilter",
+                    "Type": "uint32_t",
+                    "Description": "Filter for suitable memory types."
+                },
+                {
+                    "Name": "properties",
+                    "Type": "VkMemoryPropertyFlags",
+                    "Description": "Memory properties required by the application."
+                }
+            ],
+            "Returns": {
+                "Type": "uint32_t",
+                "Description": "The index of a suitable memory type in the physical devices memory properties list."
+            }
+        },
+        {
+            "Name": "FindQueueFamilies",
+            "Description": "Finds the queue families required by the application on the specified physical device.",
+            "Parameters": [
+                {
+                    "Name": "physicalDevice",
+                    "Type": "VkPhysicalDevice",
+                    "Description": "The physical device used by the application. This is the device that we will look for queue families on."
+                }
+            ],
+            "Returns": {
+                "Type": "QueueFamilyIndices",
+                "Description": "A QueueFamilyIndices struct storing the indices of the required queue families."
+            }
+        },
+        {
+            "Name": "Run",
+            "Description": "Starts the application. This method initializes the GLFW window, and Vulkan. It also sets up the camera, starts the main game loop, and cleans up resources when the main loop function ends.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "InitVulkan",
+            "Description": "Creates and allocates vulkan resources.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "CreateInstance",
+            "Description": "Creates and allocates the VkInstance used by the application.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "CreateLogicalDevice",
+            "Description": "Creates and allocates the logical device used by the application.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "CreateSurface",
+            "Description": "Creates and allocates the surface used by the application.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "Cleanup",
+            "Description": "Cleans up all vulkan resources.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "MainLoop",
+            "Description": "The main game loop for the application, this method is repeated once per frame until the window is closed. Before starting the loop it resets the Time class so that initialization time isn't included in totalTime. Then it initializes the gameobjects and starts the loop.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "Draw",
+            "Description": "Called once per frame the draw method calls the swap chain's begin draw, then entity manager's draw, followed by the swap chain's end draw to draw all objects in the scene.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "Update",
+            "Description": "Calls Update methods on the other manager classes.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "GetRequiredExtensions",
+            "Description": "Finds the physical device extensions required for the application to run.",
+            "Parameters": [
+            ],
+            "Returns": {
+                "Type": "std::vector<const char*>",
+                "Description": "The list of required device extensions"
+            }
+        },
+        {
+            "Name": "PickPhysicalDevice",
+            "Description": "Selects a physical device to use.",
+            "Parameters": [
+            ],
+            "Returns": {}
+        },
+        {
+            "Name": "CheckDeviceExtensionSupport",
+            "Description": "Checks that the physical device supports the required extensions. If the device does not support the required extension the application will not be able to run.",
+            "Parameters": [
+                {
+                    "Name": "physicalDevice",
+                    "Type": "VkPhysicalDevice",
+                    "Description": "The physical device to check."
+                }
+            ],
+            "Returns": {
+                "Type": "Bool",
+                "Description": "True if the device supports the extensions."
+            }
+        },
+        {
+            "Name": "RateDevice",
+            "Description": "Used to select a physical device to use in the event that there are multiple to choose from, this method rates a physical device based on its capabilities, the better the device is the higher the score.",
+            "Parameters": [
+                {
+                    "Name": "physicalDevice",
+                    "Type": "VkPhysicalDevice",
+                    "Description": "The physical device to rate."
+                }
+            ],
+            "Returns": {
+                "Type": "Int",
+                "Description": "The score given to the device, the higher the score the better the device."
+            }
+        },
+        {
+            "Name": "IsDeviceSuitable",
+            "Description": "Checks that the physical device is capable of running the application. Returns true if the device is suitable.",
+            "Parameters": [
+                {
+                    "Name": "physicalDevice",
+                    "Type": "VkPhysicalDevice",
+                    "Description": "The physical device to check."
+                },
+                {
+                    "Name": "deviceFeatures",
+                    "Type": "VkPhysicalDeviceFeatures",
+                    "Description": "The physical device features to check for."
+                }
+            ],
+            "Returns": {
+                "Type": "Bool",
+                "Description": "True if the device is suitable."
+            }
+        }
+    ]
+}
