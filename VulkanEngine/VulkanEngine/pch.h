@@ -42,6 +42,7 @@
 //Enums
 #include "MeshTypes.h"
 #include "Controls.h"
+#include "ColliderTypes.h"
 #include "InputStates.h"
 #include "PhysicsLayers.h"
 

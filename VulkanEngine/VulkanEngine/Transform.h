@@ -13,6 +13,8 @@ private:
 	glm::mat4 model;
 	bool isDirty; //Keeps track of whether position rotation or scale have changed to know when to regenerate the model matrix
 
+	std::shared_ptr<Transform> parent = nullptr;
+
 #pragma region Model Matrix
 
 /// <summary>
@@ -29,7 +31,8 @@ public:
 	Transform(
 		glm::vec3 postition = glm::vec3(0.0f, 0.0f, 0.0f), 
 		glm::quat orientation = glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)), 
-		glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f));
+		glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f),
+		std::shared_ptr<Transform> parent = nullptr);
 
 #pragma endregion
 
@@ -83,6 +86,18 @@ public:
 	/// </summary>
 	/// <returns>The updated mat4 model matrix</returns>
 	glm::mat4 GetModelMatrix();
+
+	/// <summary>
+	/// Returns the parent transform of this transform
+	/// </summary>
+	/// <returns>The parent transform</returns>
+	std::shared_ptr<Transform> GetParent();
+
+	/// <summary>
+	/// Sets the parent transform of this transform
+	/// </summary>
+	/// <param name="value">The transform to set as parent</param>
+	void SetParent(std::shared_ptr<Transform> value);
 
 #pragma endregion
 

@@ -136,11 +136,13 @@ void Mesh::UpdateInstanceBuffer()
 		Buffer::CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, *instanceBuffer);
 	}
 
-	//Copy Data
-	void* data;
-	vkMapMemory(logicalDevice, instanceBuffer->GetBufferMemory(), 0, bufferSize, 0, &data);
-	memcpy(data, bufferData.data(), bufferSize);
-	vkUnmapMemory(logicalDevice, instanceBuffer->GetBufferMemory());
+	//Copy data if there are instances to copy
+	if (bufferData.size() > 0) {
+		void* data;
+		vkMapMemory(logicalDevice, instanceBuffer->GetBufferMemory(), 0, bufferSize, 0, &data);
+		memcpy(data, bufferData.data(), bufferSize);
+		vkUnmapMemory(logicalDevice, instanceBuffer->GetBufferMemory());
+	}
 }
 
 void Mesh::UpdateVertexBuffer()

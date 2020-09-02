@@ -72,19 +72,19 @@ void PhysicsManager::DetectCollisions()
     //Check Dynamic objects against all objects
     for (size_t i = 0; i < physicsObjects[PhysicsLayers::Dynamic].size(); i++) {
         for (size_t j = i + 1; j < physicsObjects[PhysicsLayers::Dynamic].size(); j++) {
-            if (CheckCollision(physicsObjects[PhysicsLayers::Dynamic][i], physicsObjects[PhysicsLayers::Dynamic][j])) {
+            if (physicsObjects[PhysicsLayers::Dynamic][i]->GetCollider()->CheckCollision(physicsObjects[PhysicsLayers::Dynamic][j]->GetCollider().get())) {
                 ResolveCollision(physicsObjects[PhysicsLayers::Dynamic][i], physicsObjects[PhysicsLayers::Dynamic][j]);
             }
         }
 
         for (size_t j = 0; j < physicsObjects[PhysicsLayers::Static].size(); j++) {
-            if (CheckCollision(physicsObjects[PhysicsLayers::Dynamic][i], physicsObjects[PhysicsLayers::Static][j])) {
+            if (physicsObjects[PhysicsLayers::Dynamic][i]->GetCollider()->CheckCollision(physicsObjects[PhysicsLayers::Static][j]->GetCollider().get())) {
                 ResolveCollision(physicsObjects[PhysicsLayers::Dynamic][i], physicsObjects[PhysicsLayers::Static][j]);
             }
         }
 
         for (size_t j = 0; j < physicsObjects[PhysicsLayers::Trigger].size(); j++) {
-            if (CheckCollision(physicsObjects[PhysicsLayers::Dynamic][i], physicsObjects[PhysicsLayers::Trigger][j])) {
+            if (physicsObjects[PhysicsLayers::Dynamic][i]->GetCollider()->CheckCollision(physicsObjects[PhysicsLayers::Trigger][j]->GetCollider().get())) {
                 //TODO: Call the trigger's on collide function
             }
         }
@@ -93,20 +93,11 @@ void PhysicsManager::DetectCollisions()
     //Check Static objects against triggers
     for (size_t i = 0; i < physicsObjects[PhysicsLayers::Static].size(); i++) {
         for (size_t j = 0; j < physicsObjects[PhysicsLayers::Trigger].size(); j++) {
-            if (CheckCollision(physicsObjects[PhysicsLayers::Static][i], physicsObjects[PhysicsLayers::Trigger][j])) {
+            if (physicsObjects[PhysicsLayers::Static][i]->GetCollider()->CheckCollision(physicsObjects[PhysicsLayers::Trigger][j]->GetCollider().get())) {
                 //TODO: Call the trigger's on collide function
             }
         }
     }
-}
-
-bool PhysicsManager::CheckCollision(std::shared_ptr<PhysicsObject> physicsObject1, std::shared_ptr<PhysicsObject> physicsObject2)
-{
-    //TODO: Change this to use colliders rather than a radius check
-    glm::vec3 direction = physicsObject1->GetTransform()->GetPosition() - physicsObject2->GetTransform()->GetPosition();
-    float distance = direction.x * direction.x + direction.y * direction.y + direction.z * direction.z;
-
-    return distance < 1.0f;
 }
 
 #pragma endregion

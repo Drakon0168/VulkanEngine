@@ -63,6 +63,12 @@ bool GameObject::GetActive()
 
 #pragma region Spawning
 
+void GameObject::Init()
+{
+	physicsObject->GetCollider()->GenerateFromMesh(mesh);
+	physicsObject->GetCollider()->ToggleVisible(true);
+}
+
 void GameObject::Spawn()
 {
 	if (transform == nullptr) {

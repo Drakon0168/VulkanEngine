@@ -3,9 +3,12 @@
 
 #include "PhysicsManager.h"
 
+#include "Collider.h"
+#include "SphereCollider.h"
+
 #pragma region Constructor
 
-PhysicsObject::PhysicsObject(std::shared_ptr<Transform> transform, PhysicsLayers physicsLayer, float mass, bool affectedByGravity, bool alive)
+PhysicsObject::PhysicsObject(std::shared_ptr<Transform> transform, PhysicsLayers physicsLayer, ColliderTypes::ColliderTypes colliderType, float mass, bool affectedByGravity, bool alive)
 {
 	this->transform = transform;
 	this->mass = mass;
@@ -15,6 +18,14 @@ PhysicsObject::PhysicsObject(std::shared_ptr<Transform> transform, PhysicsLayers
 
 	velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 	acceleration = glm::vec3(0.0f, 0.0f, 0.0f);
+
+	switch (colliderType) {
+	case ColliderTypes::Sphere:
+	default:
+		collider = std::make_shared<SphereCollider>();
+		collider->SetParentTransform(transform);
+		break;
+	}
 }
 
 #pragma endregion
@@ -71,9 +82,14 @@ void PhysicsObject::SetAlive(bool value)
 	alive = value;
 }
 
+std::shared_ptr<Collider> PhysicsObject::GetCollider()
+{
+	return collider;
+}
+
 #pragma endregion
 
-#pragma Physics
+#pragma region Physics
 
 void PhysicsObject::ApplyForce(glm::vec3 force, bool applyMass)
 {
@@ -107,6 +123,11 @@ void PhysicsObject::Update()
 		if (position.y <= 0.5f) {
 			velocity = glm::vec3(velocity.x, velocity.y * -0.8f, velocity.z);
 			transform->SetPosition(glm::vec3(position.x, 0.5f, position.z));
+		}
+
+		//Update collider
+		if (collider != nullptr) {
+			collider->Update();
 		}
 	}
 }

@@ -70,11 +70,18 @@ void EntityManager::LoadMeshes()
 
     meshes[MeshTypes::Model] = std::make_shared<Mesh>(materials[0]);
     meshes[MeshTypes::Model]->LoadModel("models/room.obj");
+
+    meshes[MeshTypes::SphereCollider] = std::make_shared<Mesh>(materials[1]);
+    meshes[MeshTypes::SphereCollider]->GenerateSphere(10);
+
+    meshes[MeshTypes::CubeCollider] = std::make_shared<Mesh>(materials[1]);
+    meshes[MeshTypes::CubeCollider]->GenerateSphere(50);
 }
 
 void EntityManager::LoadMaterials()
 {
     materials.push_back(std::make_shared<Material>("shaders/vert.spv", "shaders/frag.spv"));
+    materials.push_back(std::make_shared<Material>("shaders/vert.spv", "shaders/unlitfrag.spv", true));
 }
 
 #pragma endregion

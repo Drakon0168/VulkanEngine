@@ -155,6 +155,7 @@
   <ItemGroup>
     <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Collider.cpp" />
     <ClCompile Include="CommandBuffer.cpp" />
     <ClCompile Include="DebugManager.cpp" />
     <ClCompile Include="EntityManager.cpp" />
@@ -173,6 +174,7 @@
     </ClCompile>
     <ClCompile Include="PhysicsManager.cpp" />
     <ClCompile Include="PhysicsObject.cpp" />
+    <ClCompile Include="SphereCollider.cpp" />
     <ClCompile Include="SwapChain.cpp" />
     <ClCompile Include="Time.cpp" />
     <ClCompile Include="Transform.cpp" />
@@ -183,6 +185,8 @@
   <ItemGroup>
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Collider.h" />
+    <ClInclude Include="ColliderTypes.h" />
     <ClInclude Include="CommandBuffer.h" />
     <ClInclude Include="Controls.h" />
     <ClInclude Include="DebugManager.h" />
@@ -204,6 +208,7 @@
     <ClInclude Include="PhysicsManager.h" />
     <ClInclude Include="PhysicsObject.h" />
     <ClInclude Include="QueueFamilyIndices.h" />
+    <ClInclude Include="SphereCollider.h" />
     <ClInclude Include="SwapChain.h" />
     <ClInclude Include="SwapChainSupportDetails.h" />
     <ClInclude Include="Time.h" />
@@ -219,17 +224,18 @@
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">call $(SolutionDir)compile.bat</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Shaders</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)shaders\frag.spv;$(ProjectDir)shaders\vert.spv;%(Outputs)</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)shaders\BasicShader.frag;$(ProjectDir)shaders\BasicShader.vert;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)shaders\frag.spv;$(ProjectDir)shaders\vert.spv;$(ProjectDir)shaders\unlitFrag.spv;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)shaders\BasicShader.frag;$(ProjectDir)shaders\BasicShaderUnlit.frag;$(ProjectDir)shaders\BasicShader.vert;%(AdditionalInputs)</AdditionalInputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">call $(SolutionDir)compile.bat</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Shaders</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)shaders\frag.spv;$(ProjectDir)shaders\vert.spv;%(Outputs)</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)shaders\BasicShader.frag;$(ProjectDir)shaders\BasicShader.vert;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)shaders\frag.spv;$(ProjectDir)shaders\vert.spv;$(ProjectDir)shaders\unlitFrag.spv;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)shaders\BasicShader.frag;$(ProjectDir)shaders\BasicShaderUnlit.frag;$(ProjectDir)shaders\BasicShader.vert;%(AdditionalInputs)</AdditionalInputs>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\BasicShader.frag" />
     <None Include="shaders\BasicShader.vert" />
+    <None Include="shaders\BasicShaderUnlit.frag" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

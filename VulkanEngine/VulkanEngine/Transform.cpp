@@ -4,12 +4,13 @@
 
 #pragma region Constructor
 
-Transform::Transform(glm::vec3 postition, glm::quat orientation, glm::vec3 scale)
+Transform::Transform(glm::vec3 postition, glm::quat orientation, glm::vec3 scale, std::shared_ptr<Transform> parent)
 {
 	//Set position rotation and scale
 	this->position = postition;
 	this->orientation = orientation;
 	this->scale = scale;
+	this->parent = parent;
 
 	//Generate model matrix
 	model = {};
@@ -79,7 +80,21 @@ glm::mat4 Transform::GetModelMatrix()
 		GenerateModelMatrix();
 	}
 
+	if (parent != nullptr) {
+		return model * parent->GetModelMatrix();
+	}
+
 	return model;
+}
+
+std::shared_ptr<Transform> Transform::GetParent()
+{
+	return parent;
+}
+
+void Transform::SetParent(std::shared_ptr<Transform> value)
+{
+	parent = value;
 }
 
 #pragma endregion
@@ -135,11 +150,11 @@ void Transform::LookAt(glm::vec3 target, glm::vec3 up)
 
 void Transform::GenerateModelMatrix()
 {
-	//Update the matrix
+	//Generate the model matrix
 	glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), position);
 	glm::mat4 rotationMatrix = glm::toMat4(orientation);
 	glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), scale);
-
+	
 	model = translationMatrix * rotationMatrix * scaleMatrix;
 
 	//Mark the matrix as clean

@@ -10,10 +10,11 @@
 
 #pragma region Memory Management
 
-Material::Material(std::string vertexShaderPath, std::string fragmentShaderPath)
+Material::Material(std::string vertexShaderPath, std::string fragmentShaderPath, bool wireframe)
 {
 	this->vertexShaderPath = vertexShaderPath;
 	this->fragmentShaderPath = fragmentShaderPath;
+	this->wireframe = wireframe;
 
 	pipelineLayout = VkPipelineLayout();
 	pipeline = VkPipeline();
@@ -121,7 +122,14 @@ void Material::CreateGraphicsPipeline()
 	rasterizerCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
 	rasterizerCreateInfo.depthClampEnable = VK_FALSE;
 	rasterizerCreateInfo.rasterizerDiscardEnable = VK_FALSE;
-	rasterizerCreateInfo.polygonMode = VK_POLYGON_MODE_FILL;
+
+	if (wireframe) {
+		rasterizerCreateInfo.polygonMode = VK_POLYGON_MODE_LINE;
+	}
+	else {
+		rasterizerCreateInfo.polygonMode = VK_POLYGON_MODE_FILL;
+	}
+
 	rasterizerCreateInfo.lineWidth = 1.0f;
 	rasterizerCreateInfo.cullMode = VK_CULL_MODE_BACK_BIT;
 	rasterizerCreateInfo.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;

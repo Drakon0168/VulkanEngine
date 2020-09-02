@@ -1,9 +1,13 @@
 #pragma once
 
-enum MeshTypes {
-	Plane,
-	Cube,
-	Sphere,
-	Model,
-	MeshTypeCount
-};
+namespace MeshTypes {
+	enum MeshTypes {
+		Plane,
+		Cube,
+		Sphere,
+		Model,
+		SphereCollider,
+		CubeCollider,
+		MeshTypeCount
+	};
+}

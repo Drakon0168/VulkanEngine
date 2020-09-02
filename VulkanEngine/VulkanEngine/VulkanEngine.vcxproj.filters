@@ -34,6 +34,12 @@
     <Filter Include="Resource Files\Shaders">
       <UniqueIdentifier>{7b1ab22d-992b-430f-b765-090b384ac123}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Components\Colliders">
+      <UniqueIdentifier>{a2a201a2-6538-48e2-ae35-99ca44a026ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\Colliders">
+      <UniqueIdentifier>{e93e7adb-7fa9-4066-8c60-6e0faa0df169}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="VulkanEngine.cpp">
@@ -104,6 +110,12 @@
     </ClCompile>
     <ClCompile Include="PhysicsObject.cpp">
       <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider.cpp">
+      <Filter>Source Files\Components\Colliders</Filter>
+    </ClCompile>
+    <ClCompile Include="SphereCollider.cpp">
+      <Filter>Source Files\Components\Colliders</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -203,6 +215,15 @@
     <ClInclude Include="PhysicsObject.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
+    <ClInclude Include="Collider.h">
+      <Filter>Header Files\Components\Colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="SphereCollider.h">
+      <Filter>Header Files\Components\Colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="ColliderTypes.h">
+      <Filter>Header Files\Enums</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\compile.bat">
@@ -214,6 +235,9 @@
       <Filter>Resource Files\Shaders</Filter>
     </None>
     <None Include="shaders\BasicShader.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="shaders\BasicShaderUnlit.frag">
       <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>

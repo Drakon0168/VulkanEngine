@@ -66,6 +66,11 @@ public:
 #pragma region Spawning
 
 	/// <summary>
+	/// Initializes the gameobjects variables
+	/// </summary>
+	virtual void Init();
+
+	/// <summary>
 	/// Sets the object to active and spawns it into the entity manager
 	/// </summary>
 	virtual void Spawn();

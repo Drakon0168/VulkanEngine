@@ -15,11 +15,13 @@ protected:
 	VkDescriptorSetLayout descriptorSetLayout;
 	std::vector<VkDescriptorSet> descriptorSets;
 
+	bool wireframe;
+
 public:
 
 #pragma region Memory Management
 
-	Material(std::string vertexShaderPath, std::string fragmentShaderPath);
+	Material(std::string vertexShaderPath, std::string fragmentShaderPath, bool wireframe = false);
 
 	/// <summary>
 	/// Creates and allocates Material resources

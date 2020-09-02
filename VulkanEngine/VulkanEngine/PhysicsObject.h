@@ -2,6 +2,7 @@
 #include "pch.h"
 
 #include "Transform.h"
+#include "Collider.h"
 
 class PhysicsObject
 {
@@ -15,11 +16,13 @@ private:
 	bool affectedByGravity;
 	bool alive;
 	PhysicsLayers physicsLayer;
+
+	std::shared_ptr<Collider> collider;
 public:
 
 #pragma region Constructor
 
-	PhysicsObject(std::shared_ptr<Transform> transform, PhysicsLayers physicsLayer = PhysicsLayers::Dynamic, float mass = 1.0f, bool affectedByGravity = true, bool alive = false);
+	PhysicsObject(std::shared_ptr<Transform> transform, PhysicsLayers physicsLayer = PhysicsLayers::Dynamic, ColliderTypes::ColliderTypes colliderType = ColliderTypes::Sphere, float mass = 1.0f, bool affectedByGravity = true, bool alive = false);
 
 #pragma endregion
 
@@ -84,6 +87,12 @@ public:
 	/// </summary>
 	/// <param name="value">The value to set to</param>
 	void SetAlive(bool value);
+
+	/// <summary>
+	/// Returns the collider used by this physics object
+	/// </summary>
+	/// <returns>The collider that is used by this physics object</returns>
+	std::shared_ptr<Collider> GetCollider();
 
 #pragma endregion
 
