@@ -40,8 +40,8 @@ void main(){
 		finalColor +=  (diffuse + specular) * strength;
 	}
 
-	finalColor += vec3(0.015f, 0.015f, 0.015f);
+//	finalColor += vec3(0.015f, 0.015f, 0.015f);
 
 	outColor = vec4(finalColor * vertColor, 1.0f);
-    outColor = texture(texSampler, uv);
+    outColor += texture(texSampler, uv);
 }
