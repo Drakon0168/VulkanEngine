@@ -12,7 +12,7 @@
 #define logicalDevice VulkanManager::GetInstance()->GetLogicalDevice()
 
 #pragma region Constructor
-
+// WELCOME TO ATLAS!! <3 <3 
 Mesh::Mesh(std::shared_ptr<Material> material, std::vector<Vertex> vertices, std::vector<uint16_t> indices, std::shared_ptr<Buffer> vertexBuffer, uint32_t vertexBufferOffset, std::shared_ptr<Buffer> indexBuffer, uint32_t indexBufferOffset, std::vector<std::shared_ptr<Transform>> instances, std::shared_ptr<Buffer> instanceBuffer)
 {
 	this->material = material;
