@@ -33,46 +33,50 @@ std::vector<std::shared_ptr<Light>> GameManager::GetLights()
 
 void GameManager::Init()
 {
-    //Reset time so that it doesn't include initialization in totalTime
-    Time::Reset();
-
     //Setup Lights
     lights.push_back(std::make_shared<Light>(glm::vec3(1.5f, 1.1f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), 5.0f));
     lights.push_back(std::make_shared<Light>(glm::vec3(0.0f, 2.0f, -1.5f), glm::vec3(1.0f, 0.988f, 0.769f), 3.0f));
 
-    //gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Model]));
     gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Plane]));
     gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Cube]));
+    gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Sphere]));
     gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Sphere]));
     gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Sphere]));
     gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Model]));
   
     //Setup Plane
-    gameObjects[0]->SetTransform(std::make_shared<Transform>(glm::vec3(3.0f, 0.0f, 0.0f)));
-    gameObjects[0]->GetTransform()->SetScale(glm::vec3(5.0f, 1.0f, 5.0f));
-    gameObjects[0]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[0]->GetTransform(), PhysicsLayers::Static, ColliderTypes::Sphere, 1.0f, false, true));
+    gameObjects[0]->SetTransform(std::make_shared<Transform>(glm::vec3(0.0f, 0.0f, 0.0f)));
+    gameObjects[0]->GetTransform()->SetScale(glm::vec3(5.0f, 1.0f, 1.0f));
+    gameObjects[0]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[0]->GetTransform(), PhysicsLayers::Static, ColliderTypes::ARBB, 1.0f, false, true));
 
     //Setup Cube
     gameObjects[1]->SetTransform(std::make_shared<Transform>(glm::vec3(-1.5f, 0.5f, 0.0f)));
     gameObjects[1]->GetTransform()->SetOrientation(glm::vec3(0.0f, 45.0f, 0.0f));
-    gameObjects[1]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[1]->GetTransform(), PhysicsLayers::Dynamic, ColliderTypes::Sphere, 1.0f, true, true));
+    gameObjects[1]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[1]->GetTransform(), PhysicsLayers::Static, ColliderTypes::ARBB, 1.0f, false, true));
 
     //Setup Sphere
-    gameObjects[2]->SetTransform(std::make_shared<Transform>(glm::vec3(1.0f, 2.5f, 0.0f)));
+    gameObjects[2]->SetTransform(std::make_shared<Transform>(glm::vec3(-1.5f, 2.5f, 0.0f)));
     gameObjects[2]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[2]->GetTransform(), PhysicsLayers::Dynamic, ColliderTypes::Sphere, 1.0f, true, true));
 
-    gameObjects[3]->SetTransform(std::make_shared<Transform>(glm::vec3(1.0f, 1.0f, 1.0f)));
+    gameObjects[3]->SetTransform(std::make_shared<Transform>(glm::vec3(0.0f, 2.5f, -1.5f)));
     gameObjects[3]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[3]->GetTransform(), PhysicsLayers::Dynamic, ColliderTypes::Sphere, 1.0f, true, true));
 
-    //setup model
-    gameObjects[4]->SetTransform(std::make_shared<Transform>(glm::vec3(0.0f, 0.0f, -1.5f)));
-    gameObjects[4]->GetTransform()->SetOrientation(glm::vec3(-90.0f, -90.0f, 0.0f));
-    gameObjects[4]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[4]->GetTransform(), PhysicsLayers::Static, ColliderTypes::Sphere, 1.0f, false, true));
+    gameObjects[4]->SetTransform(std::make_shared<Transform>(glm::vec3(1.5f, 2.5f, 0.0f)));
+    gameObjects[4]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[4]->GetTransform(), PhysicsLayers::Dynamic, ColliderTypes::Sphere, 1.0f, true, true));
 
+    //setup model
+    gameObjects[5]->SetTransform(std::make_shared<Transform>(glm::vec3(0.0f, 0.1f, -1.5f)));
+    gameObjects[5]->GetTransform()->SetOrientation(glm::vec3(-90.0f, -90.0f, 0.0f));
+    gameObjects[5]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[5]->GetTransform(), PhysicsLayers::Static, ColliderTypes::AABB, 1.0f, false, true));
+
+    //Initialize GameObjects
     for (size_t i = 0; i < gameObjects.size(); i++) {
         gameObjects[i]->Init();
         gameObjects[i]->Spawn();
     }
+
+    //Reset time so that it doesn't include initialization in totalTime
+    Time::Reset();
 }
 
 void GameManager::Update()
@@ -128,10 +132,7 @@ void GameManager::Update()
     float scaledTime = Time::GetTotalTime() / 2.5f;
     lights[0]->position = glm::vec3(0.0f, 1.1f, 0.0f) + glm::vec3(cos(scaledTime), 0.0f, sin(scaledTime)) * 1.5f;
 
-    //Update Game Objects
-    for (size_t i = 0; i < gameObjects.size(); i++) {
-        gameObjects[i]->Update();
-    }
+    gameObjects[0]->GetTransform()->Rotate(glm::vec3(0.0f, 10.0f, 0.0f) * Time::GetDeltaTime());
 
     if (InputManager::GetInstance()->GetKeyPressed(Controls::Jump)) {
         gameObjects[2]->GetPhysicsObject()->ApplyForce(glm::vec3(0.0f, 5000.0f, 0.0f));
@@ -147,6 +148,11 @@ void GameManager::Update()
         newObject->Init();
         newObject->Spawn();
         */
+    }
+
+    //Update Game Objects
+    for (size_t i = 0; i < gameObjects.size(); i++) {
+        gameObjects[i]->Update();
     }
 }
 

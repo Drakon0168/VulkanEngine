@@ -21,11 +21,9 @@ void SphereCollider::SetRadius(float value)
 
 bool SphereCollider::CheckCollision(Collider* other)
 {
-    glm::vec3 center = GetParentTransform()->GetPosition() + GetOffset();
-
-    glm::vec3 closest = other->ClosestToPoint(center);
-
-    return glm::distance(center, closest) <= radius;
+    glm::vec3 closest = other->ClosestToPoint(transform->GetPosition());
+    bool contained = ContainsPoint(closest);
+    return contained;
 }
 
 #pragma endregion
@@ -95,7 +93,7 @@ void SphereCollider::GenerateFromMesh(std::shared_ptr<Mesh> mesh)
     }
 
     radius = furthestDistance;
-    //Set scale to counteract parent scaling and match the radius of the sphere
+    //Set scale to match the radius of the sphere
     transform->SetScale(2.0f * radius * glm::vec3(1.0f, 1.0f, 1.0f));
     SetOffset(center);
     Update();
@@ -107,27 +105,30 @@ void SphereCollider::GenerateFromMesh(std::shared_ptr<Mesh> mesh)
 
 bool SphereCollider::ContainsPoint(glm::vec3 point)
 {
-    //Find the global center of the collider
-    glm::vec3 center = GetParentTransform()->GetPosition() + GetOffset();
-
     //Check distance to point
-    float distance = glm::distance(center, point);
+    float distance = glm::distance(transform->GetPosition(), point);
 
     return distance <= radius;
 }
 
 glm::vec3 SphereCollider::ClosestToPoint(glm::vec3 point)
 {
-    //Find global center of the collider
-    glm::vec3 center = GetParentTransform()->GetPosition() + GetOffset();
-
     //Get direction to point
-    glm::vec3 direction = glm::normalize(point - center);
+    glm::vec3 direction = point - transform->GetPosition();
+    float distance = glm::distance(point, transform->GetPosition());
+
+    //Make sure the point isn't inside of the collider
+    if (distance < radius) {
+        return point;
+    }
+    
+    //Normalize direction
+    direction = direction / distance;
 
     //Scale to radius
     direction = direction * radius;
 
-    return center + direction;
+    return transform->GetPosition() + direction;
 }
 
 void SphereCollider::ToggleVisible(bool visible)

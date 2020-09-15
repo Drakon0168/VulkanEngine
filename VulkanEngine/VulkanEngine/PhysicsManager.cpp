@@ -59,6 +59,10 @@ void PhysicsManager::Update()
         physicsObjects[PhysicsLayers::Dynamic][i]->Update();
     }
 
+    for (size_t i = 0; i < physicsObjects[PhysicsLayers::Static].size(); i++) {
+        physicsObjects[PhysicsLayers::Static][i]->Update();
+    }
+
     //Check for collisions
     DetectCollisions();
 }
@@ -129,9 +133,10 @@ void PhysicsManager::ResolveCollision(std::shared_ptr<PhysicsObject> physicsObje
             staticObject = physicsObject1;
         }
 
-        //Move dynamic object out of the static object
-        glm::vec3 collisionDirection = glm::normalize(dynamicObject->GetTransform()->GetPosition() - staticObject->GetTransform()->GetPosition());
-        dynamicObject->GetTransform()->SetPosition(staticObject->GetTransform()->GetPosition() + collisionDirection);
+        //TODO: remove this once actual collisions are working
+        if (dynamicObject->GetVelocity().y < 0) {
+            dynamicObject->SetVelocity(glm::vec3(dynamicObject->GetVelocity().x, dynamicObject->GetVelocity().y * -0.8f, dynamicObject->GetVelocity().z));
+        }
     }
 
     //TODO: Call both object's on collision methods

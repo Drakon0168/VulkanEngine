@@ -75,7 +75,7 @@ void EntityManager::LoadMeshes()
     meshes[MeshTypes::SphereCollider]->GenerateSphere(10);
 
     meshes[MeshTypes::CubeCollider] = std::make_shared<Mesh>(materials[1]);
-    meshes[MeshTypes::CubeCollider]->GenerateSphere(50);
+    meshes[MeshTypes::CubeCollider]->GenerateCube();
 }
 
 void EntityManager::LoadMaterials()

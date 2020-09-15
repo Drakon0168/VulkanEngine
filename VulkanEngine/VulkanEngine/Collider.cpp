@@ -32,11 +32,6 @@ void Collider::SetTransform(std::shared_ptr<Transform> value)
 
 glm::vec3 Collider::GetOffset()
 {
-    //Return rotated offset
-    if (parent != nullptr) {
-        return parent->GetOrientation() * offset;
-    }
-
     return offset;
 }
 

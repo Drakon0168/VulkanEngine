@@ -5,6 +5,8 @@
 
 #include "Collider.h"
 #include "SphereCollider.h"
+#include "AABBCollider.h"
+#include "ARBBCollider.h"
 
 #pragma region Constructor
 
@@ -21,11 +23,17 @@ PhysicsObject::PhysicsObject(std::shared_ptr<Transform> transform, PhysicsLayers
 
 	switch (colliderType) {
 	case ColliderTypes::Sphere:
-	default:
 		collider = std::make_shared<SphereCollider>();
-		collider->SetParentTransform(transform);
+		break;
+	case ColliderTypes::AABB:
+		collider = std::make_shared<AABBCollider>();
+		break;
+	case ColliderTypes::ARBB:
+		collider = std::make_shared<ARBBCollider>();
 		break;
 	}
+
+	collider->SetParentTransform(transform);
 }
 
 #pragma endregion
@@ -117,18 +125,11 @@ void PhysicsObject::Update()
 
 		//Apply velocity
 		transform->Translate(velocity * Time::GetDeltaTime());
+	}
 
-		//TODO: remove this once actual collisions are working
-		glm::vec3 position = transform->GetPosition();
-		if (position.y <= 0.5f) {
-			velocity = glm::vec3(velocity.x, velocity.y * -0.8f, velocity.z);
-			transform->SetPosition(glm::vec3(position.x, 0.5f, position.z));
-		}
-
-		//Update collider
-		if (collider != nullptr) {
-			collider->Update();
-		}
+	//Update collider
+	if (collider != nullptr) {
+		collider->Update();
 	}
 }
 
