@@ -133,8 +133,8 @@ void VulkanManager::Run()
 
 	//Setup Camera
 	mainCamera->SetPerspective(true);
-	mainCamera->GetTransform()->SetPosition(glm::vec3(0.0f, 2.5f, 5.0f));
-	mainCamera->GetTransform()->LookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	mainCamera->GetTransform()->SetPosition(glm::vec3(0.0f, 3.0f, 5.0f));
+	mainCamera->GetTransform()->LookAt(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
 	InitVulkan();
 

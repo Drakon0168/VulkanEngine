@@ -110,14 +110,14 @@ void PhysicsManager::DetectCollisions()
 
 void PhysicsManager::ResolveCollision(std::shared_ptr<PhysicsObject> physicsObject1, std::shared_ptr<PhysicsObject> physicsObject2)
 {
-    //TODO: Change this to use colliders rather than a radius check
     //Double Dynamic
     if (physicsObject1->GetPhysicsLayer() == PhysicsLayers::Dynamic && physicsObject2->GetPhysicsLayer() == PhysicsLayers::Dynamic) {
-        glm::vec3 center = (physicsObject1->GetTransform()->GetPosition() + physicsObject2->GetTransform()->GetPosition()) / 2.0f;
-        glm::vec3 collisionDirection = glm::normalize(physicsObject2->GetTransform()->GetPosition() - physicsObject1->GetTransform()->GetPosition());
+        //TODO: scale resolution movement based on velocity and mass
+        glm::vec3 obj1Point = physicsObject1->GetCollider()->ClosestToPoint(physicsObject2->GetTransform()->GetPosition());
+        glm::vec3 obj2Point = physicsObject2->GetCollider()->ClosestToPoint(physicsObject1->GetTransform()->GetPosition());
 
-        physicsObject1->GetTransform()->SetPosition(center + collisionDirection * -0.5f);
-        physicsObject2->GetTransform()->SetPosition(center + collisionDirection * 0.5f);
+        physicsObject1->GetTransform()->Translate((obj2Point - obj1Point) * 0.5f);
+        physicsObject2->GetTransform()->Translate((obj1Point - obj2Point) * 0.5f);
     }
     else { //One Dynamic and One Static
         //Figure out which object is static and which is dynamic
@@ -133,13 +133,77 @@ void PhysicsManager::ResolveCollision(std::shared_ptr<PhysicsObject> physicsObje
             staticObject = physicsObject1;
         }
 
-        //TODO: remove this once actual collisions are working
-        if (dynamicObject->GetVelocity().y < 0) {
-            dynamicObject->SetVelocity(glm::vec3(dynamicObject->GetVelocity().x, dynamicObject->GetVelocity().y * -0.8f, dynamicObject->GetVelocity().z));
-        }
+        glm::vec3 dynamicPoint = dynamicObject->GetCollider()->ClosestToPoint(staticObject->GetTransform()->GetPosition());
+        glm::vec3 staticPoint = staticObject->GetCollider()->ClosestToPoint(dynamicObject->GetTransform()->GetPosition());
+
+        dynamicObject->GetTransform()->Translate(staticPoint - dynamicPoint);
     }
 
+    //Resolve Velocities after positions have been fixed
+    ResolveVelocity(physicsObject1, physicsObject2);
+
     //TODO: Call both object's on collision methods
+}
+
+void PhysicsManager::ResolveVelocity(std::shared_ptr<PhysicsObject> physicsObject1, std::shared_ptr<PhysicsObject> physicsObject2)
+{
+    //TODO: Calculate elasticity coefficient from physics objects
+    float elasticityCoefficient = 1.0f;
+
+    if (physicsObject1->GetPhysicsLayer() == PhysicsLayers::Dynamic && physicsObject2->GetPhysicsLayer() == PhysicsLayers::Dynamic) { //Two Dynamic Objects
+        glm::vec3 obj1StartingVelocity = physicsObject1->GetVelocity();
+        glm::vec3 obj2StartingVelocity = physicsObject2->GetVelocity();
+
+        //Calculate the coefficient representing the difference in mass between the two objects
+        float massCoefficient = physicsObject1->GetMass() / (physicsObject1->GetMass() + physicsObject2->GetMass());
+
+        if (obj1StartingVelocity == glm::vec3(0, 0, 0) || obj2StartingVelocity == glm::vec3(0, 0, 0)) {
+            //If one of the objects is still bounce based on the other's velocity
+            if (obj1StartingVelocity == glm::vec3(0, 0, 0)) {
+                physicsObject1->SetVelocity(obj2StartingVelocity * massCoefficient * elasticityCoefficient);
+                physicsObject2->SetVelocity(-obj2StartingVelocity * (1 - massCoefficient) * elasticityCoefficient);
+            }
+            else {
+                physicsObject1->SetVelocity(obj1StartingVelocity * massCoefficient * elasticityCoefficient);
+                physicsObject2->SetVelocity(-obj1StartingVelocity * (1 - massCoefficient) * elasticityCoefficient);
+            }
+            return;
+        }
+        else {
+            //Calculate the vector to reflect off of using the object's velocities scaled by the difference in their mass
+            glm::vec3 reflectDirection = obj1StartingVelocity * massCoefficient + obj2StartingVelocity * (1 - massCoefficient);
+
+            glm::vec3 projMult = (1.0f / glm::dot(reflectDirection, reflectDirection)) * reflectDirection;
+            glm::vec3 obj1ProjectedVelocity = glm::dot(obj1StartingVelocity, reflectDirection) * projMult;
+            glm::vec3 obj2ProjectedVelocity = glm::dot(obj2StartingVelocity, reflectDirection) * projMult;
+
+            physicsObject1->SetVelocity(obj1ProjectedVelocity + (obj1StartingVelocity - obj1ProjectedVelocity) * elasticityCoefficient);
+            physicsObject2->SetVelocity(obj2ProjectedVelocity + (obj2StartingVelocity - obj2ProjectedVelocity) * elasticityCoefficient);
+        }
+    }
+    else { //One Dynamic One Static
+        //Find which object is Static and which is Dynamic
+        std::shared_ptr<PhysicsObject> dynamicObject;
+        std::shared_ptr<PhysicsObject> staticObject;
+
+        if (physicsObject1->GetPhysicsLayer() == PhysicsLayers::Dynamic) {
+            dynamicObject = physicsObject1;
+            staticObject = physicsObject2;
+        }
+        else {
+            dynamicObject = physicsObject2;
+            staticObject = physicsObject1;
+        }
+
+        //Bounce the dynamic object off of the static object
+        //  Find the point of contact on the static object to the dynamic object
+        glm::vec3 dynamicPosition = dynamicObject->GetTransform()->GetPosition();
+        glm::vec3 startingVelocity = dynamicObject->GetVelocity();
+        glm::vec3 contactPoint = staticObject->GetCollider()->ClosestToPoint(dynamicPosition);
+        glm::vec3 reflectDirection = contactPoint - dynamicPosition;
+        glm::vec3 velocityProjection = (glm::dot(reflectDirection, startingVelocity) / glm::dot(reflectDirection, reflectDirection)) * reflectDirection;
+        dynamicObject->SetVelocity(velocityProjection * -elasticityCoefficient + (startingVelocity - velocityProjection));
+    }
 }
 
 #pragma endregion

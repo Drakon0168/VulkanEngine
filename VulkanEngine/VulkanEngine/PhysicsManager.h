@@ -90,5 +90,12 @@ public:
 	/// <param name="physicsObject2">The second object in the collision</param>
 	void ResolveCollision(std::shared_ptr<PhysicsObject> physicsObject1, std::shared_ptr<PhysicsObject> physicsObject2);
 
+	/// <summary>
+	/// Alters the velocity of two physics objects when they collide
+	/// </summary>
+	/// <param name="physicsObject1">The first object in the collision</param>
+	/// <param name="physicsObject2">The second object in the collision</param>
+	void ResolveVelocity(std::shared_ptr<PhysicsObject> physicsObject1, std::shared_ptr<PhysicsObject> physicsObject2);
+
 #pragma endregion
 };
