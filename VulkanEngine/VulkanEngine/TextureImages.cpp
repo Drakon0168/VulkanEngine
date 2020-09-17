@@ -4,9 +4,10 @@
 #include "TextureImages.h"
 #include "VulkanManager.h"
 
-
+//STB Includes
 #define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h> 
+#include "stb/stb_image.h"
+
 #include "Buffer.h"
 
 TextureImages* TextureImages::instance = nullptr;
