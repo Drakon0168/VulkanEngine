@@ -40,6 +40,11 @@ void Collider::SetOffset(glm::vec3 value)
     offset = value;
 }
 
+ColliderTypes::ColliderTypes Collider::GetColliderType()
+{
+    return colliderType;
+}
+
 #pragma endregion
 
 #pragma region Update

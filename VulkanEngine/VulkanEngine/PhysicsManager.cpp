@@ -76,19 +76,19 @@ void PhysicsManager::DetectCollisions()
     //Check Dynamic objects against all objects
     for (size_t i = 0; i < physicsObjects[PhysicsLayers::Dynamic].size(); i++) {
         for (size_t j = i + 1; j < physicsObjects[PhysicsLayers::Dynamic].size(); j++) {
-            if (physicsObjects[PhysicsLayers::Dynamic][i]->GetCollider()->CheckCollision(physicsObjects[PhysicsLayers::Dynamic][j]->GetCollider().get())) {
+            if (CheckCollision(physicsObjects[PhysicsLayers::Dynamic][i], physicsObjects[PhysicsLayers::Dynamic][j])) {
                 ResolveCollision(physicsObjects[PhysicsLayers::Dynamic][i], physicsObjects[PhysicsLayers::Dynamic][j]);
             }
         }
 
         for (size_t j = 0; j < physicsObjects[PhysicsLayers::Static].size(); j++) {
-            if (physicsObjects[PhysicsLayers::Dynamic][i]->GetCollider()->CheckCollision(physicsObjects[PhysicsLayers::Static][j]->GetCollider().get())) {
+            if (CheckCollision(physicsObjects[PhysicsLayers::Dynamic][i], physicsObjects[PhysicsLayers::Static][j])) {
                 ResolveCollision(physicsObjects[PhysicsLayers::Dynamic][i], physicsObjects[PhysicsLayers::Static][j]);
             }
         }
 
         for (size_t j = 0; j < physicsObjects[PhysicsLayers::Trigger].size(); j++) {
-            if (physicsObjects[PhysicsLayers::Dynamic][i]->GetCollider()->CheckCollision(physicsObjects[PhysicsLayers::Trigger][j]->GetCollider().get())) {
+            if (CheckCollision(physicsObjects[PhysicsLayers::Dynamic][i], physicsObjects[PhysicsLayers::Trigger][j])) {
                 //TODO: Call the trigger's on collide function
             }
         }
@@ -97,11 +97,34 @@ void PhysicsManager::DetectCollisions()
     //Check Static objects against triggers
     for (size_t i = 0; i < physicsObjects[PhysicsLayers::Static].size(); i++) {
         for (size_t j = 0; j < physicsObjects[PhysicsLayers::Trigger].size(); j++) {
-            if (physicsObjects[PhysicsLayers::Static][i]->GetCollider()->CheckCollision(physicsObjects[PhysicsLayers::Trigger][j]->GetCollider().get())) {
+            if (CheckCollision(physicsObjects[PhysicsLayers::Static][i], physicsObjects[PhysicsLayers::Trigger][j])) {
                 //TODO: Call the trigger's on collide function
             }
         }
     }
+}
+
+bool PhysicsManager::CheckCollision(std::shared_ptr<PhysicsObject> physicsObject1, std::shared_ptr<PhysicsObject> physicsObject2)
+{
+    //If one of the objects is a sphere do the sphere collider check
+    if (physicsObject1->GetCollider()->GetColliderType() == ColliderTypes::Sphere) {
+        return physicsObject1->GetCollider()->CheckCollision(physicsObject2->GetCollider().get());
+    }
+
+    if (physicsObject2->GetCollider()->GetColliderType() == ColliderTypes::Sphere) {
+        return physicsObject2->GetCollider()->CheckCollision(physicsObject1->GetCollider().get());
+    }
+
+    //If both objects are AABB do the AABB check
+    if (physicsObject1->GetCollider()->GetColliderType() == ColliderTypes::AABB && physicsObject2->GetCollider()->GetColliderType() == ColliderTypes::AABB) {
+        return physicsObject1->GetCollider()->CheckCollision(physicsObject2->GetCollider().get());
+    }
+
+    //If one of the objecs is ARBB do the SAT check
+    if (physicsObject1->GetCollider()->GetColliderType() == ColliderTypes::ARBB) {
+        return physicsObject1->GetCollider()->CheckCollision(physicsObject2->GetCollider().get());
+    }
+    return physicsObject2->GetCollider()->CheckCollision(physicsObject1->GetCollider().get());
 }
 
 #pragma endregion

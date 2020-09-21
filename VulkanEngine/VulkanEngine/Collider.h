@@ -12,6 +12,7 @@ protected:
 	std::shared_ptr<Transform> transform;
 	glm::vec3 offset;
 	int entityID;
+	ColliderTypes::ColliderTypes colliderType;
 
 public:
 
@@ -58,6 +59,12 @@ public:
 	/// </summary>
 	/// <param name="value">The value to set the offset to</param>
 	void SetOffset(glm::vec3 value);
+
+	/// <summary>
+	/// Returns the type of collider
+	/// </summary>
+	/// <returns>The collider type of this collider</returns>
+	ColliderTypes::ColliderTypes GetColliderType();
 
 #pragma endregion
 

@@ -3,6 +3,17 @@
 
 #include "EntityManager.h"
 
+#pragma region Contructor
+
+SphereCollider::SphereCollider(float radius)
+{
+    this->radius = radius;
+
+    colliderType = ColliderTypes::Sphere;
+}
+
+#pragma endregion
+
 #pragma region Accessors
 
 float SphereCollider::getRadius()

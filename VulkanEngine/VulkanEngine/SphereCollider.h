@@ -12,6 +12,12 @@ private:
 
 public:
 
+#pragma region Contructor
+
+	SphereCollider(float radius = 0.0f);
+
+#pragma endregion
+
 #pragma region Accessors
 
 	/// <summary>

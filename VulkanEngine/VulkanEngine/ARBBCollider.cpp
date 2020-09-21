@@ -3,6 +3,17 @@
 
 #include "EntityManager.h"
 
+#pragma region Contructor
+
+ARBBCollider::ARBBCollider(glm::vec3 extents)
+{
+    this->extents = extents;
+
+    colliderType = ColliderTypes::ARBB;
+}
+
+#pragma endregion
+
 #pragma region Accessors
 
 glm::vec3 ARBBCollider::GetExtents()

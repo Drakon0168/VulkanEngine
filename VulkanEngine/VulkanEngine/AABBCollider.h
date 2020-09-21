@@ -9,6 +9,12 @@ private:
 
 public:
 
+#pragma region Constructor
+
+	AABBCollider(glm::vec3 extents = glm::vec3(0, 0, 0));
+
+#pragma endregion
+
 #pragma region Accessors
 
 	/// <summary>
