@@ -108,23 +108,66 @@ bool PhysicsManager::CheckCollision(std::shared_ptr<PhysicsObject> physicsObject
 {
     //If one of the objects is a sphere do the sphere collider check
     if (physicsObject1->GetCollider()->GetColliderType() == ColliderTypes::Sphere) {
-        return physicsObject1->GetCollider()->CheckCollision(physicsObject2->GetCollider().get());
+        return CheckSphereCollision(std::static_pointer_cast<SphereCollider>(physicsObject1->GetCollider()), physicsObject2->GetCollider());
     }
 
     if (physicsObject2->GetCollider()->GetColliderType() == ColliderTypes::Sphere) {
-        return physicsObject2->GetCollider()->CheckCollision(physicsObject1->GetCollider().get());
+        return CheckSphereCollision(std::static_pointer_cast<SphereCollider>(physicsObject2->GetCollider()), physicsObject1->GetCollider());
     }
 
     //If both objects are AABB do the AABB check
     if (physicsObject1->GetCollider()->GetColliderType() == ColliderTypes::AABB && physicsObject2->GetCollider()->GetColliderType() == ColliderTypes::AABB) {
-        return physicsObject1->GetCollider()->CheckCollision(physicsObject2->GetCollider().get());
+        return CheckAABBCollision(std::static_pointer_cast<AABBCollider>(physicsObject1->GetCollider()), std::static_pointer_cast<AABBCollider>(physicsObject2->GetCollider()));
     }
 
-    //If one of the objecs is ARBB do the SAT check
-    if (physicsObject1->GetCollider()->GetColliderType() == ColliderTypes::ARBB) {
-        return physicsObject1->GetCollider()->CheckCollision(physicsObject2->GetCollider().get());
+    //Otherwise do the SAT check
+    return SAT(physicsObject1->GetCollider(), physicsObject2->GetCollider());
+}
+
+bool PhysicsManager::CheckSphereCollision(std::shared_ptr<SphereCollider> sphereCollider, std::shared_ptr<Collider> other)
+{
+    return sphereCollider->ContainsPoint(other->ClosestToPoint(sphereCollider->GetTransform()->GetPosition()));
+}
+
+bool PhysicsManager::CheckAABBCollision(std::shared_ptr<AABBCollider> collider1, std::shared_ptr<AABBCollider> collider2)
+{
+    if (collider1->GetTransform()->GetPosition().x + collider1->GetExtents().x < collider2->GetTransform()->GetPosition().x - collider2->GetExtents().x ||
+        collider1->GetTransform()->GetPosition().x - collider1->GetExtents().x > collider2->GetTransform()->GetPosition().x + collider2->GetExtents().x ||
+        collider1->GetTransform()->GetPosition().y + collider1->GetExtents().y < collider2->GetTransform()->GetPosition().y - collider2->GetExtents().y ||
+        collider1->GetTransform()->GetPosition().y - collider1->GetExtents().y > collider2->GetTransform()->GetPosition().y + collider2->GetExtents().y || 
+        collider1->GetTransform()->GetPosition().z + collider1->GetExtents().z < collider2->GetTransform()->GetPosition().z - collider2->GetExtents().z ||
+        collider1->GetTransform()->GetPosition().z - collider1->GetExtents().z > collider2->GetTransform()->GetPosition().z + collider2->GetExtents().z) {
+        return false;
     }
-    return physicsObject2->GetCollider()->CheckCollision(physicsObject1->GetCollider().get());
+    return true;
+}
+
+bool PhysicsManager::SAT(std::shared_ptr<Collider> collider1, std::shared_ptr<Collider> collider2)
+{
+    std::vector<glm::vec3> SATaxis = std::vector<glm::vec3>();
+    SATaxis.push_back(collider1->GetTransform()->GetOrientation() * glm::vec3(1.0f, 0.0f, 0.0f));
+    SATaxis.push_back(collider1->GetTransform()->GetOrientation() * glm::vec3(0.0f, 1.0f, 0.0f));
+    SATaxis.push_back(collider1->GetTransform()->GetOrientation() * glm::vec3(0.0f, 0.0f, 1.0f));
+    SATaxis.push_back(collider2->GetTransform()->GetOrientation() * glm::vec3(1.0f, 0.0f, 0.0f));
+    SATaxis.push_back(collider2->GetTransform()->GetOrientation() * glm::vec3(0.0f, 1.0f, 0.0f));
+    SATaxis.push_back(collider2->GetTransform()->GetOrientation() * glm::vec3(0.0f, 0.0f, 1.0f));
+
+    for (int i = 0; i < 3; i++) {
+        for (int j = 3; j < 6; j++) {
+            SATaxis.push_back(glm::cross(SATaxis[i], SATaxis[j]));
+        }
+    }
+
+    for (int i = 0; i < SATaxis.size(); i++) {
+        glm::vec2 projection1 = collider1->ProjectOntoAxis(SATaxis[i]);
+        glm::vec2 projection2 = collider2->ProjectOntoAxis(SATaxis[i]);
+
+        if (projection1.y < projection2.x || projection1.x > projection2.y) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 #pragma endregion

@@ -34,17 +34,6 @@ public:
 
 #pragma endregion
 
-#pragma region Collision Detection
-
-	/// <summary>
-	/// Checks for a collision with another collider and returns true if there is one.
-	/// </summary>
-	/// <param name="other">The collider to check against</param>
-	/// <returns>True if this collider is colliding with the other collider</returns>
-	bool CheckCollision(Collider* other) override;
-
-#pragma endregion
-
 #pragma region Collider Generation
 
 	/// <summary>
@@ -70,6 +59,13 @@ public:
 	/// <param name="point">The point to check distance to</param>
 	/// <returns>The point in the collider closest to the given point</returns>
 	glm::vec3 ClosestToPoint(glm::vec3 point) override;
+
+	/// <summary>
+	/// Projects the collider onto the given axis and returns the min and max projection points
+	/// </summary>
+	/// <param name="axis">The normalized axis to project against</param>
+	/// <returns>A vector 2 representing the min and max projection points (x * axis = min point, y * axis = max point)</returns>
+	glm::vec2 ProjectOntoAxis(glm::vec3 axis) override;
 
 	/// <summary>
 	/// Makes this collider visible or invisible to the user

@@ -3,6 +3,11 @@
 
 #include "PhysicsObject.h"
 
+#include "Collider.h"
+#include "SphereCollider.h"
+#include "AABBCollider.h"
+#include "ARBBCollider.h"
+
 class PhysicsManager
 {
 private:
@@ -78,6 +83,30 @@ public:
 	/// <param name="physicsObject2">The second object to check</param>
 	/// <returns>True if the objects are colliding</returns>
 	bool CheckCollision(std::shared_ptr<PhysicsObject> physicsObject1, std::shared_ptr<PhysicsObject> physicsObject2);
+
+	/// <summary>
+	/// Checks for a collision between a sphere collider and any other type of collider
+	/// </summary>
+	/// <param name="sphereCollider">The sphere collider to check</param>
+	/// <param name="other">The other collider to check against</param>
+	/// <returns></returns>
+	bool CheckSphereCollision(std::shared_ptr<SphereCollider> sphereCollider, std::shared_ptr<Collider> other);
+
+	/// <summary>
+	/// Checks for a collision between two Axis Aligned Bounding Boxes
+	/// </summary>
+	/// <param name="collider1">The first collider to check</param>
+	/// <param name="collider2">The second collider to check</param>
+	/// <returns>True if the two objects are in collision</returns>
+	bool CheckAABBCollision(std::shared_ptr<AABBCollider> collider1, std::shared_ptr<AABBCollider> collider2);
+
+	/// <summary>
+	/// Uses the separating axis Theorem to check for a collision between two colliders
+	/// </summary>
+	/// <param name="collider1">The first collider to check</param>
+	/// <param name="collider2">The second collider to check</param>
+	/// <returns>True if the two objects are in collision</returns>
+	bool SAT(std::shared_ptr<Collider> collider1, std::shared_ptr<Collider> collider2);
 
 #pragma endregion
 

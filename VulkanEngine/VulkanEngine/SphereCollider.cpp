@@ -28,17 +28,6 @@ void SphereCollider::SetRadius(float value)
 
 #pragma endregion
 
-#pragma region Collision Detection
-
-bool SphereCollider::CheckCollision(Collider* other)
-{
-    glm::vec3 closest = other->ClosestToPoint(transform->GetPosition());
-    bool contained = ContainsPoint(closest);
-    return contained;
-}
-
-#pragma endregion
-
 #pragma region Collider Generation
 
 void SphereCollider::GenerateFromMesh(std::shared_ptr<Mesh> mesh)
@@ -140,6 +129,13 @@ glm::vec3 SphereCollider::ClosestToPoint(glm::vec3 point)
     direction = direction * radius;
 
     return transform->GetPosition() + direction;
+}
+
+glm::vec2 SphereCollider::ProjectOntoAxis(glm::vec3 axis)
+{
+    float projectionMult = glm::dot(transform->GetPosition(), axis) / glm::dot(axis, axis);
+
+    return glm::vec2(projectionMult - radius, projectionMult + radius);
 }
 
 void SphereCollider::ToggleVisible(bool visible)

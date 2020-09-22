@@ -28,16 +28,6 @@ void ARBBCollider::SetExtents(glm::vec3 value)
 
 #pragma endregion
 
-#pragma region Collision Detection
-
-bool ARBBCollider::CheckCollision(Collider* other)
-{
-    glm::vec3 closest = other->ClosestToPoint(transform->GetPosition());
-    return ContainsPoint(closest);
-}
-
-#pragma endregion
-
 #pragma region Collider Generation
 
 void ARBBCollider::GenerateFromMesh(std::shared_ptr<Mesh> mesh)
@@ -144,6 +134,38 @@ glm::vec3 ARBBCollider::ClosestToPoint(glm::vec3 point)
 
     //Convert back to global space
     return ConvertToGlobalSpace(closestPoint);
+}
+
+glm::vec2 ARBBCollider::ProjectOntoAxis(glm::vec3 axis)
+{
+    glm::vec3 center = transform->GetPosition();
+    glm::quat orientation = transform->GetOrientation();
+    glm::vec3 corners[8] = {
+        center + orientation * glm::vec3(extents.x, extents.y, extents.z),
+        center + orientation * glm::vec3(extents.x, extents.y, -extents.z),
+        center + orientation * glm::vec3(extents.x, -extents.y, extents.z),
+        center + orientation * glm::vec3(extents.x, -extents.y, -extents.z),
+        center + orientation * glm::vec3(-extents.x, extents.y, extents.z),
+        center + orientation * glm::vec3(-extents.x, extents.y, -extents.z),
+        center + orientation * glm::vec3(-extents.x, -extents.y, extents.z),
+        center + orientation * glm::vec3(-extents.x, -extents.y, -extents.z),
+    };
+
+    float sqrLength = glm::dot(axis, axis);
+    glm::vec2 projections = glm::vec2(glm::dot(corners[0], axis) / sqrLength, glm::dot(corners[0], axis) / sqrLength);
+
+    for (int i = 1; i < 8; i++) {
+        float projectionMult = glm::dot(corners[i], axis) / sqrLength;
+
+        if (projectionMult < projections.x) {
+            projections.x = projectionMult;
+        }
+        else if (projectionMult > projections.y) {
+            projections.y = projectionMult;
+        }
+    }
+
+    return projections;
 }
 
 glm::vec3 ARBBCollider::ConvertToLocalSpace(glm::vec3 point)
