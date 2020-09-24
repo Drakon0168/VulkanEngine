@@ -4,6 +4,7 @@
 #include "EntityManager.h"
 #include "InputManager.h"
 #include "Camera.h"
+#include "Octant.h"
 
 #pragma region Singleton
 
@@ -33,6 +34,7 @@ std::vector<std::shared_ptr<Light>> GameManager::GetLights()
 
 void GameManager::Init()
 {
+    Camera::GetMainCamera()->GetTransform()->SetPosition(glm::vec3(0.0f, 0.0f, 50));
     //Setup Lights
     lights.push_back(std::make_shared<Light>(glm::vec3(1.5f, 1.1f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), 5.0f));
     lights.push_back(std::make_shared<Light>(glm::vec3(0.0f, 2.0f, -1.5f), glm::vec3(1.0f, 0.988f, 0.769f), 3.0f));
@@ -43,6 +45,7 @@ void GameManager::Init()
     gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Sphere]));
     gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Sphere]));
     gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Model]));
+    // gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::CubeCollider]));
     //gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Sphere]));
 
     //Setup Plane
@@ -70,10 +73,18 @@ void GameManager::Init()
     gameObjects[5]->GetTransform()->SetOrientation(glm::vec3(-90.0f, -90.0f, 0.0f));
     gameObjects[5]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[5]->GetTransform(), PhysicsLayers::Static, ColliderTypes::AABB, 1.0f, false, true));
 
+    // setup collider
+    // gameObjects[6]->SetTransform(std::make_shared<Transform>(glm::vec3(0.0f, 0.0f, 0.0f)));
+    // gameObjects[6]->GetTransform()->SetScale(glm::vec3(20, 20, 20));
+    // gameObjects[6]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[6]->GetTransform(), PhysicsLayers::Static, ColliderTypes::AABB, 1.0f, false, true));
     //Dynamic v Dynamic collision test
     //gameObjects[6]->SetTransform(std::make_shared<Transform>(glm::vec3(1.5f, 5.0f, 0.0f)));
     //gameObjects[6]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[6]->GetTransform(), PhysicsLayers::Dynamic, ColliderTypes::Sphere, 1.0f, true, true));
 
+    // Setup octant
+    // octree = new Octant(EntityManager::GetInstance()->GetMeshes()[MeshTypes::CubeCollider], glm::vec3(0.0f,0.0f,0.0f), 20.0f);
+    
+    
     //Initialize GameObjects
     for (size_t i = 0; i < gameObjects.size(); i++) {
         gameObjects[i]->Init();

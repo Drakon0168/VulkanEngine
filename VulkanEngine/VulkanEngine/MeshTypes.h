@@ -8,6 +8,7 @@ namespace MeshTypes {
 		Model,
 		SphereCollider,
 		CubeCollider,
+		// Octant,
 		MeshTypeCount
 	};
 }

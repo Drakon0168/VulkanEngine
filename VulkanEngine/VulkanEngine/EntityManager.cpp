@@ -63,7 +63,7 @@ void EntityManager::LoadMeshes()
     meshes[MeshTypes::Plane]->GeneratePlane();
 
     meshes[MeshTypes::Cube] = std::make_shared<Mesh>(materials[0]);
-    meshes[MeshTypes::Cube]->GenerateCube();
+    meshes[MeshTypes::Cube]->GenerateCube(glm::vec3(1.0f, 1.0f, 1.0f));
 
     meshes[MeshTypes::Sphere] = std::make_shared<Mesh>(materials[0]);
     meshes[MeshTypes::Sphere]->GenerateSphere(50);
@@ -75,7 +75,10 @@ void EntityManager::LoadMeshes()
     meshes[MeshTypes::SphereCollider]->GenerateSphere(10);
 
     meshes[MeshTypes::CubeCollider] = std::make_shared<Mesh>(materials[1]);
-    meshes[MeshTypes::CubeCollider]->GenerateCube();
+    meshes[MeshTypes::CubeCollider]->GenerateCube(glm::vec3(1.0f, 1.0f, 1.0f));
+
+    // meshes[MeshTypes::Octant] = std::make_shared<Mesh>(materials[1]);
+    // meshes[MeshTypes::Octant]->GenerateCube(glm::vec3(1.0f, 1.0f, 0.0f));
 }
 
 void EntityManager::LoadMaterials()

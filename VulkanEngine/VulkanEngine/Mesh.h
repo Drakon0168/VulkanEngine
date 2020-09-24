@@ -218,7 +218,7 @@ public:
 	/// <summary>
 	/// Sets the vertices and indices to generate a cube
 	/// </summary>
-	void GenerateCube();
+	void GenerateCube(glm::vec3 color);
 
 	/// <summary>
 	/// Sets the vertices and indices to generate a sphere
