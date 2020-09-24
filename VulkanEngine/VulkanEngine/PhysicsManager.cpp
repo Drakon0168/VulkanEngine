@@ -106,6 +106,9 @@ void PhysicsManager::DetectCollisions()
 
 bool PhysicsManager::CheckCollision(std::shared_ptr<PhysicsObject> physicsObject1, std::shared_ptr<PhysicsObject> physicsObject2)
 {
+    // If the 2 objects don't share a dimension::
+        // return false
+
     //If one of the objects is a sphere do the sphere collider check
     if (physicsObject1->GetCollider()->GetColliderType() == ColliderTypes::Sphere) {
         return CheckSphereCollision(std::static_pointer_cast<SphereCollider>(physicsObject1->GetCollider()), physicsObject2->GetCollider());

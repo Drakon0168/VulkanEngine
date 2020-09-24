@@ -12,15 +12,19 @@ private:
 	std::shared_ptr<PhysicsObject> physicsObject;
 
 	std::shared_ptr<Mesh> mesh;
-	int instanceId;
+	unsigned int instanceId;
 	bool active;
 
-	std::vector<Octant*> children;
+	std::shared_ptr<Octant> children[8];
+	static unsigned int octantCount;
+	std::vector<std::shared_ptr<PhysicsObject>> objects;
+	std::shared_ptr<Octant> root;
 	glm::vec3 center;
 	float size;
+	unsigned int octantId;
 
 public:
-	Octant(unsigned int maxLevel = 2, unsigned int idealEntityCount = 5);
+	// Octant(unsigned int maxLevel = 2, unsigned int idealEntityCount = 5);
 	Octant(std::shared_ptr<Mesh> mesh, 
 		glm::vec3 center,
 		float size,
@@ -45,6 +49,15 @@ public:
 	virtual void Despawn();
 
 	void Subdivide();
+
+	void AddObject(std::shared_ptr<PhysicsObject> g);
+	
+	// std::shared_ptr<Octant> GetSmallestContainingOctant(std::shared_ptr<PhysicsObject> g);
+	Octant* GetSmallestContainingOctant(std::shared_ptr<PhysicsObject> g);
+	
+	bool IsContained(std::shared_ptr<PhysicsObject> g);
+	
+	bool IsColliding(std::shared_ptr<PhysicsObject> g);
 
 #pragma endregion
 

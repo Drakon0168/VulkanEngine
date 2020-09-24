@@ -18,6 +18,8 @@ private:
 	PhysicsLayers physicsLayer;
 
 	std::shared_ptr<Collider> collider;
+
+	std::vector<unsigned int> dimensions;
 public:
 
 #pragma region Constructor
@@ -93,6 +95,10 @@ public:
 	/// </summary>
 	/// <returns>The collider that is used by this physics object</returns>
 	std::shared_ptr<Collider> GetCollider();
+
+	void AddDimension(unsigned int d);
+	void RemoveDimension(unsigned int d);
+	bool ContainsDimension(unsigned int d);
 
 #pragma endregion
 

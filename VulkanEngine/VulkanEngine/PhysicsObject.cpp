@@ -95,6 +95,33 @@ std::shared_ptr<Collider> PhysicsObject::GetCollider()
 	return collider;
 }
 
+void PhysicsObject::AddDimension(unsigned int d)
+{
+	if (!ContainsDimension(d)) {
+		dimensions.push_back(d);
+	}
+}
+
+void PhysicsObject::RemoveDimension(unsigned int d)
+{
+	for (int i = 0; i < dimensions.size(); i++) {
+		if (d == dimensions[i]) {
+			dimensions.erase(dimensions.begin() + i);
+			return;
+		}
+	}
+}
+
+bool PhysicsObject::ContainsDimension(unsigned int d)
+{
+	for (int i = 0; i < dimensions.size(); i++) {
+		if (d == dimensions[i]) {
+			return true;
+		}
+	}
+	return false;
+}
+
 #pragma endregion
 
 #pragma region Physics

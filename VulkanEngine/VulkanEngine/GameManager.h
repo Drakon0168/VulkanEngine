@@ -10,9 +10,10 @@ private:
 	static GameManager* instance;
 
 	std::vector<std::shared_ptr<GameObject>> gameObjects;
+	std::vector<std::shared_ptr<GameObject>> octObjects;
 	std::vector<std::shared_ptr<Light>> lights;
 
-	Octant* octree = nullptr;
+	std::shared_ptr<Octant> octree = nullptr;
 
 	float cameraSpeed = 2.5f;
 	bool lockCamera = true;
