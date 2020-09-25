@@ -83,18 +83,17 @@ void GameManager::Init()
     
     // Setup octant
     octree = std::make_shared<Octant>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::CubeCollider], glm::vec3(0.0f, 0.0f, 0.0f), 20.0f);
-
-    for (int i = 0; i < 50; i++) {
+    // octree = new Octant(EntityManager::GetInstance()->GetMeshes()[MeshTypes::CubeCollider], glm::vec3(0.0f, 0.0f, 0.0f), 20.0f);
+    for (int i = 0; i < 20; i++) {
         octObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Cube]));
         octObjects[i]->SetTransform(std::make_shared<Transform>(glm::vec3(rand() % 20 - 10, rand() % 20 - 10, rand() % 20 - 10)));
         octObjects[i]->SetPhysicsObject(std::make_shared<PhysicsObject>(octObjects[i]->GetTransform(), PhysicsLayers::Trigger, ColliderTypes::AABB, 1.0f, false, true));
         octObjects[i]->Init();
         octObjects[i]->Spawn();
-        octree->AddObject(octObjects[i]->GetPhysicsObject());
+        octree->AddObject(octObjects[i]->GetPhysicsObject(), octree);
     }
     // gameObjects[0]->GetPhysicsObject()->GetCollider()
     // octree->AddObject(gameObjects[0]);
-    
     //Initialize GameObjects
     for (size_t i = 0; i < gameObjects.size(); i++) {
         gameObjects[i]->Init();

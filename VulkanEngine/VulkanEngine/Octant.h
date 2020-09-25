@@ -50,10 +50,10 @@ public:
 
 	void Subdivide();
 
-	void AddObject(std::shared_ptr<PhysicsObject> g);
+	void AddObject(std::shared_ptr<PhysicsObject> g, std::shared_ptr<Octant> self);
 	
 	// std::shared_ptr<Octant> GetSmallestContainingOctant(std::shared_ptr<PhysicsObject> g);
-	Octant* GetSmallestContainingOctant(std::shared_ptr<PhysicsObject> g);
+	std::shared_ptr<Octant> GetSmallestContainingOctant(std::shared_ptr<PhysicsObject> g, std::shared_ptr<Octant> self);
 	
 	bool IsContained(std::shared_ptr<PhysicsObject> g);
 	

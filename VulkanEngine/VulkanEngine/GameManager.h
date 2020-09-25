@@ -14,6 +14,7 @@ private:
 	std::vector<std::shared_ptr<Light>> lights;
 
 	std::shared_ptr<Octant> octree = nullptr;
+	// Octant* octree = nullptr;
 
 	float cameraSpeed = 2.5f;
 	bool lockCamera = true;

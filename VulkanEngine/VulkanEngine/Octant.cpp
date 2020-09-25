@@ -97,13 +97,15 @@ void Octant::Subdivide()
 	}
 }
 
-void Octant::AddObject(std::shared_ptr<PhysicsObject> g)
+void Octant::AddObject(std::shared_ptr<PhysicsObject> g, std::shared_ptr<Octant> self)
 {
-	Octant* temp = GetSmallestContainingOctant(g);
+	std::shared_ptr<Octant> temp = GetSmallestContainingOctant(g, self);
 	// If the smallest octant has no children
 	 if (temp->children[0] == nullptr) {
 	 	// then the object ONLY exists in this octant
-	 	g->AddDimension(octantId);
+	 	g->AddDimension(temp->octantId);
+		glm::vec3 t = g->GetTransform()->GetPosition();
+		std::cout << "Added object at position: (" << t.x << "," << t.y << "," << t.z << ") with ID: " << temp->octantId << " because there are no children" << std::endl;
 	 }
 	else { // otherwise, octant has children
 		// check if this object COLLIDES with any of the octant children
@@ -113,31 +115,50 @@ void Octant::AddObject(std::shared_ptr<PhysicsObject> g)
 			if (children[i]->IsColliding(g)) {
 				// add octant to object's dimensions (at most will be 8)
 				g->AddDimension(children[i]->octantId);
+				glm::vec3 t = g->GetTransform()->GetPosition();
+				std::cout << "Added object at position: (" << t.x << "," << t.y << "," << t.z << ") with ID: " << children[i]->octantId << std::endl;
 			}
 		}
 	}
 }
 
-Octant* Octant::GetSmallestContainingOctant(std::shared_ptr<PhysicsObject> g)
+std::shared_ptr<Octant> Octant::GetSmallestContainingOctant(std::shared_ptr<PhysicsObject> g, std::shared_ptr<Octant> self)
 {
-	std::shared_ptr<AABBCollider> temp = std::static_pointer_cast<AABBCollider>(g->GetCollider());
-	// glm::vec3 min = -temp->GetExtents();
 	if (children[0] != nullptr) {
 		for (unsigned int i = 0; i < 8; i++) {
 			if (children[i]->IsContained(g)) {
-				return children[i]->GetSmallestContainingOctant(g);
+				return children[i]->GetSmallestContainingOctant(g, children[i]);
 			}
 		}
 	}
-	return this;
+	return self;
 }
 
 bool Octant::IsContained(std::shared_ptr<PhysicsObject> g)
 {
-	return false;
+	std::shared_ptr<AABBCollider> temp = std::static_pointer_cast<AABBCollider>(g->GetCollider());
+	glm::vec3 max = temp->GetExtents() + temp->GetTransform()->GetPosition();
+	glm::vec3 min = -temp->GetExtents() + temp->GetTransform()->GetPosition();
+	temp = std::static_pointer_cast<AABBCollider>(physicsObject->GetCollider());
+	glm::vec3 octMax = temp->GetExtents() + temp->GetTransform()->GetPosition();
+	glm::vec3 octMin = -temp->GetExtents() + temp->GetTransform()->GetPosition();
+
+	if (max.x > octMax.x || max.y > octMax.y || max.z > octMax.z) return false;
+	if (min.x < octMin.x || min.y < octMin.y || min.z < octMin.z) return false;
+
+	return true;
 }
 
 bool Octant::IsColliding(std::shared_ptr<PhysicsObject> g)
 {
+	std::shared_ptr<AABBCollider> temp = std::static_pointer_cast<AABBCollider>(g->GetCollider());
+	glm::vec3 max = temp->GetExtents() + temp->GetTransform()->GetPosition();
+	glm::vec3 min = -temp->GetExtents() + temp->GetTransform()->GetPosition();
+	temp = std::static_pointer_cast<AABBCollider>(physicsObject->GetCollider());
+	glm::vec3 octMax = temp->GetExtents() + temp->GetTransform()->GetPosition();
+	glm::vec3 octMin = -temp->GetExtents() + temp->GetTransform()->GetPosition();
+
+	if (max.x > octMin.x && max.y > octMin.y && max.z > octMin.z &&
+		min.x < octMax.x && min.y < octMax.y && min.z < octMax.z) return true;
 	return false;
 }
