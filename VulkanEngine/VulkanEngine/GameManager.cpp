@@ -38,7 +38,7 @@ void GameManager::Init()
     //Setup Lights
     lights.push_back(std::make_shared<Light>(glm::vec3(1.5f, 1.1f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), 5.0f));
     lights.push_back(std::make_shared<Light>(glm::vec3(0.0f, 2.0f, -1.5f), glm::vec3(1.0f, 0.988f, 0.769f), 3.0f));
-
+    /**
     gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Plane]));
     gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Cube]));
     gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Sphere]));
@@ -81,13 +81,16 @@ void GameManager::Init()
     //gameObjects[6]->SetTransform(std::make_shared<Transform>(glm::vec3(1.5f, 5.0f, 0.0f)));
     //gameObjects[6]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[6]->GetTransform(), PhysicsLayers::Dynamic, ColliderTypes::Sphere, 1.0f, true, true));
     
+
+    */
+
     // Setup octant
     octree = std::make_shared<Octant>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::CubeCollider], glm::vec3(0.0f, 0.0f, 0.0f), 20.0f);
     // octree = new Octant(EntityManager::GetInstance()->GetMeshes()[MeshTypes::CubeCollider], glm::vec3(0.0f, 0.0f, 0.0f), 20.0f);
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < 300; i++) {
         octObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Cube]));
         octObjects[i]->SetTransform(std::make_shared<Transform>(glm::vec3(rand() % 20 - 10, rand() % 20 - 10, rand() % 20 - 10)));
-        octObjects[i]->SetPhysicsObject(std::make_shared<PhysicsObject>(octObjects[i]->GetTransform(), PhysicsLayers::Trigger, ColliderTypes::AABB, 1.0f, false, true));
+        octObjects[i]->SetPhysicsObject(std::make_shared<PhysicsObject>(octObjects[i]->GetTransform(), PhysicsLayers::Dynamic, ColliderTypes::AABB, 1.0f, false, true));
         octObjects[i]->Init();
         octObjects[i]->Spawn();
         octree->AddObject(octObjects[i]->GetPhysicsObject(), octree);
@@ -157,7 +160,7 @@ void GameManager::Update()
     float scaledTime = Time::GetTotalTime() / 2.5f;
     lights[0]->position = glm::vec3(0.0f, 1.1f, 0.0f) + glm::vec3(cos(scaledTime), 0.0f, sin(scaledTime)) * 1.5f;
 
-    gameObjects[0]->GetTransform()->Rotate(glm::vec3(0.0f, 10.0f, 0.0f) * Time::GetDeltaTime());
+    // gameObjects[0]->GetTransform()->Rotate(glm::vec3(0.0f, 10.0f, 0.0f) * Time::GetDeltaTime());
 
     if (InputManager::GetInstance()->GetKeyPressed(Controls::Jump)) {
         gameObjects[2]->GetPhysicsObject()->ApplyForce(glm::vec3(0.0f, 5000.0f, 0.0f));

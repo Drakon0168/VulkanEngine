@@ -19,8 +19,11 @@ private:
 
 	std::shared_ptr<Collider> collider;
 
-	std::vector<unsigned int> dimensions;
+	std::vector<size_t> dimensions;
 public:
+	size_t dimensionCount = 0;
+
+	bool SharesDimension(std::shared_ptr<PhysicsObject> other);
 
 #pragma region Constructor
 
@@ -99,6 +102,8 @@ public:
 	void AddDimension(unsigned int d);
 	void RemoveDimension(unsigned int d);
 	bool ContainsDimension(unsigned int d);
+
+	std::vector<size_t> GetDimensions();
 
 #pragma endregion
 

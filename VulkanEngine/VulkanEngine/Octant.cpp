@@ -31,7 +31,7 @@ Octant::Octant(std::shared_ptr<Mesh> mesh, glm::vec3 center, float size, std::sh
 	Init();
 	Spawn();
 	
-	if (size > 10)
+	if (size > 5)
 	{
 		 Subdivide();
 	}
@@ -103,9 +103,9 @@ void Octant::AddObject(std::shared_ptr<PhysicsObject> g, std::shared_ptr<Octant>
 	// If the smallest octant has no children
 	 if (temp->children[0] == nullptr) {
 	 	// then the object ONLY exists in this octant
-	 	g->AddDimension(temp->octantId);
+	 	// g->AddDimension(temp->octantId);
 		glm::vec3 t = g->GetTransform()->GetPosition();
-		std::cout << "Added object at position: (" << t.x << "," << t.y << "," << t.z << ") with ID: " << temp->octantId << " because there are no children" << std::endl;
+		// std::cout << "Added object at position: (" << t.x << "," << t.y << "," << t.z << ") with ID: " << temp->octantId << " because there are no children" << std::endl;
 	 }
 	else { // otherwise, octant has children
 		// check if this object COLLIDES with any of the octant children
@@ -116,7 +116,7 @@ void Octant::AddObject(std::shared_ptr<PhysicsObject> g, std::shared_ptr<Octant>
 				// add octant to object's dimensions (at most will be 8)
 				g->AddDimension(children[i]->octantId);
 				glm::vec3 t = g->GetTransform()->GetPosition();
-				std::cout << "Added object at position: (" << t.x << "," << t.y << "," << t.z << ") with ID: " << children[i]->octantId << std::endl;
+				// std::cout << "Added object at position: (" << t.x << "," << t.y << "," << t.z << ") with ID: " << children[i]->octantId << std::endl;
 			}
 		}
 	}

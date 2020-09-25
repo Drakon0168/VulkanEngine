@@ -83,6 +83,7 @@ public:
 	/// <param name="physicsObject2">The second object to check</param>
 	/// <returns>True if the objects are colliding</returns>
 	bool CheckCollision(std::shared_ptr<PhysicsObject> physicsObject1, std::shared_ptr<PhysicsObject> physicsObject2);
+	bool SharesDimension(std::shared_ptr<PhysicsObject> physicsObject1, std::shared_ptr<PhysicsObject> physicsObject2);
 
 	/// <summary>
 	/// Checks for a collision between a sphere collider and any other type of collider
@@ -99,6 +100,7 @@ public:
 	/// <param name="collider2">The second collider to check</param>
 	/// <returns>True if the two objects are in collision</returns>
 	bool CheckAABBCollision(std::shared_ptr<AABBCollider> collider1, std::shared_ptr<AABBCollider> collider2);
+
 
 	/// <summary>
 	/// Uses the separating axis Theorem to check for a collision between two colliders

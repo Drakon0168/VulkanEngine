@@ -10,6 +10,27 @@
 
 #pragma region Constructor
 
+bool PhysicsObject::SharesDimension(std::shared_ptr<PhysicsObject> other)
+{
+	// early return to test framerate
+	// return true;
+	/*if (0 == dimensionCount) {
+		if (0 == other->dimensionCount)
+			return true;
+	}*/
+	std::vector<size_t> t2 = other->GetDimensions();
+
+	// return true;
+	for (size_t i = 0; i < dimensionCount; ++i) {
+		for (size_t j = 0; j < other->dimensionCount; j++) {
+			if (dimensions[i] == t2[j])
+				return true; // As soon as we find one we know they share dimensions
+		}
+	}
+
+	return false;
+}
+
 PhysicsObject::PhysicsObject(std::shared_ptr<Transform> transform, PhysicsLayers physicsLayer, ColliderTypes::ColliderTypes colliderType, float mass, bool affectedByGravity, bool alive)
 {
 	this->transform = transform;
@@ -100,6 +121,7 @@ void PhysicsObject::AddDimension(unsigned int d)
 	if (!ContainsDimension(d)) {
 		dimensions.push_back(d);
 	}
+	dimensionCount++;
 }
 
 void PhysicsObject::RemoveDimension(unsigned int d)
@@ -110,6 +132,7 @@ void PhysicsObject::RemoveDimension(unsigned int d)
 			return;
 		}
 	}
+	dimensionCount--;
 }
 
 bool PhysicsObject::ContainsDimension(unsigned int d)
@@ -120,6 +143,11 @@ bool PhysicsObject::ContainsDimension(unsigned int d)
 		}
 	}
 	return false;
+}
+
+std::vector<size_t> PhysicsObject::GetDimensions()
+{
+	return dimensions;
 }
 
 #pragma endregion
