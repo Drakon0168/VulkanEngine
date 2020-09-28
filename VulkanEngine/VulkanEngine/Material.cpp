@@ -122,7 +122,8 @@ void Material::CreateGraphicsPipeline()
 	rasterizerCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
 	rasterizerCreateInfo.depthClampEnable = VK_FALSE;
 	rasterizerCreateInfo.rasterizerDiscardEnable = VK_FALSE;
-
+	
+	// VK_POLYGON_MODE_
 	if (wireframe) {
 		rasterizerCreateInfo.polygonMode = VK_POLYGON_MODE_LINE;
 	}
