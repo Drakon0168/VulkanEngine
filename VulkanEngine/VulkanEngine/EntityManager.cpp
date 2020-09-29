@@ -67,10 +67,10 @@ void EntityManager::LoadMeshes()
 
     meshes[MeshTypes::Cube] = std::make_shared<Mesh>(materials[1]);
     meshes[MeshTypes::Cube]->GenerateCube();
-
+    
     meshes[MeshTypes::Sphere] = std::make_shared<Mesh>(materials[0]);
     meshes[MeshTypes::Sphere]->GenerateSphere(50);
-
+    
     meshes[MeshTypes::Model] = std::make_shared<Mesh>(materials[1]);
     meshes[MeshTypes::Model]->LoadModel("models/room.obj");
 }
@@ -88,7 +88,8 @@ void EntityManager::LoadMaterials()
 void EntityManager::Update()
 {
     for (std::shared_ptr<Mesh> mesh : meshes) {
-        mesh->UpdateInstanceBuffer();
+        if (mesh->GetActiveInstanceCount() > 0)
+            mesh->UpdateInstanceBuffer();
     }
 }
 

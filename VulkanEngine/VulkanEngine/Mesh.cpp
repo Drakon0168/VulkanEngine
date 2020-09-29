@@ -130,6 +130,7 @@ void Mesh::UpdateInstanceBuffer()
 	}
 	else {
 		bufferSize = sizeof(TransformData);
+		// return;
 	}
 
 	//Create the buffer if necessary
@@ -302,7 +303,6 @@ int Mesh::AddInstance(std::shared_ptr<Transform> value)
 		instances.push_back(value);
 		return (instances.size() - 1);
 	}
-
 	instances[freeIndex] = value;
 	instanceBufferDirty = true;
 	return freeIndex;
