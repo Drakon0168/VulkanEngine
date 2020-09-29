@@ -123,7 +123,6 @@ void Material::CreateGraphicsPipeline()
 	rasterizerCreateInfo.depthClampEnable = VK_FALSE;
 	rasterizerCreateInfo.rasterizerDiscardEnable = VK_FALSE;
 	
-	// VK_POLYGON_MODE_
 	if (wireframe) {
 		rasterizerCreateInfo.polygonMode = VK_POLYGON_MODE_LINE;
 	}
