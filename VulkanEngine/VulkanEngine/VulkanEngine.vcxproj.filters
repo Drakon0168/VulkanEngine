@@ -236,6 +236,9 @@
     <ClInclude Include="ARBBCollider.h">
       <Filter>Header Files\Components\Colliders</Filter>
     </ClInclude>
+    <ClInclude Include="CollisionData.h">
+      <Filter>Header Files\Structs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\compile.bat">

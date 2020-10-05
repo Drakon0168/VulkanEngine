@@ -81,32 +81,36 @@ public:
 	/// </summary>
 	/// <param name="physicsObject1">The first object to check</param>
 	/// <param name="physicsObject2">The second object to check</param>
+	/// <param name="data">The collision data used to resolve the collision</param>
 	/// <returns>True if the objects are colliding</returns>
-	bool CheckCollision(std::shared_ptr<PhysicsObject> physicsObject1, std::shared_ptr<PhysicsObject> physicsObject2);
+	bool CheckCollision(std::shared_ptr<PhysicsObject> physicsObject1, std::shared_ptr<PhysicsObject> physicsObject2, CollisionData& data);
 
 	/// <summary>
 	/// Checks for a collision between a sphere collider and any other type of collider
 	/// </summary>
 	/// <param name="sphereCollider">The sphere collider to check</param>
 	/// <param name="other">The other collider to check against</param>
+	/// <param name="data">The collision data used to resolve the collision</param>
 	/// <returns></returns>
-	bool CheckSphereCollision(std::shared_ptr<SphereCollider> sphereCollider, std::shared_ptr<Collider> other);
+	bool CheckSphereCollision(std::shared_ptr<SphereCollider> sphereCollider, std::shared_ptr<Collider> other, CollisionData& data);
 
 	/// <summary>
 	/// Checks for a collision between two Axis Aligned Bounding Boxes
 	/// </summary>
 	/// <param name="collider1">The first collider to check</param>
 	/// <param name="collider2">The second collider to check</param>
+	/// <param name="data">The collision data used to resolve the collision</param>
 	/// <returns>True if the two objects are in collision</returns>
-	bool CheckAABBCollision(std::shared_ptr<AABBCollider> collider1, std::shared_ptr<AABBCollider> collider2);
+	bool CheckAABBCollision(std::shared_ptr<AABBCollider> collider1, std::shared_ptr<AABBCollider> collider2, CollisionData& data);
 
 	/// <summary>
 	/// Uses the separating axis Theorem to check for a collision between two colliders
 	/// </summary>
 	/// <param name="collider1">The first collider to check</param>
 	/// <param name="collider2">The second collider to check</param>
+	/// <param name="data">The collision data used to resolve the collision</param>
 	/// <returns>True if the two objects are in collision</returns>
-	bool SAT(std::shared_ptr<Collider> collider1, std::shared_ptr<Collider> collider2);
+	bool SAT(std::shared_ptr<Collider> collider1, std::shared_ptr<Collider> collider2, CollisionData& data);
 
 #pragma endregion
 
@@ -117,7 +121,8 @@ public:
 	/// </summary>
 	/// <param name="physicsObject1">The first object in the collision</param>
 	/// <param name="physicsObject2">The second object in the collision</param>
-	void ResolveCollision(std::shared_ptr<PhysicsObject> physicsObject1, std::shared_ptr<PhysicsObject> physicsObject2);
+	/// <param name="data">The collision data used to resolve the collision</param>
+	void ResolveCollision(std::shared_ptr<PhysicsObject> physicsObject1, std::shared_ptr<PhysicsObject> physicsObject2, CollisionData data);
 
 	/// <summary>
 	/// Alters the velocity of two physics objects when they collide

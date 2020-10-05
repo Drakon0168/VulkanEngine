@@ -138,6 +138,11 @@ glm::vec2 SphereCollider::ProjectOntoAxis(glm::vec3 axis)
     return glm::vec2(projectionMult - radius, projectionMult + radius);
 }
 
+glm::vec3 SphereCollider::FindSurfaceNormal(glm::vec3 surfacePoint)
+{
+    return glm::normalize(surfacePoint - transform->GetPosition());
+}
+
 void SphereCollider::ToggleVisible(bool visible)
 {
     if (visible) {

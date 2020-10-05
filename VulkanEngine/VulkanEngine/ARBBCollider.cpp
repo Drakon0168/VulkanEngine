@@ -202,6 +202,40 @@ glm::vec3 ARBBCollider::ConvertToGlobalSpace(glm::vec3 point)
     return transform->GetPosition() + localAxis[0] * point.x + localAxis[1] * point.y + localAxis[2] * point.z;
 }
 
+glm::vec3 ARBBCollider::FindSurfaceNormal(glm::vec3 surfacePoint)
+{
+    surfacePoint = ConvertToLocalSpace(surfacePoint);
+
+    //TODO: make sure the point is actually on the surface of the shape
+
+    glm::vec3 normal = glm::vec3(0, 0, 0);
+
+    if (surfacePoint.x >= extents.x) {
+        normal += glm::vec3(1, 0, 0);
+    }
+    else if (surfacePoint.x <= -extents.x) {
+        normal += glm::vec3(-1, 0, 0);
+    }
+
+    if (surfacePoint.y >= extents.y) {
+        normal += glm::vec3(0, 1, 0);
+    }
+    else if (surfacePoint.y <= -extents.y) {
+        normal += glm::vec3(0, -1, 0);
+    }
+
+    if (surfacePoint.z >= extents.z) {
+        normal += glm::vec3(0, 0, 1);
+    }
+    else if (surfacePoint.z <= -extents.z) {
+        normal += glm::vec3(0, 0, -1);
+    }
+
+    //Convert back to global space without translation
+    normal = ConvertToGlobalSpace(normal) - transform->GetPosition();
+    return glm::normalize(normal);
+}
+
 void ARBBCollider::ToggleVisible(bool visible)
 {
     if (visible) {

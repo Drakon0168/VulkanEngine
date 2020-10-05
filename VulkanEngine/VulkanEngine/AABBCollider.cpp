@@ -155,6 +155,37 @@ glm::vec2 AABBCollider::ProjectOntoAxis(glm::vec3 axis)
     return projections;
 }
 
+glm::vec3 AABBCollider::FindSurfaceNormal(glm::vec3 surfacePoint)
+{
+    //TODO: Make sure surface point is actually on the surface of the shape
+
+    glm::vec3 direction = surfacePoint - transform->GetPosition();
+    glm::vec3 normal = glm::vec3(0, 0, 0);
+
+    if (direction.x >= extents.x) {
+        normal += glm::vec3(1, 0, 0);
+    }
+    else if (direction.x <= -extents.x) {
+        normal += glm::vec3(-1, 0, 0);
+    }
+
+    if (direction.y >= extents.y) {
+        normal += glm::vec3(0, 1, 0);
+    }
+    else if (direction.y <= -extents.y) {
+        normal += glm::vec3(0, -1, 0);
+    }
+
+    if (direction.z >= extents.z) {
+        normal += glm::vec3(0, 0, 1);
+    }
+    else if (direction.z <= -extents.z) {
+        normal += glm::vec3(0, 0, -1);
+    }
+
+    return glm::normalize(normal);
+}
+
 void AABBCollider::ToggleVisible(bool visible)
 {
     if (visible) {

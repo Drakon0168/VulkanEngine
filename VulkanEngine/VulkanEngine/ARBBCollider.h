@@ -85,6 +85,13 @@ public:
 	glm::vec3 ConvertToGlobalSpace(glm::vec3 point);
 
 	/// <summary>
+	/// Finds the normal vector of a point on the surface of the collider
+	/// </summary>
+	/// <param name="surfacePoint">The point on the surface of the collider to check</param>
+	/// <returns>The normal vector at that point</returns>
+	glm::vec3 FindSurfaceNormal(glm::vec3 surfacePoint) override;
+
+	/// <summary>
 	/// Makes this collider visible or invisible to the user
 	/// </summary>
 	/// <param name="visible">Whether to show or hide the collider true to show</param>
