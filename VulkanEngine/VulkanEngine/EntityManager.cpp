@@ -77,9 +77,17 @@ void EntityManager::LoadMeshes()
 
 void EntityManager::LoadMaterials()
 {
-    materials.push_back(std::make_shared<Material>("shaders/vert.spv", "shaders/frag.spv", "textures/frog.jpg"));
-    materials.push_back(std::make_shared<Material>("shaders/vert.spv", "shaders/frag.spv", "textures/room.png"));
-    materials.push_back(std::make_shared<Material>("shaders/SkyVert.spv", "shaders/SkyFrag.spv", "textures/Skybox/", 'S'));
+    std::vector<std::vector<VkVertexInputAttributeDescription>> attributeDescriptions;
+    attributeDescriptions.push_back(Vertex::GetAttributeDescriptions(0));
+    attributeDescriptions.push_back(TransformData::GetAttributeDescriptions(attributeDescriptions[0].size()));
+
+    std::vector<VkVertexInputBindingDescription> bindingDescriptions;
+    bindingDescriptions.push_back(Vertex::GetBindingDescription(0));
+    bindingDescriptions.push_back(TransformData::GetBindingDescription(bindingDescriptions.size()));
+
+    materials.push_back(std::make_shared<Material>("shaders/vert.spv", "shaders/frag.spv", attributeDescriptions, bindingDescriptions, "textures/frog.jpg"));
+    materials.push_back(std::make_shared<Material>("shaders/vert.spv", "shaders/frag.spv", attributeDescriptions, bindingDescriptions, "textures/room.png"));
+    materials.push_back(std::make_shared<Material>("shaders/SkyVert.spv", "shaders/SkyFrag.spv", attributeDescriptions, bindingDescriptions, "textures/Skybox/", 'S'));
 }
 
 #pragma endregion

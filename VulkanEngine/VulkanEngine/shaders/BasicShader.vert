@@ -5,6 +5,7 @@ struct Light{
 	vec3 position;
 	vec3 color;
 	float range;
+	float intensity;
 };
 
 layout(binding = 0) uniform UniformBufferObject{

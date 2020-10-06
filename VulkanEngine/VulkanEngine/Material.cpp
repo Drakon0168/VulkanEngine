@@ -11,7 +11,7 @@
 
 #pragma region Memory Management
 
-Material::Material(std::string vertexShaderPath, std::string fragmentShaderPath, std::string materialPath, char type)
+Material::Material(std::string vertexShaderPath, std::string fragmentShaderPath, std::vector<std::vector<VkVertexInputAttributeDescription>> attributes, std::vector<VkVertexInputBindingDescription> bindings, std::string materialPath, char type)
 {
 	this->matPath = materialPath;
 	this->vertexShaderPath = vertexShaderPath;
@@ -24,6 +24,8 @@ Material::Material(std::string vertexShaderPath, std::string fragmentShaderPath,
 	descriptorPool = VkDescriptorPool();
 	descriptorSetLayout = VkDescriptorSetLayout();
 	descriptorSets = std::vector<VkDescriptorSet>();
+
+	SetupVertexInput(attributes, bindings);
 }
 
 void Material::Init()
@@ -77,24 +79,6 @@ void Material::CreateGraphicsPipeline()
 	};
 
 	//Setup the Vertex input
-	std::array<VkVertexInputAttributeDescription, 4> vertexDescriptions = Vertex::GetAttributeDescriptions();
-	std::array<VkVertexInputAttributeDescription, 4> transformDescriptions = TransformData::GetAttributeDescriptions();
-	std::array<VkVertexInputAttributeDescription, 8> attributeDescriptions = {
-		vertexDescriptions[0],
-		vertexDescriptions[1],
-		vertexDescriptions[2],
-		vertexDescriptions[3],
-		transformDescriptions[0],
-		transformDescriptions[1],
-		transformDescriptions[2],
-		transformDescriptions[3]
-	};
-
-	std::array<VkVertexInputBindingDescription, 2> bindingDescriptions = {
-		Vertex::GetBindingDescription(),
-		TransformData::GetBindingDescription()
-	};
-
 	VkPipelineVertexInputStateCreateInfo vertexInputCreateInfo = {};
 	vertexInputCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
 	vertexInputCreateInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size());
@@ -384,6 +368,21 @@ void Material::CreateDescriptorSets()
 
 		vkUpdateDescriptorSets(logicalDevice, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
 	}
+}
+
+void Material::SetupVertexInput(std::vector<std::vector<VkVertexInputAttributeDescription>> attributes, std::vector<VkVertexInputBindingDescription> bindings)
+{
+	//Set attribute descriptions
+	attributeDescriptions = std::vector<VkVertexInputAttributeDescription>();
+
+	for (size_t i = 0; i < attributes.size(); i++) {
+		for (size_t j = 0; j < attributes[i].size(); j++) {
+			attributeDescriptions.push_back(attributes[i][j]);
+		}
+	}
+
+	//Set binding descriptions
+	bindingDescriptions = bindings;
 }
 
 void Material::Cleanup()
