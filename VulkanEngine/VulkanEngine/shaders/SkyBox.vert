@@ -17,10 +17,11 @@ layout(binding = 0) uniform UniformBufferObject{
 layout(location = 0) in vec3 inPosition;
 layout(location = 1) in vec3 inColor;
 layout(location = 2) in vec3 inNormal;
-layout(location = 3) in vec3 texCoord;
+layout(location = 3) in vec2 texCoord;
+layout(location = 4) in float zCoord;
 
 //Instanced Data
-layout(location = 4) in mat4 model;
+layout(location = 5) in mat4 model;
 
 layout(location = 0) out vec3 position;
 layout(location = 1) out vec3 vertColor;
@@ -36,11 +37,11 @@ void main(){
 	// viewNoTranslation[0][0] = 2;
 	// viewNoTranslation[1][1] = 2;
 	// viewNoTranslation[2][2] = 2;
-	// 
-	// // Removing translation
-	// viewNoTranslation[3][0] = 0;
-	// viewNoTranslation[3][1] = 0;
-	// viewNoTranslation[3][2] = 0;
+	 
+	 // Removing translation
+	 viewNoTranslation[3][0] = 0;
+	 viewNoTranslation[3][1] = 0;
+	 viewNoTranslation[3][2] = 0;
 	//Create model view projection matrix
 	mat4 vp = ubo.projection * viewNoTranslation;
 
@@ -54,6 +55,6 @@ void main(){
 	lights = ubo.lights;
 	vertColor = inColor;
 	normal = inNormal;
-	uv = texCoord;
+	uv = vec3(texCoord, zCoord);
 	cameraPosition = ubo.cameraPosition;
 }

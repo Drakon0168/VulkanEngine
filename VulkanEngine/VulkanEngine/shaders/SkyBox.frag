@@ -44,9 +44,10 @@ void main(){
 	
 	outColor = vec4(vertColor, 1.0f);
 	vec3 temp =  (uv * 2) - 1;
+	// vec3 temp = uv;
 	// temp.b = 0;
 	// outColor = vec4(finalColor * vertColor, 1.0f);
     outColor = texture(texSampler, temp);
-	outColor = vec4(temp, 1.0);
+	// outColor = vec4(temp, 1.0);
 	// outColor = vec4(position, 1.0);
 }

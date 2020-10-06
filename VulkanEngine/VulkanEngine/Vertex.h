@@ -6,13 +6,15 @@ struct Vertex {
 	alignas(16) glm::vec3 position;
 	alignas(16) glm::vec3 normal;
 	alignas(16) glm::vec3 color;
-	alignas(16) glm::vec3 textureCoordinate;
+	alignas(8) glm::vec2 textureCoordinate;
+	alignas(8) float zCoord;
 
 	Vertex(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3 normal = glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2 textureCoordinate = glm::vec2(0.0f, 0.0f), float z = 0.0f) {
 		this->position = position;
 		this->color = color;
 		this->normal = normal;
-		this->textureCoordinate = {textureCoordinate.x, textureCoordinate.y, z};
+		this->textureCoordinate = textureCoordinate;
+		this->zCoord = z;
 	}
 
 	static VkVertexInputBindingDescription GetBindingDescription() {
@@ -24,9 +26,9 @@ struct Vertex {
 		return bindingDescription;
 	}
 
-	static std::array<VkVertexInputAttributeDescription, 4> GetAttributeDescriptions() {
+	static std::array<VkVertexInputAttributeDescription, 5> GetAttributeDescriptions() {
 		//Setup attributes
-		std::array<VkVertexInputAttributeDescription, 4> attributeDescriptions = {};
+		std::array<VkVertexInputAttributeDescription, 5> attributeDescriptions = {};
 		attributeDescriptions[0].binding = 0;
 		attributeDescriptions[0].location = 0;
 		attributeDescriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;
@@ -46,6 +48,11 @@ struct Vertex {
 		attributeDescriptions[3].location = 3;
 		attributeDescriptions[3].format = VK_FORMAT_R32G32_SFLOAT;
 		attributeDescriptions[3].offset = offsetof(Vertex, textureCoordinate);
+
+		attributeDescriptions[4].binding = 0;
+		attributeDescriptions[4].location = 4;
+		attributeDescriptions[4].format = VK_FORMAT_R32_SFLOAT;
+		attributeDescriptions[4].offset = offsetof(Vertex, zCoord);
 
 		return attributeDescriptions;
 	}

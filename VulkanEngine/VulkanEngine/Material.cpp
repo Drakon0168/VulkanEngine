@@ -77,13 +77,14 @@ void Material::CreateGraphicsPipeline()
 	};
 
 	//Setup the Vertex input
-	std::array<VkVertexInputAttributeDescription, 4> vertexDescriptions = Vertex::GetAttributeDescriptions();
+	std::array<VkVertexInputAttributeDescription, 5> vertexDescriptions = Vertex::GetAttributeDescriptions();
 	std::array<VkVertexInputAttributeDescription, 4> transformDescriptions = TransformData::GetAttributeDescriptions();
-	std::array<VkVertexInputAttributeDescription, 8> attributeDescriptions = {
+	std::array<VkVertexInputAttributeDescription, 9> attributeDescriptions = {
 		vertexDescriptions[0],
 		vertexDescriptions[1],
 		vertexDescriptions[2],
 		vertexDescriptions[3],
+		vertexDescriptions[4],
 		transformDescriptions[0],
 		transformDescriptions[1],
 		transformDescriptions[2],
@@ -140,7 +141,7 @@ void Material::CreateGraphicsPipeline()
 	rasterizerCreateInfo.cullMode = VK_CULL_MODE_BACK_BIT;
 	if (type == 'S')
 		rasterizerCreateInfo.cullMode = VK_CULL_MODE_FRONT_BIT;
-	rasterizerCreateInfo.cullMode = VK_CULL_MODE_BACK_BIT;
+	// rasterizerCreateInfo.cullMode = VK_CULL_MODE_BACK_BIT;
 	rasterizerCreateInfo.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
 	rasterizerCreateInfo.depthBiasEnable = VK_FALSE;
 	rasterizerCreateInfo.depthBiasConstantFactor = 0.0f;

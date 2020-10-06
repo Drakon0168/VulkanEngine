@@ -64,47 +64,53 @@ void TextureImages::LoadCubeMap(const std::string texturePath)
 	if (texturePath.c_str() == NULL) {
 		throw std::runtime_error("path is null");
 	}
-	// stbi_uc* pixels[6];
+	stbi_uc* pixels[6];
+	std::vector<stbi_uc*> pixelVector;
 	std::string file = texturePath;
-	/*pixels[0] = stbi_load((file + "Front.jpg").c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
-	pixels[1] = stbi_load((file + "Back.jpg").c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+	stbi_uc* pixel = stbi_load((file + "SkyboxLR.jpg").c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+	// stbi_uc* pixel = stbi_load((file + "Skybox.png").c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+	pixels[0] = stbi_load((file + "Right.jpg").c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+	pixels[1] = stbi_load((file + "Left.jpg").c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
 	pixels[2] = stbi_load((file + "Top.jpg").c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
 	pixels[3] = stbi_load((file + "Bot.jpg").c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
-	pixels[4] = stbi_load((file + "Right.jpg").c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
-	pixels[5] = stbi_load((file + "Left.jpg").c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);*/
-	stbi_uc* pixel = stbi_load((file + "SkyboxLR.jpg").c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
-	VkDeviceSize imageSize = texWidth * texHeight * 4;
+	pixels[5] = stbi_load((file + "Back.jpg").c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+	pixels[4] = stbi_load((file + "Front.jpg").c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+	
+
+	
+	// stbi_uc* pixel = stbi_load((file + "AllSky.jpg").c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+	VkDeviceSize imageSize = texWidth * texHeight * 4 * 6;
 	VkDeviceSize layerSize = imageSize / 6;
 	mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texWidth, texHeight)))) + 1;
 	mipLevels = 1;
 
 
 	if (!pixel) { throw std::runtime_error("failed to load texture image!"); }
-	/*for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < 6; i++) {
 		if (!pixels[i]) { throw std::runtime_error("failed to load texture image!"); }
-	}*/
+	}
 
 	Buffer stagingBuffer;
 
 	Buffer::CreateBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer);
 
-	void* data;
+	void *data;
+	// void* dataOffset = &data + layerSize;
+	VkResult res = 
 	vkMapMemory(VulkanManager::GetInstance()->GetLogicalDevice(), stagingBuffer.GetBufferMemory(), 0, imageSize, 0, &data);
-	// layerSize = sizeof(pixels[0]);
-	// data = *(&data + layerSize);
-	// for (uint8_t i = 0; i < 6; ++i ){
-	// 	// memcpy(static_cast(data) + (layerSize * i), pixels[i], layerSize);
-	// 	// memcpy(*(&data + (layerSize * i)), pixels[i], layerSize);
-	// 	memcpy(data, pixels[2], layerSize);
-	// 	// break;
-	// }
-	// std::cout << "MEMORY: " << data << std::endl;
-	memcpy(data, pixel, static_cast<size_t>(imageSize));
+	for (uint8_t i = 0; i < 6; ++i) {
+		// memcpy(static_cast(data) + (layerSize * i), pixels[i], layerSize);
+		// memcpy(*(&data + (layerSize * i)), pixels[i], layerSize);
+		memcpy(static_cast<int*>(data) + (layerSize / 4) * i, pixels[i], static_cast<size_t>(layerSize));
+		// break;
+	}
+	std::cout << "MEMORY: " << data << std::endl;
+	// memcpy(data, pixel, static_cast<size_t>(imageSize));
 	vkUnmapMemory(VulkanManager::GetInstance()->GetLogicalDevice(), stagingBuffer.GetBufferMemory());
 	stbi_image_free(pixel);
-	/*for (size_t i = 0; i < 6; ++i) {
+	for (size_t i = 0; i < 6; ++i) {
 		stbi_image_free(pixels[i]);
-	}*/
+	}
 
 
 	Image::CreateImage(mipLevels, texWidth, texHeight, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, textureImage, 6
