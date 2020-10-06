@@ -5,6 +5,7 @@ struct Light{
 	vec3 position;
 	vec3 color;
 	float range;
+	float intensity;
 };
 
  
@@ -37,11 +38,12 @@ void main(){
 		float specular = pow(clamp(dot(reflect(direction, normal), cameraDirection), 0.0f, 1.0f), 128) * 0.5f;
 
 		//Calculate final color
-		finalColor +=  (diffuse + specular) * strength;
+		finalColor +=  (diffuse + specular) * strength * lights[i].intensity;
 	}
 
-//	finalColor += vec3(0.015f, 0.015f, 0.015f);
+	//Add ambient light
+	finalColor += vec3(0.015f, 0.015f, 0.015f);
 
 	outColor = vec4(finalColor * vertColor, 1.0f);
-    outColor += texture(texSampler, uv);
+    outColor *= texture(texSampler, uv);
 }
