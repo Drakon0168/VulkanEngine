@@ -211,15 +211,19 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="..\compile.bat">
-      <Filter>Resource Files\Shaders</Filter>
-    </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="shaders\BasicShader.frag">
       <Filter>Resource Files\Shaders</Filter>
     </None>
     <None Include="shaders\BasicShader.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="shaders\SkyBox.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="shaders\SkyBox.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="compile.bat">
       <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>

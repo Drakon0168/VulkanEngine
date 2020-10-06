@@ -6,13 +6,13 @@ struct Vertex {
 	alignas(16) glm::vec3 position;
 	alignas(16) glm::vec3 normal;
 	alignas(16) glm::vec3 color;
-	alignas(8) glm::vec2 textureCoordinate;
+	alignas(16) glm::vec3 textureCoordinate;
 
-	Vertex(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3 normal = glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2 textureCoordinate = glm::vec2(0.0f, 0.0f)) {
+	Vertex(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3 normal = glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2 textureCoordinate = glm::vec2(0.0f, 0.0f), float z = 0.0f) {
 		this->position = position;
 		this->color = color;
 		this->normal = normal;
-		this->textureCoordinate = textureCoordinate;
+		this->textureCoordinate = {textureCoordinate.x, textureCoordinate.y, z};
 	}
 
 	static VkVertexInputBindingDescription GetBindingDescription() {

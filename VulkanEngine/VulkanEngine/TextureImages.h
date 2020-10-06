@@ -23,12 +23,15 @@ public:
 #pragma endregion
 #pragma region Memory Management
 
-	void GenerateMipmaps(VkImage image, VkFormat imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels);
+	void GenerateMipmaps(VkImage image, VkFormat imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels, uint32_t layers = 1);
 	void LoadTexture(const std::string texturePath);
+	void LoadCubeMap(const std::string texturePath);
 
 	void LoadAll();
 
 	void CreateTextureImageView();
+
+	void CreateTextureImageViewCube();
 
 	void CreateTextureSampler();
 	

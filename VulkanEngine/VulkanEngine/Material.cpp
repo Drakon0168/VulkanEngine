@@ -11,11 +11,12 @@
 
 #pragma region Memory Management
 
-Material::Material(std::string vertexShaderPath, std::string fragmentShaderPath, std::string materialPath)
+Material::Material(std::string vertexShaderPath, std::string fragmentShaderPath, std::string materialPath, char type)
 {
 	this->matPath = materialPath;
 	this->vertexShaderPath = vertexShaderPath;
 	this->fragmentShaderPath = fragmentShaderPath;
+	this->type = type;
 
 	pipelineLayout = VkPipelineLayout();
 	pipeline = VkPipeline();
@@ -27,8 +28,16 @@ Material::Material(std::string vertexShaderPath, std::string fragmentShaderPath,
 
 void Material::Init()
 {
-	TextureImages::GetInstance()->LoadTexture(matPath);
-	TextureImages::GetInstance()->CreateTextureImageView();
+	
+	if (type == 'S') {
+		// Skybox loading
+		TextureImages::GetInstance()->LoadCubeMap(matPath);
+		TextureImages::GetInstance()->CreateTextureImageViewCube();
+	}
+	else {
+		TextureImages::GetInstance()->LoadTexture(matPath);
+		TextureImages::GetInstance()->CreateTextureImageView();
+	}
 	TextureImages::GetInstance()->CreateTextureSampler();
 	CreateDescriptorSetLayout();
 
@@ -128,6 +137,9 @@ void Material::CreateGraphicsPipeline()
 	rasterizerCreateInfo.rasterizerDiscardEnable = VK_FALSE;
 	rasterizerCreateInfo.polygonMode = VK_POLYGON_MODE_FILL;
 	rasterizerCreateInfo.lineWidth = 1.0f;
+	rasterizerCreateInfo.cullMode = VK_CULL_MODE_BACK_BIT;
+	if (type == 'S')
+		rasterizerCreateInfo.cullMode = VK_CULL_MODE_FRONT_BIT;
 	rasterizerCreateInfo.cullMode = VK_CULL_MODE_BACK_BIT;
 	rasterizerCreateInfo.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
 	rasterizerCreateInfo.depthBiasEnable = VK_FALSE;

@@ -65,13 +65,13 @@ void EntityManager::LoadMeshes()
     meshes[MeshTypes::Plane] = std::make_shared<Mesh>(materials[0]);
     meshes[MeshTypes::Plane]->GeneratePlane();
 
-    meshes[MeshTypes::Cube] = std::make_shared<Mesh>(materials[1]);
+    meshes[MeshTypes::Cube] = std::make_shared<Mesh>(materials[2]);
     meshes[MeshTypes::Cube]->GenerateCube();
     
     meshes[MeshTypes::Sphere] = std::make_shared<Mesh>(materials[0]);
     meshes[MeshTypes::Sphere]->GenerateSphere(50);
     
-    meshes[MeshTypes::Model] = std::make_shared<Mesh>(materials[1]);
+    meshes[MeshTypes::Model] = std::make_shared<Mesh>(materials[0]);
     meshes[MeshTypes::Model]->LoadModel("models/room.obj");
 }
 
@@ -79,6 +79,7 @@ void EntityManager::LoadMaterials()
 {
     materials.push_back(std::make_shared<Material>("shaders/vert.spv", "shaders/frag.spv", "textures/frog.jpg"));
     materials.push_back(std::make_shared<Material>("shaders/vert.spv", "shaders/frag.spv", "textures/room.png"));
+    materials.push_back(std::make_shared<Material>("shaders/SkyVert.spv", "shaders/SkyFrag.spv", "textures/Skybox/", 'S'));
 }
 
 #pragma endregion
