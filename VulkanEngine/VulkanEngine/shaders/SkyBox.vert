@@ -17,11 +17,10 @@ layout(binding = 0) uniform UniformBufferObject{
 layout(location = 0) in vec3 inPosition;
 layout(location = 1) in vec3 inColor;
 layout(location = 2) in vec3 inNormal;
-layout(location = 3) in vec2 texCoord;
-layout(location = 4) in float zCoord;
+layout(location = 3) in vec3 texCoord;
 
 //Instanced Data
-layout(location = 5) in mat4 model;
+layout(location = 4) in mat4 model;
 
 layout(location = 0) out vec3 position;
 layout(location = 1) out vec3 vertColor;
@@ -47,6 +46,8 @@ void main(){
 
 	//calculate screen position of the fragment
 	gl_Position = vp * vec4(inPosition, 1.0f);
+	// Always draws at max depth
+	gl_Position.z = gl_Position.w;
 	
 	//calculate world position of the fragment
 	position = (vp * vec4(inPosition, 1.0f)).xyz;
@@ -55,6 +56,6 @@ void main(){
 	lights = ubo.lights;
 	vertColor = inColor;
 	normal = inNormal;
-	uv = vec3(texCoord, zCoord);
+	uv = texCoord;
 	cameraPosition = ubo.cameraPosition;
 }

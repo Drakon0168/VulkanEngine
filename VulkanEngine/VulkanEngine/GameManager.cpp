@@ -50,6 +50,7 @@ void GameManager::Init()
     // //Setup Plane
     gameObjects[0]->SetTransform(std::make_shared<Transform>());
     gameObjects[0]->GetTransform()->SetScale(glm::vec3(5.0f, 1.0f, 5.0f));
+    gameObjects[0]->GetTransform()->Rotate(glm::vec3(90, 0, 0));
     gameObjects[0]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[0]->GetTransform(), PhysicsLayers::Static, 1.0f, false, true));
     // 
     // //Setup Cube
@@ -80,10 +81,7 @@ void GameManager::Update()
     //Rotate Camera
     //  Toggle camera lock on right click
     if (InputManager::GetInstance()->GetKeyPressed(Controls::RightClick)) {
-        lockCamera = !lockCamera;
-        gameObjects[0]->GetMesh()->RemoveInstance(0);
-        gameObjects[0]->GetTransform()->SetScale(glm::vec3(1, 1, 1));
-        gameObjects[0]->Spawn();
+        lockCamera = !lockCamera; 
     }
 
     //  Rotate camera if not locked

@@ -77,14 +77,13 @@ void Material::CreateGraphicsPipeline()
 	};
 
 	//Setup the Vertex input
-	std::array<VkVertexInputAttributeDescription, 5> vertexDescriptions = Vertex::GetAttributeDescriptions();
+	std::array<VkVertexInputAttributeDescription, 4> vertexDescriptions = Vertex::GetAttributeDescriptions();
 	std::array<VkVertexInputAttributeDescription, 4> transformDescriptions = TransformData::GetAttributeDescriptions();
-	std::array<VkVertexInputAttributeDescription, 9> attributeDescriptions = {
+	std::array<VkVertexInputAttributeDescription, 8> attributeDescriptions = {
 		vertexDescriptions[0],
 		vertexDescriptions[1],
 		vertexDescriptions[2],
 		vertexDescriptions[3],
-		vertexDescriptions[4],
 		transformDescriptions[0],
 		transformDescriptions[1],
 		transformDescriptions[2],
@@ -186,6 +185,7 @@ void Material::CreateGraphicsPipeline()
 	depthStencilCreateInfo.depthTestEnable = VK_TRUE;
 	depthStencilCreateInfo.depthWriteEnable = VK_TRUE;
 	depthStencilCreateInfo.depthCompareOp = VK_COMPARE_OP_LESS;
+	if (type == 'S') depthStencilCreateInfo.depthCompareOp = VK_COMPARE_OP_LESS_OR_EQUAL;
 	depthStencilCreateInfo.depthBoundsTestEnable = VK_FALSE;
 	depthStencilCreateInfo.minDepthBounds = 0.0f;
 	depthStencilCreateInfo.maxDepthBounds = 1.0f;

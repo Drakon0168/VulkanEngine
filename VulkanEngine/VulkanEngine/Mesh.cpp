@@ -534,7 +534,8 @@ void Mesh::LoadModel(const std::string modelPath) {
 
 			vertex.textureCoordinate = {
 				attrib.texcoords[2 * index.texcoord_index + 0],
-				1.0f - attrib.texcoords[2 * index.texcoord_index + 1]
+				1.0f - attrib.texcoords[2 * index.texcoord_index + 1],
+				0.0f
 			};
 
 			vertex.color = { 1.0f, 1.0f, 1.0f };

@@ -99,13 +99,10 @@ void TextureImages::LoadCubeMap(const std::string texturePath)
 	VkResult res = 
 	vkMapMemory(VulkanManager::GetInstance()->GetLogicalDevice(), stagingBuffer.GetBufferMemory(), 0, imageSize, 0, &data);
 	for (uint8_t i = 0; i < 6; ++i) {
-		// memcpy(static_cast(data) + (layerSize * i), pixels[i], layerSize);
-		// memcpy(*(&data + (layerSize * i)), pixels[i], layerSize);
+		// since an int is 32-bit, we need to divide layerSize by 4 to get the number of bytes as our offset
 		memcpy(static_cast<int*>(data) + (layerSize / 4) * i, pixels[i], static_cast<size_t>(layerSize));
 		// break;
 	}
-	std::cout << "MEMORY: " << data << std::endl;
-	// memcpy(data, pixel, static_cast<size_t>(imageSize));
 	vkUnmapMemory(VulkanManager::GetInstance()->GetLogicalDevice(), stagingBuffer.GetBufferMemory());
 	stbi_image_free(pixel);
 	for (size_t i = 0; i < 6; ++i) {
@@ -113,72 +110,13 @@ void TextureImages::LoadCubeMap(const std::string texturePath)
 	}
 
 
-	Image::CreateImage(mipLevels, texWidth, texHeight, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, textureImage, 6
-		, (VkImageLayout)(VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL | VK_IMAGE_LAYOUT_UNDEFINED)
-	); 		//transitionImageLayout(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
-	Image::TransitionImageLayout(textureImage, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, mipLevels, 6);
-	// Image::TransitionImageLayout(textureImage, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, mipLevels, 6);
-	// Image::CopyBufferToImage(stagingBuffer.GetBuffer(), textureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight), 6);
-
-	// BUFFER COPY CODE
-
-	VkCommandBuffer commandBuffer = CommandBuffer::BeginSingleTimeCommand();
-
-	VkBufferImageCopy region = {};
-	region.bufferOffset = 0;
-	region.bufferImageHeight = 0;
-	region.bufferRowLength = 0;
-	region.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-	region.imageSubresource.mipLevel = 0;
-	region.imageSubresource.baseArrayLayer = 0;
-	region.imageSubresource.layerCount = 6;
-	region.imageOffset = { 0, 0, 0 };
-	region.imageExtent = {
-		static_cast<uint32_t>(texWidth),
-		static_cast<uint32_t>(texHeight),
-		1
-	};
+	Image::CreateImage(mipLevels, texWidth, texHeight, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, textureImage, 6);  
+	Image::TransitionImageLayout(textureImage, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, mipLevels, 6);
+	Image::CopyBufferToImage(stagingBuffer.GetBuffer(), textureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight), 6);
 	
-	vkCmdCopyBufferToImage(commandBuffer, stagingBuffer.GetBuffer(), *textureImage.GetImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region);
-
-	CommandBuffer::EndSingleTimeCommand(commandBuffer);
-	// textureImage
-
 	vkDestroyBuffer(VulkanManager::GetInstance()->GetLogicalDevice(), stagingBuffer.GetBuffer(), nullptr);
 	vkFreeMemory(VulkanManager::GetInstance()->GetLogicalDevice(), stagingBuffer.GetBufferMemory(), nullptr);
 	GenerateMipmaps(*textureImage.GetImage(), VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, mipLevels, 6);
-
-	// -----------------------------------------------------------
-
-
-	// Create optimal tiled target image
-	//VkImageCreateInfo imageCreateInfo = {};
-	//imageCreateInfo.imageType = VK_IMAGE_TYPE_2D;
-	//imageCreateInfo.format = VK_FORMAT_R8G8B8A8_SRGB;
-	//imageCreateInfo.mipLevels = mipLevels;
-	//imageCreateInfo.samples = VK_SAMPLE_COUNT_1_BIT;
-	//imageCreateInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
-	//imageCreateInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-	//imageCreateInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-	//imageCreateInfo.extent = { texWidth, texHeight, 1 };
-	//imageCreateInfo.usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
-	//// Cube faces count as array layers in Vulkan
-	//imageCreateInfo.arrayLayers = 6;
-	//// This flag is required for cube map images
-	//imageCreateInfo.flags = VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT;
-
-	//vkCreateImage(VulkanManager::GetInstance()->GetLogicalDevice(), &imageCreateInfo, nullptr, textureImage.GetImage());
-
-
-	//VkMemoryRequirements memReqs;
-	//vkGetImageMemoryRequirements(VulkanManager::GetInstance()->GetLogicalDevice(), *textureImage.GetImage(), &memReqs);
-
-	//VkMemoryAllocateInfo memAllocInfo = {};
-	//memAllocInfo.allocationSize = memReqs.size;
-	//memAllocInfo.memoryTypeIndex = VulkanManager::GetInstance()->FindMemoryType(memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
-
-	//vkAllocateMemory(VulkanManager::GetInstance()->GetLogicalDevice(), &memAllocInfo, nullptr, textureImage.GetMemory());
-	//vkBindImageMemory(VulkanManager::GetInstance()->GetLogicalDevice(), *textureImage.GetImage(), *textureImage.GetMemory(), 0);
 
 }
 
