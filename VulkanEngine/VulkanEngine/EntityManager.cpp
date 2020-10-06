@@ -65,14 +65,17 @@ void EntityManager::LoadMeshes()
     meshes[MeshTypes::Plane] = std::make_shared<Mesh>(materials[0]);
     meshes[MeshTypes::Plane]->GeneratePlane();
 
-    meshes[MeshTypes::Cube] = std::make_shared<Mesh>(materials[2]);
+    meshes[MeshTypes::Cube] = std::make_shared<Mesh>(materials[1]);
     meshes[MeshTypes::Cube]->GenerateCube();
     
     meshes[MeshTypes::Sphere] = std::make_shared<Mesh>(materials[0]);
     meshes[MeshTypes::Sphere]->GenerateSphere(50);
     
-    meshes[MeshTypes::Model] = std::make_shared<Mesh>(materials[0]);
+    meshes[MeshTypes::Model] = std::make_shared<Mesh>(materials[1]);
     meshes[MeshTypes::Model]->LoadModel("models/room.obj");
+
+    meshes[MeshTypes::Skybox] = std::make_shared<Mesh>(materials[2]);
+    meshes[MeshTypes::Skybox]->GenerateCube();
 }
 
 void EntityManager::LoadMaterials()
