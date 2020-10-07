@@ -143,6 +143,7 @@ void EntityManager::Draw(uint32_t imageIndex, VkCommandBuffer* commandBuffer)
         //Begin Per Mesh Commands
         for (std::shared_ptr<Mesh> mesh : entities[material]) {
             if (mesh->GetActiveInstanceCount() > 0) {
+                //TODO: Make sure this changes based on the attributes used by the current material
                 VkBuffer vertexBuffers[] = { mesh->GetVertexBuffer()->GetBuffer() };
                 VkDeviceSize offsets[] = { 0 };
                 vkCmdBindVertexBuffers(*commandBuffer, 0, 1, vertexBuffers, offsets);//Per mesh
