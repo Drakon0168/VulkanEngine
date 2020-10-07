@@ -43,6 +43,7 @@ void WindowManager::InitWindow()
 	//Setup the frame buffer resized callback
 	glfwSetWindowUserPointer(window, this);
 	glfwSetFramebufferSizeCallback(window, FrameBufferResizedCallback);
+	
 }
 
 #pragma endregion

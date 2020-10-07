@@ -42,19 +42,22 @@ VkDeviceMemory* Image::GetMemory()
 
 #pragma region Helper Methods
 
-void Image::CreateImage(uint32_t mipLevels, uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, Image& image)
+void Image::CreateImage(uint32_t mipLevels, uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, Image& image, uint32_t layers, VkImageLayout layout)
 {
 	VkImageCreateInfo createInfo = {};
 	createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
 	createInfo.imageType = VK_IMAGE_TYPE_2D;
+	// createInfo.imageType = VK_IMAGE_TYPE_3D;
+	if (layers > 1)
+	createInfo.flags = VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT;
 	createInfo.extent.width = width;
 	createInfo.extent.height = height;
 	createInfo.extent.depth = 1;
 	createInfo.mipLevels = mipLevels;
-	createInfo.arrayLayers = 1;
+	createInfo.arrayLayers = layers;
 	createInfo.format = format;
 	createInfo.tiling = tiling;
-	createInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+	createInfo.initialLayout = layout;
 	createInfo.usage = usage;
 	createInfo.samples = VK_SAMPLE_COUNT_1_BIT;
 	createInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
@@ -97,18 +100,19 @@ void Image::CreateImageView(Image* image, VkFormat format, VkImageAspectFlags as
 	}
 }
 
-VkImageView Image::CreateImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels)
+VkImageView Image::CreateImageView(VkImage image,  VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels, VkImageViewType viewType, uint32_t layers)
 {
 	VkImageViewCreateInfo createInfo = {};
 	createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
 	createInfo.image = image;
-	createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+	createInfo.viewType = viewType;
 	createInfo.format = /*VK_FORMAT_R8G8B8A8_UNORM;//*/format;
+
 	createInfo.subresourceRange.aspectMask = aspectFlags;
 	createInfo.subresourceRange.baseMipLevel = 0;
 	createInfo.subresourceRange.levelCount = mipLevels;
 	createInfo.subresourceRange.baseArrayLayer = 0;
-	createInfo.subresourceRange.layerCount = 1;
+	createInfo.subresourceRange.layerCount = layers;
 
 	VkImageView imageView;
 	if (vkCreateImageView(VulkanManager::GetInstance()->GetLogicalDevice(), &createInfo, nullptr, &imageView) != VK_SUCCESS) {
@@ -118,7 +122,7 @@ VkImageView Image::CreateImageView(VkImage image, VkFormat format, VkImageAspect
 	return imageView;
 }
 
-void Image::TransitionImageLayout(Image image, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels)
+void Image::TransitionImageLayout(Image image, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels, uint32_t layers)
 {
 	VkCommandBuffer commandBuffer = CommandBuffer::BeginSingleTimeCommand();
 	
@@ -133,7 +137,7 @@ void Image::TransitionImageLayout(Image image, VkImageLayout oldLayout, VkImageL
 	barrier.subresourceRange.baseMipLevel = 0;
 	barrier.subresourceRange.levelCount = mipLevels;
 	barrier.subresourceRange.baseArrayLayer = 0;
-	barrier.subresourceRange.layerCount = 1;
+	barrier.subresourceRange.layerCount = layers;
 
 	VkPipelineStageFlags srcStage;
 	VkPipelineStageFlags dstStage;
@@ -153,7 +157,7 @@ void Image::TransitionImageLayout(Image image, VkImageLayout oldLayout, VkImageL
 		dstStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
 	}
 	else {
-		throw std::runtime_error("Unsupported Layput Transition!");
+		throw std::runtime_error("Unsupported Layout Transition!");
 	}
 
 	vkCmdPipelineBarrier(commandBuffer, srcStage, dstStage, 0, 0, nullptr, 0, nullptr, 1, &barrier);
@@ -161,7 +165,7 @@ void Image::TransitionImageLayout(Image image, VkImageLayout oldLayout, VkImageL
 	CommandBuffer::EndSingleTimeCommand(commandBuffer);
 }
 
-void Image::CopyBufferToImage(VkBuffer buffer, Image image, uint32_t imageWidth, uint32_t imageHeight)
+void Image::CopyBufferToImage(VkBuffer buffer, Image image, uint32_t imageWidth, uint32_t imageHeight, uint32_t layers, VkImageLayout layout)
 {
 	VkCommandBuffer commandBuffer = CommandBuffer::BeginSingleTimeCommand();
 
@@ -173,7 +177,7 @@ void Image::CopyBufferToImage(VkBuffer buffer, Image image, uint32_t imageWidth,
 	region.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 	region.imageSubresource.mipLevel = 0;
 	region.imageSubresource.baseArrayLayer = 0;
-	region.imageSubresource.layerCount = 1;
+	region.imageSubresource.layerCount = layers;
 
 	region.imageOffset = { 0, 0, 0 };
 	region.imageExtent = {
@@ -182,7 +186,7 @@ void Image::CopyBufferToImage(VkBuffer buffer, Image image, uint32_t imageWidth,
 		1
 	};
 
-	vkCmdCopyBufferToImage(commandBuffer, buffer, *image.GetImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region);
+	vkCmdCopyBufferToImage(commandBuffer, buffer, *image.GetImage(), layout, 1, &region);
 
 	CommandBuffer::EndSingleTimeCommand(commandBuffer);
 }

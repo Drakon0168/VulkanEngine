@@ -73,7 +73,8 @@ void GameObject::Spawn()
 		physicsObject = std::make_shared<PhysicsObject>(transform);
 		PhysicsManager::GetInstance()->AddPhysicsObject(physicsObject);
 	}
-
+	
+	// glm::lerp(glm::vec3(), glm::vec3(), 4.0f);
 	instanceId = mesh->AddInstance(transform);
 	physicsObject->SetAlive(true);
 	active = true;

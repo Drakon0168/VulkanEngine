@@ -5,5 +5,6 @@ enum MeshTypes {
 	Cube,
 	Sphere,
 	Model,
+	Skybox,
 	MeshTypeCount
 };

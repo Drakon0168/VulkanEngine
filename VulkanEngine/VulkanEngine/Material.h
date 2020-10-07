@@ -19,11 +19,13 @@ protected:
 	std::vector<VkDescriptorSet> descriptorSets;
 	std::string matPath;
 
+	char type;
+
 public:
 
 #pragma region Memory Management
 
-	Material(std::string vertexShaderPath, std::string fragmentShaderPath, std::vector<std::vector<VkVertexInputAttributeDescription>> attributes, std::vector<VkVertexInputBindingDescription> bindings, std::string materialPath);
+	Material(std::string vertexShaderPath, std::string fragmentShaderPath, std::vector<std::vector<VkVertexInputAttributeDescription>> attributes, std::vector<VkVertexInputBindingDescription> bindings, std::string materialPath, char type = ' ');
 
 	/// <summary>
 	/// Creates and allocates Material resources

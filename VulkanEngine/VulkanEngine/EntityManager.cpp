@@ -67,12 +67,15 @@ void EntityManager::LoadMeshes()
 
     meshes[MeshTypes::Cube] = std::make_shared<Mesh>(materials[1]);
     meshes[MeshTypes::Cube]->GenerateCube();
-
+    
     meshes[MeshTypes::Sphere] = std::make_shared<Mesh>(materials[0]);
     meshes[MeshTypes::Sphere]->GenerateSphere(50);
-
+    
     meshes[MeshTypes::Model] = std::make_shared<Mesh>(materials[1]);
     meshes[MeshTypes::Model]->LoadModel("models/room.obj");
+
+    meshes[MeshTypes::Skybox] = std::make_shared<Mesh>(materials[2]);
+    meshes[MeshTypes::Skybox]->GenerateCube();
 }
 
 void EntityManager::LoadMaterials()
@@ -87,6 +90,7 @@ void EntityManager::LoadMaterials()
 
     materials.push_back(std::make_shared<Material>("shaders/vert.spv", "shaders/frag.spv", attributeDescriptions, bindingDescriptions, "textures/frog.jpg"));
     materials.push_back(std::make_shared<Material>("shaders/vert.spv", "shaders/frag.spv", attributeDescriptions, bindingDescriptions, "textures/room.png"));
+    materials.push_back(std::make_shared<Material>("shaders/SkyVert.spv", "shaders/SkyFrag.spv", attributeDescriptions, bindingDescriptions, "textures/Skybox/", 'S'));
 }
 
 #pragma endregion
@@ -96,7 +100,8 @@ void EntityManager::LoadMaterials()
 void EntityManager::Update()
 {
     for (std::shared_ptr<Mesh> mesh : meshes) {
-        mesh->UpdateInstanceBuffer();
+        if (mesh->GetActiveInstanceCount() > 0)
+            mesh->UpdateInstanceBuffer();
     }
 }
 

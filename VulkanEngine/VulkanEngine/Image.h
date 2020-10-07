@@ -60,7 +60,7 @@ public:
 	/// <param name="usage">The usage type of the image</param>
 	/// <param name="properties">The memory properties of the image</param>
 	/// <param name="image">The image that is being allocated</param>
-	static void CreateImage(uint32_t mipLevels, uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, Image& image);
+	static void CreateImage(uint32_t mipLevels, uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, Image& image, uint32_t layers = 1, VkImageLayout layout = VK_IMAGE_LAYOUT_UNDEFINED);
 
 	/// <summary>
 	/// Creates an image view for the supplied image
@@ -77,7 +77,7 @@ public:
 	/// <param name="format">The format of the image</param>
 	/// <param name="aspectFlags">The aspect flag defining the use of the image</param>
 	/// <returns>The image view that was created</returns>
-	static VkImageView CreateImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels);
+	static VkImageView CreateImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels, VkImageViewType viewType = VK_IMAGE_VIEW_TYPE_2D, uint32_t layers = 1);
 
 	/// <summary>
 	/// Changes the layout of the image
@@ -85,7 +85,7 @@ public:
 	/// <param name="image">The image to change the layout of</param>
 	/// <param name="oldLayout">The layout to transition from</param>
 	/// <param name="newLayout">The layout to transition to</param>
-	static void TransitionImageLayout(Image image, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels);
+	static void TransitionImageLayout(Image image, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels, uint32_t layers = 1);
 
 	/// <summary>
 	/// Copies the data stored in a buffer to an image
@@ -94,7 +94,7 @@ public:
 	/// <param name="image">The image to copy the data to</param>
 	/// <param name="imageWidth">The width of the image</param>
 	/// <param name="imageHeight">The height of the image</param>
-	static void CopyBufferToImage(VkBuffer buffer, Image image, uint32_t imageWidth, uint32_t imageHeight);
+	static void CopyBufferToImage(VkBuffer buffer, Image image, uint32_t imageWidth, uint32_t imageHeight, uint32_t layers = 1, VkImageLayout layout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 
 	/// <summary>
 	/// Checks the physical device for format support

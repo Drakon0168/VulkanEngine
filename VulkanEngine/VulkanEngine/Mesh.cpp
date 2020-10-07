@@ -130,6 +130,7 @@ void Mesh::UpdateInstanceBuffer()
 	}
 	else {
 		bufferSize = sizeof(TransformData);
+		// return;
 	}
 
 	//Create the buffer if necessary
@@ -302,7 +303,6 @@ int Mesh::AddInstance(std::shared_ptr<Transform> value)
 		instances.push_back(value);
 		return (instances.size() - 1);
 	}
-
 	instances[freeIndex] = value;
 	instanceBufferDirty = true;
 	return freeIndex;
@@ -357,15 +357,26 @@ void Mesh::GenerateCube() {
 	//Set vertices
 	vertices.resize(4);
 
+	/*vertices = {
+		{{0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f},    {1.0f, 1.0f}     , 1.0f },
+		{{0.5f, 0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f},   {1.0f, 1.0f}    , 0.0f},
+		{{0.5f, -0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f},   {1.0f, 0.0f}   , 1.0f },
+		{{0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f},  {1.0f, 0.0f}  , 0.0f},
+		{{-0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f},   {0.0f, 1.0f}   , 1.0f },
+		{{-0.5f, 0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f},  {0.0f, 1.0f}  , 0.0f},
+		{{-0.5f, -0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f},  {0.0f, 0.0f} , 1.0f },
+		{{-0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}, 0.0f},
+	};*/
+
 	vertices = {
-		{{0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
-		{{0.5f, 0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
-		{{0.5f, -0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
-		{{0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
-		{{-0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
-		{{-0.5f, 0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
-		{{-0.5f, -0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
-		{{-0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
+		{{0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f},    {1.0f, 1.0f}  , 1.0f },
+		{{0.5f, 0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f},   {1.0f, 1.0f}  , 0.0f },
+		{{0.5f, -0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f},   {1.0f, 0.0f}  , 1.0f },
+		{{0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f},  {1.0f, 0.0f}  , 0.0f },
+		{{-0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f},   {0.0f, 1.0f}  , 1.0f },
+		{{-0.5f, 0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f},  {0.0f, 1.0f}  , 0.0f },
+		{{-0.5f, -0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f},  {0.0f, 0.0f}  , 1.0f },
+		{{-0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}  , 0.0f },
 	};
 
 	//Set indices
@@ -523,7 +534,8 @@ void Mesh::LoadModel(const std::string modelPath) {
 
 			vertex.textureCoordinate = {
 				attrib.texcoords[2 * index.texcoord_index + 0],
-				1.0f - attrib.texcoords[2 * index.texcoord_index + 1]
+				1.0f - attrib.texcoords[2 * index.texcoord_index + 1],
+				0.0f
 			};
 
 			vertex.color = { 1.0f, 1.0f, 1.0f };
