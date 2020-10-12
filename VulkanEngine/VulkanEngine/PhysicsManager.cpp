@@ -198,13 +198,133 @@ bool PhysicsManager::SAT(std::shared_ptr<Collider> collider1, std::shared_ptr<Co
         }
     }
 
-    for (int i = 0; i < SATaxis.size(); i++) {
-        glm::vec2 projection1 = collider1->ProjectOntoAxis(SATaxis[i]);
-        glm::vec2 projection2 = collider2->ProjectOntoAxis(SATaxis[i]);
+    ProjectionData closestData[2] = {
+        ProjectionData(),
+        ProjectionData()
+    };
+    float minOverlap = -1;
+    glm::vec3 closestAxis = SATaxis[0];
 
-        if (projection1.y < projection2.x || projection1.x > projection2.y) {
+    for (int i = 0; i < SATaxis.size(); i++) {
+        ProjectionData projection1 = collider1->ProjectOntoAxis(SATaxis[i]);
+        ProjectionData projection2 = collider2->ProjectOntoAxis(SATaxis[i]);
+
+        //Calculate overlap
+        float overlap = 0;
+
+        if (projection1.minMax.x < projection2.minMax.x) {
+            overlap = projection1.minMax.x - projection2.minMax.y;
+        }
+        else {
+            overlap = projection2.minMax.x - projection1.minMax.y;
+        }
+
+        //Exit if there is no overlap
+        if (overlap <= 0) {
             return false;
         }
+
+        //Compare with min overlap and set min overlap if it hasn't been set yet
+        if (minOverlap == -1 || overlap < minOverlap) {
+            minOverlap = overlap;
+            closestAxis = SATaxis[i];
+            closestData[0] = projection1;
+            closestData[1] = projection2;
+        }
+    }
+
+    //Calculate collision data
+    data.collisionNormal = closestAxis;
+
+    //Ensure collision normal points from object 1 to object 2
+    if (glm::dot(closestAxis, collider2->GetTransform()->GetPosition() - collider1->GetTransform()->GetPosition()) < 0) {
+        data.collisionNormal *= -1;
+    }
+
+    data.intersectionDistance = minOverlap;
+
+    // Figure out the type of contact
+    std::vector<glm::vec3> collisionPoints[2]{
+        std::vector<glm::vec3>(),
+        std::vector<glm::vec3>()
+    };
+
+    if (closestData[0].minMax.x < closestData[1].minMax.x) {
+        collisionPoints[0] = closestData[0].maxPoints;
+        collisionPoints[1] = closestData[1].minPoints;
+    }
+    else {
+        collisionPoints[0] = closestData[1].maxPoints;
+        collisionPoints[1] = closestData[0].minPoints;
+    }
+
+    switch (collisionPoints[0].size() + collisionPoints[1].size()) {
+    case 2: //Point on Point collision
+        data.contactPoint = (collisionPoints[0][0] + collisionPoints[1][0]) * 0.5f;
+        break;
+    case 3: //Point on Edge collision
+        glm::vec3 point;
+        glm::vec3 edge[2];
+
+        if (collisionPoints[0].size() == 1) {
+            point = collisionPoints[0][0];
+            edge[0] = collisionPoints[1][0];
+            edge[1] = collisionPoints[1][1];
+        }
+        else {
+            point = collisionPoints[1][0];
+            edge[0] = collisionPoints[0][0];
+            edge[1] = collisionPoints[0][1];
+        }
+
+        glm::vec3 edgeDirection = edge[1] - edge[0];
+        glm::vec3 projectedPoint = edge[0] + (glm::dot(point - edge[0], edgeDirection) / glm::dot(edgeDirection, edgeDirection)) * edgeDirection;
+        data.contactPoint = (point + projectedPoint) * 0.5f;
+        break;
+    case 4: //Edge on Edge or Point on Face collision
+        if (collisionPoints[0].size() == 2) { //Edge on Edge
+
+        }
+        else {
+            glm::vec3 point;
+            glm::vec3 face[3];
+
+            if (collisionPoints[0].size() == 1) {
+                point = collisionPoints[0][0];
+                face[0] = collisionPoints[1][0];
+                face[1] = collisionPoints[1][1];
+                face[2] = collisionPoints[1][2];
+            }
+
+            glm::vec3 planeAxis[2];
+            planeAxis[0] = face[1] - face[0];
+            planeAxis[1] = face[2] - face[0];
+
+            glm::vec3 projectedPoint = face[0] + (planeAxis[0] * (glm::dot(planeAxis[0], point - face[0]) / glm::dot(planeAxis[0], planeAxis[0]))) + (planeAxis[1] * (glm::dot(planeAxis[1], point - face[0]) / glm::dot(planeAxis[1], planeAxis[1])));
+            data.contactPoint = (point + projectedPoint) * 0.5f;
+        }
+        break;
+    case 5: //Edge on Face collision
+
+        break;
+    default: //Face on Face collision
+        glm::vec3 centerPoint[2] = {
+            glm::vec3(),
+            glm::vec3()
+        };
+
+        for (int i = 0; i < collisionPoints[0].size(); i++) {
+            centerPoint[0] += collisionPoints[0][i];
+        }
+        centerPoint[0] *= 1.0f / collisionPoints[0].size();
+
+        for (int i = 0; i < collisionPoints[1].size(); i++) {
+            centerPoint[1] += collisionPoints[1][i];
+        }
+        centerPoint[1] *= 1.0f / collisionPoints[0].size();
+
+        data.contactPoint = (centerPoint[0] + centerPoint[1]) * 0.5f;
+        break;
     }
 
     return true;
@@ -230,13 +350,15 @@ void PhysicsManager::ResolveCollision(std::shared_ptr<PhysicsObject> physicsObje
         if (physicsObject1->GetPhysicsLayer() == PhysicsLayers::Dynamic) {
             dynamicObject = physicsObject1;
             staticObject = physicsObject2;
+
+            physicsObject1->GetTransform()->Translate(data.collisionNormal * data.intersectionDistance * -1.0f);
         }
         else {
             dynamicObject = physicsObject2;
             staticObject = physicsObject1;
-        }
 
-        dynamicObject->GetTransform()->Translate(glm::normalize(dynamicObject->GetTransform()->GetPosition() - data.contactPoint) * data.intersectionDistance);
+            physicsObject2->GetTransform()->Translate(data.collisionNormal * data.intersectionDistance);
+        }
     }
 
     //Resolve Velocities after positions have been fixed
@@ -248,7 +370,7 @@ void PhysicsManager::ResolveCollision(std::shared_ptr<PhysicsObject> physicsObje
 void PhysicsManager::ResolveVelocity(std::shared_ptr<PhysicsObject> physicsObject1, std::shared_ptr<PhysicsObject> physicsObject2)
 {
     //TODO: Calculate elasticity coefficient from physics objects
-    float elasticityCoefficient = 0.9f;
+    float elasticityCoefficient = 0.99f;
 
     if (physicsObject1->GetPhysicsLayer() == PhysicsLayers::Dynamic && physicsObject2->GetPhysicsLayer() == PhysicsLayers::Dynamic) { //Two Dynamic Objects
         glm::vec3 obj1StartingVelocity = physicsObject1->GetVelocity();

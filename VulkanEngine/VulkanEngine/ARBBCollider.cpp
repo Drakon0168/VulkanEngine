@@ -136,8 +136,9 @@ glm::vec3 ARBBCollider::ClosestToPoint(glm::vec3 point)
     return ConvertToGlobalSpace(closestPoint);
 }
 
-glm::vec2 ARBBCollider::ProjectOntoAxis(glm::vec3 axis)
+ProjectionData ARBBCollider::ProjectOntoAxis(glm::vec3 axis)
 {
+    ProjectionData data = {};
     glm::vec3 center = transform->GetPosition();
     glm::quat orientation = transform->GetOrientation();
     glm::vec3 corners[8] = {
@@ -152,20 +153,34 @@ glm::vec2 ARBBCollider::ProjectOntoAxis(glm::vec3 axis)
     };
 
     float sqrLength = glm::dot(axis, axis);
-    glm::vec2 projections = glm::vec2(glm::dot(corners[0], axis) / sqrLength, glm::dot(corners[0], axis) / sqrLength);
+    data.minMax = glm::vec2(glm::dot(corners[0], axis) / sqrLength, glm::dot(corners[0], axis) / sqrLength);
+    data.minPoints = std::vector<glm::vec3>();
+    data.minPoints.push_back(corners[0]);
+    data.maxPoints = std::vector<glm::vec3>();
+    data.maxPoints.push_back(corners[0]);
 
     for (int i = 1; i < 8; i++) {
         float projectionMult = glm::dot(corners[i], axis) / sqrLength;
 
-        if (projectionMult < projections.x) {
-            projections.x = projectionMult;
+        if (projectionMult < data.minMax.x) {
+            data.minMax.x = projectionMult;
+            data.minPoints.clear();
+            data.minPoints.push_back(corners[i]);
         }
-        else if (projectionMult > projections.y) {
-            projections.y = projectionMult;
+        else if (projectionMult == data.minMax.x) {
+            data.minPoints.push_back(corners[i]);
+        }
+        else if (projectionMult > data.minMax.y) {
+            data.minMax.y = projectionMult;
+            data.maxPoints.clear();
+            data.maxPoints.push_back(corners[i]);
+        }
+        else if (projectionMult == data.minMax.y) {
+            data.maxPoints.push_back(corners[i]);
         }
     }
 
-    return projections;
+    return data;
 }
 
 glm::vec3 ARBBCollider::ConvertToLocalSpace(glm::vec3 point)

@@ -108,7 +108,7 @@ public:
 	/// </summary>
 	/// <param name="axis">The normalized axis to project against</param>
 	/// <returns>A vector 2 representing the min and max projection points (x * axis = min point, y * axis = max point)</returns>
-	virtual glm::vec2 ProjectOntoAxis(glm::vec3 axis) = 0;
+	virtual ProjectionData ProjectOntoAxis(glm::vec3 axis) = 0;
 
 	/// <summary>
 	/// Finds the normal vector of a point on the surface of the collider

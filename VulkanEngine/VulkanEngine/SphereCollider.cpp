@@ -131,11 +131,18 @@ glm::vec3 SphereCollider::ClosestToPoint(glm::vec3 point)
     return transform->GetPosition() + direction;
 }
 
-glm::vec2 SphereCollider::ProjectOntoAxis(glm::vec3 axis)
+ProjectionData SphereCollider::ProjectOntoAxis(glm::vec3 axis)
 {
+    ProjectionData data = {};
     float projectionMult = glm::dot(transform->GetPosition(), axis) / glm::dot(axis, axis);
 
-    return glm::vec2(projectionMult - radius, projectionMult + radius);
+    data.minMax = glm::vec2(projectionMult - radius, projectionMult + radius);
+    data.minPoints = std::vector<glm::vec3>();
+    data.minPoints.push_back(transform->GetPosition() + axis * data.minMax.x);
+    data.maxPoints = std::vector<glm::vec3>();
+    data.maxPoints.push_back(transform->GetPosition() + axis * data.minMax.y);
+
+    return data;
 }
 
 glm::vec3 SphereCollider::FindSurfaceNormal(glm::vec3 surfacePoint)
