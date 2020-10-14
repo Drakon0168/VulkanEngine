@@ -156,17 +156,16 @@ bool PhysicsManager::CheckAABBCollision(std::shared_ptr<AABBCollider> collider1,
 
     glm::vec3 col1Min = collider1->GetTransform()->GetPosition() - collider1->GetExtents();
     glm::vec3 col1Max = collider1->GetTransform()->GetPosition() + collider1->GetExtents();
-    glm::vec3 col2Min = collider1->GetTransform()->GetPosition() - collider1->GetExtents();
-    glm::vec3 col2Max = collider1->GetTransform()->GetPosition() + collider1->GetExtents();
+    glm::vec3 col2Min = collider2->GetTransform()->GetPosition() - collider2->GetExtents();
+    glm::vec3 col2Max = collider2->GetTransform()->GetPosition() + collider2->GetExtents();
 
-    glm::vec3 totalMax = glm::vec3(glm::max(col1Max.x, col2Max.x), glm::max(col1Max.y, col2Max.y), glm::max(col1Max.z, col2Max.z));
-    glm::vec3 totalMin = glm::vec3(glm::min(col1Min.x, col2Min.x), glm::min(col1Min.y, col2Min.y), glm::min(col1Min.z, col2Min.z));
-
-    glm::vec3 overlap = (totalMax - totalMin) - (glm::abs(col1Min - col2Min) + abs(col1Max - col2Max));
+    glm::vec3 overlapStart = glm::vec3(glm::max(col1Min.x, col2Min.x), glm::max(col1Min.y, col2Min.y), glm::max(col1Min.z, col2Min.z));
+    glm::vec3 overlapEnd = glm::vec3(glm::min(col1Max.x, col2Max.x), glm::min(col1Max.y, col2Max.y), glm::min(col1Max.z, col2Max.z));
+    glm::vec3 overlap = overlapEnd - overlapStart;
 
     data = {};
     //Set contact point as the center of the overlap
-    data.contactPoint = totalMin + glm::abs(col1Min - col2Min) + overlap * 0.5f;
+    data.contactPoint = (overlapStart + overlapEnd) * 0.5f;
     //Set normal as the axis with the least overlap
     data.intersectionDistance = glm::min(overlap.x, glm::min(overlap.y, overlap.z));
     if (data.intersectionDistance == overlap.x) {
@@ -177,6 +176,11 @@ bool PhysicsManager::CheckAABBCollision(std::shared_ptr<AABBCollider> collider1,
     }
     else {
         data.collisionNormal = glm::vec3(0, 0, 1);
+    }
+
+    //Make sure collision normal points from object 1 to object 2
+    if (glm::dot(data.collisionNormal, collider2->GetTransform()->GetPosition() - collider1->GetTransform()->GetPosition()) < 0) {
+        data.collisionNormal *= -1;
     }
 
     return true;
@@ -370,7 +374,7 @@ void PhysicsManager::ResolveCollision(std::shared_ptr<PhysicsObject> physicsObje
 void PhysicsManager::ResolveVelocity(std::shared_ptr<PhysicsObject> physicsObject1, std::shared_ptr<PhysicsObject> physicsObject2)
 {
     //TODO: Calculate elasticity coefficient from physics objects
-    float elasticityCoefficient = 0.99f;
+    float elasticityCoefficient = 0.8f;
 
     if (physicsObject1->GetPhysicsLayer() == PhysicsLayers::Dynamic && physicsObject2->GetPhysicsLayer() == PhysicsLayers::Dynamic) { //Two Dynamic Objects
         glm::vec3 obj1StartingVelocity = physicsObject1->GetVelocity();
