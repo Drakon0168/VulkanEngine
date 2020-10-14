@@ -607,6 +607,7 @@ void SwapChain::EndDraw(uint32_t imageIndex)
 
 	if (result == VK_SUBOPTIMAL_KHR || result == VK_ERROR_OUT_OF_DATE_KHR || frameBufferResized) {
 		RecreateSwapChain();
+		GuiManager::GetInstance()->RecreateResources();
 		SetFrameBufferResized(false);
 	}
 	else if (result != VK_SUCCESS) { // stops here

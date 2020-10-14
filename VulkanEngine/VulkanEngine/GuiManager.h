@@ -28,6 +28,7 @@ public:
 
 	std::vector<VkFramebuffer> GetFrameBuffers(void);
 	void FullCleanup();
+	void Cleanup();
 
 	/// <summary>
 	/// Returns the list of command buffers used by the swap chain
@@ -52,5 +53,7 @@ public:
 	/// Creates and allocates the command buffers
 	/// </summary>
 	void CreateCommandBuffers();
+
+	void RecreateResources();
 };
 

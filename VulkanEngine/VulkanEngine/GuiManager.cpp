@@ -210,13 +210,8 @@ std::vector<VkFramebuffer> GuiManager::GetFrameBuffers(void)
 void GuiManager::FullCleanup()
 {
 	if (guiInitialized) {
-
-		//Destroy Frame Buffers
-		for (auto frameBuffer : guiFrameBuffers) {
-			vkDestroyFramebuffer(logicalDevice, frameBuffer, nullptr);
-		}
+		Cleanup();
 		vkDestroyRenderPass(logicalDevice, imGuiRenderPass, nullptr);
-		vkFreeCommandBuffers(logicalDevice, imGuiCommandPool, static_cast<uint32_t>(imGuiCommandBuffers.size()), imGuiCommandBuffers.data());
 
 
 		
@@ -229,6 +224,14 @@ void GuiManager::FullCleanup()
 	}
 
 	
+}
+void GuiManager::Cleanup()
+{
+	//Destroy Frame Buffers
+	for (auto frameBuffer : guiFrameBuffers) {
+		vkDestroyFramebuffer(logicalDevice, frameBuffer, nullptr);
+	}
+	vkFreeCommandBuffers(logicalDevice, imGuiCommandPool, static_cast<uint32_t>(imGuiCommandBuffers.size()), imGuiCommandBuffers.data());
 }
 std::vector<VkCommandBuffer> GuiManager::GetCommandBuffers()
 {
@@ -267,6 +270,12 @@ void GuiManager::CreateCommandBuffers()
 	}
 
 	// initial draw for GUI buffers here?
+}
+void GuiManager::RecreateResources()
+{
+	Cleanup();
+	CreateFrameBuffers();
+	CreateCommandBuffers();
 }
 void GuiManager::CreateFrameBuffers()
 {
