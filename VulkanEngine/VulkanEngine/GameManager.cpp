@@ -69,6 +69,10 @@ void GameManager::Init()
     gameObjects[4]->GetTransform()->SetOrientation(glm::vec3(-90.0f, -90.0f, 0.0f));
     gameObjects[4]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[4]->GetTransform(), PhysicsLayers::Static, 1.0f, false, true));
 
+    // setup skybox
+    gameObjects[5]->SetTransform(std::make_shared<Transform>(glm::vec3(0)));
+    gameObjects[5]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[5]->GetTransform(), PhysicsLayers::Trigger, 1.0f, false, false));
+
     for (size_t i = 0; i < gameObjects.size(); i++) {
         gameObjects[i]->Spawn();
     }
