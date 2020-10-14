@@ -32,11 +32,12 @@
 #include "Time.h"
 
 //Structs
+#include "DebugShape.h"
 #include "Light.h"
 #include "QueueFamilyIndices.h"
 #include "SwapChainSupportDetails.h"
-#include "UniformBufferObject.h"
 #include "TransformData.h"
+#include "UniformBufferObject.h"
 #include "Vertex.h"
 
 //Enums

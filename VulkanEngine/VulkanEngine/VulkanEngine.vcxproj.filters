@@ -209,6 +209,9 @@
     <ClInclude Include="TextureImages.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
+    <ClInclude Include="DebugShape.h">
+      <Filter>Header Files\Structs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\BasicShader.frag">
@@ -223,8 +226,16 @@
     <None Include="shaders\SkyBox.frag">
       <Filter>Resource Files\Shaders</Filter>
     </None>
-    <None Include="compile.bat">
+    <None Include="shaders\DebugShader.frag">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="shaders\DebugShader.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="compile.bat">
+      <Filter>Resource Files\Shaders</Filter>
+    </CustomBuild>
   </ItemGroup>
 </Project>

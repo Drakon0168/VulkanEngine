@@ -48,6 +48,4 @@ public:
 
 	VkSampler GetSampler();
 #pragma endregion
-
-
 };

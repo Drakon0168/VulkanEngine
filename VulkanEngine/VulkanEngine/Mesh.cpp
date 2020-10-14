@@ -142,6 +142,8 @@ void Mesh::UpdateInstanceBuffer()
 	vkMapMemory(logicalDevice, instanceBuffer->GetBufferMemory(), 0, bufferSize, 0, &data);
 	memcpy(data, bufferData.data(), bufferSize);
 	vkUnmapMemory(logicalDevice, instanceBuffer->GetBufferMemory());
+
+	instanceBufferDirty = false;
 }
 
 void Mesh::UpdateVertexBuffer()
@@ -184,7 +186,6 @@ void Mesh::UpdateIndexBuffer()
 
 	//Cleanup staging buffer
 	stagingBuffer.Cleanup();
-	instanceBufferDirty = false;
 }
 
 #pragma endregion
@@ -500,6 +501,30 @@ void Mesh::GenerateSphere(int resolution)
 			indices.push_back(rowStart + i);
 		}
 	}
+
+	if (vertexBuffer != nullptr && indexBuffer != nullptr) {
+		UpdateVertexBuffer();
+		UpdateIndexBuffer();
+	}
+}
+
+void Mesh::GenerateLine(glm::vec3 point1, glm::vec3 point2)
+{
+	//Set vertices
+	vertices.resize(3);
+
+	vertices = {
+		{point1, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
+		{(point1 + point2) * 0.5f, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 1.0f}},
+		{point2, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.5f, 0.5f}},
+	};
+
+	//Set indices
+	indices.resize(6);
+
+	indices = {
+		0, 1, 2
+	};
 
 	if (vertexBuffer != nullptr && indexBuffer != nullptr) {
 		UpdateVertexBuffer();

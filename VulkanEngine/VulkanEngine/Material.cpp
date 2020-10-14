@@ -11,11 +11,12 @@
 
 #pragma region Memory Management
 
-Material::Material(std::string vertexShaderPath, std::string fragmentShaderPath, std::vector<std::vector<VkVertexInputAttributeDescription>> attributes, std::vector<VkVertexInputBindingDescription> bindings, std::string materialPath, char type)
+Material::Material(std::string vertexShaderPath, std::string fragmentShaderPath, bool wireframe, std::vector<std::vector<VkVertexInputAttributeDescription>> attributes, std::vector<VkVertexInputBindingDescription> bindings, std::string materialPath, char type)
 {
 	this->matPath = materialPath;
 	this->vertexShaderPath = vertexShaderPath;
 	this->fragmentShaderPath = fragmentShaderPath;
+	this->wireframe = wireframe;
 	this->type = type;
 
 	pipelineLayout = VkPipelineLayout();
@@ -119,8 +120,16 @@ void Material::CreateGraphicsPipeline()
 	rasterizerCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
 	rasterizerCreateInfo.depthClampEnable = VK_FALSE;
 	rasterizerCreateInfo.rasterizerDiscardEnable = VK_FALSE;
-	rasterizerCreateInfo.polygonMode = VK_POLYGON_MODE_FILL;
-	rasterizerCreateInfo.lineWidth = 1.0f;
+
+	if (wireframe) {
+		rasterizerCreateInfo.polygonMode = VK_POLYGON_MODE_LINE;
+		rasterizerCreateInfo.lineWidth = 1.0f;
+	}
+	else {
+		rasterizerCreateInfo.polygonMode = VK_POLYGON_MODE_FILL;
+		rasterizerCreateInfo.lineWidth = 1.0f;
+	}
+
 	rasterizerCreateInfo.cullMode = VK_CULL_MODE_BACK_BIT;
 	if (type == 'S')
 		rasterizerCreateInfo.cullMode = VK_CULL_MODE_FRONT_BIT;

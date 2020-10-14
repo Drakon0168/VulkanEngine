@@ -225,6 +225,11 @@ public:
 	void GenerateSphere(int resolution = 5);
 
 	/// <summary>
+	/// Sets the vertices and indicee to generate a line between two points
+	/// </summary>
+	void GenerateLine(glm::vec3 point1, glm::vec3 point2);
+
+	/// <summary>
 	/// Loads the model specified by the model path
 	/// </summary>
 	/// <param name="modelPath">The path to the model file from the project directory</param>
