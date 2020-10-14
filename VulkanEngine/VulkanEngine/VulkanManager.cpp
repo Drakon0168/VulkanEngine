@@ -1,5 +1,4 @@
 #include "pch.h"
-#include "AppClass.h"
 #include "VulkanManager.h"
 
 #include "GameManager.h"
@@ -364,11 +363,6 @@ void VulkanManager::Cleanup()
 	glfwTerminate();
 }
 
-void VulkanManager::InitImGui(void)
-{
-
-	
-}
 #pragma endregion
 
 #pragma region MainLoop

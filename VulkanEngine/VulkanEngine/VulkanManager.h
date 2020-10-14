@@ -113,10 +113,6 @@ private:
 #pragma endregion
 
 
-#pragma region GUI
-	void InitImGui(void);
-	void DrawGUI(void);
-#pragma endregion
 
 public:
 	inline static bool initGui;
