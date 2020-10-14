@@ -166,7 +166,6 @@ void GuiManager::Draw(uint32_t imageIndex)
 	ImGui::NewFrame();
 
 	DrawGUI();
-	// ImGui::ShowDemoWindow();
 	ImGui::Render();
 
 	//Setup commands
