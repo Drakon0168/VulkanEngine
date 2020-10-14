@@ -45,6 +45,7 @@ InputManager::InputManager()
     controls[Controls::Exit].SetKeyCode(VK_ESCAPE);
     controls[Controls::LeftClick].SetKeyCode(VK_LBUTTON);
     controls[Controls::RightClick].SetKeyCode(VK_RBUTTON);
+    controls[Controls::ToggleDebug].SetKeyCode(VK_F9);
 }
 
 #pragma endregion

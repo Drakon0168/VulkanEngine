@@ -1,7 +1,10 @@
 #include "pch.h"
 #include "PhysicsObject.h"
 
+#include "DebugManager.h"
 #include "PhysicsManager.h"
+
+#define DebugInstance DebugManager::GetInstance()
 
 #pragma region Constructor
 
@@ -109,6 +112,22 @@ void PhysicsObject::Update()
 			transform->SetPosition(glm::vec3(position.x, 0.5f, position.z));
 		}
 	}
+
+	if (DebugInstance->GetDrawHandles()) {
+		DrawHandles();
+	}
+}
+
+void PhysicsObject::DrawHandles()
+{
+	//Draw velocity
+	DebugInstance->DrawLine(transform->GetPosition(), transform->GetPosition() + velocity, glm::vec3(1.0f, 1.0f, 0.0f), 0.0f);
+	//Draw acceleration
+	DebugInstance->DrawLine(transform->GetPosition() + velocity, transform->GetPosition() + velocity + acceleration, glm::vec3(1.0f, 0.0f, 0.0f), 0.0f);
+
+	//TODO: Draw collider when this is merged with Physics Branch
+
+	transform->DrawHandles();
 }
 
 #pragma endregion

@@ -76,6 +76,8 @@ void GameManager::Init()
     for (size_t i = 0; i < gameObjects.size(); i++) {
         gameObjects[i]->Spawn();
     }
+
+    DebugManager::GetInstance()->DrawWireSphere(glm::vec3(0, 1, 0), glm::vec3(0, 0, 1), 0.25f);
 }
 
 void GameManager::Update()

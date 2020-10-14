@@ -19,6 +19,7 @@ private:
 	std::map<std::shared_ptr<Mesh>, std::vector<std::shared_ptr<DebugShape>>> debugShapes;
 	std::map<std::shared_ptr<Mesh>, std::shared_ptr<Buffer>> instanceBuffers;
 	std::map<std::shared_ptr<Mesh>, bool> instanceBufferDirty;
+	bool drawHandles = false;
 	
 #ifdef NDEBUG
 	const bool enableValidationLayers = false;
@@ -70,6 +71,12 @@ public:
 	/// </summary>
 	/// <returns>The instance buffer map</returns>
 	std::map<std::shared_ptr<Mesh>, std::shared_ptr<Buffer>> GetInstanceBuffers();
+
+	/// <summary>
+	/// Returns whether or not to draw handles
+	/// </summary>
+	/// <returns>True if handles are enabled otherwise false</returns>
+	bool GetDrawHandles();
 
 #pragma endregion
 

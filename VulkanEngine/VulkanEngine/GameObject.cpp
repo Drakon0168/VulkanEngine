@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "GameObject.h"
 
+#include "DebugManager.h"
 #include "EntityManager.h"
 #include "PhysicsManager.h"
 
@@ -94,6 +95,9 @@ void GameObject::Despawn()
 
 void GameObject::Update()
 {
+	if (!physicsObject->GetAlive() && DebugManager::GetInstance()->GetDrawHandles()) {
+		transform->DrawHandles();
+	}
 }
 
 #pragma endregion

@@ -2,6 +2,8 @@
 #include "Transform.h"
 #include <glm/gtx/quaternion.hpp>
 
+#include "DebugManager.h"
+
 #pragma region Constructor
 
 Transform::Transform(glm::vec3 postition, glm::quat orientation, glm::vec3 scale)
@@ -125,6 +127,17 @@ void Transform::LookAt(glm::vec3 target, glm::vec3 up)
 	glm::vec3 direction = glm::normalize(position - target);
 
 	orientation = glm::quatLookAt(direction, up);
+}
+
+#pragma endregion
+
+#pragma region Handles
+
+void Transform::DrawHandles()
+{
+	DebugManager::GetInstance()->DrawLine(position, position + orientation * glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), 0.0f);
+	DebugManager::GetInstance()->DrawLine(position, position + orientation * glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 0.0f);
+	DebugManager::GetInstance()->DrawLine(position, position + orientation * glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 1.0f), 0.0f);
 }
 
 #pragma endregion
