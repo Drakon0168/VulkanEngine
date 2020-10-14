@@ -187,7 +187,7 @@ void GuiManager::DrawGUI()
 	static ImVec4 v4Color = ImColor(255, 0, 0);
 	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar;
 	ImGui::SetNextWindowPos(ImVec2(1, 1), 0);
-	ImGui::SetNextWindowSize(ImVec2(340, 120), 0);
+	ImGui::SetNextWindowSize(ImVec2(340, 140), 0);
 	// tring sAbout = m_pSystem->GetAppName() + " - About";
 	ImGui::Begin("About", (bool*)0, window_flags);
 	{
@@ -196,9 +196,10 @@ void GuiManager::DrawGUI()
 		ImGui::Text("FrameRate: %.2f [FPS] -> %.3f [ms/frame]\n",
 			ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
 		ImGui::Separator();
-		ImGui::Text("Control:\n");
+		ImGui::Text("Controls:\n");
 		ImGui::Text(" WASDQE: Movement\n");
 		ImGui::Text(" Right Click: Rotation toggle\n");
+		ImGui::Text(" F9: Toggle Debug Handles\n");
 	}
 	ImGui::End();
 }

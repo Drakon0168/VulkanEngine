@@ -533,6 +533,11 @@ bool VulkanManager::IsDeviceSuitable(VkPhysicalDevice physicalDevice, VkPhysical
 		return false;
 	}
 
+	//Device does not support wireframes
+	if (!deviceFeatures.fillModeNonSolid) {
+		return false;
+	}
+
 	//Device cannot process graphics commands
 	QueueFamilyIndices queueFamilies = FindQueueFamilies(physicalDevice);
 	if (!queueFamilies.IsConplete()) {
