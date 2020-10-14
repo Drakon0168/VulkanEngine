@@ -193,7 +193,7 @@ void GuiManager::DrawGUI()
 	ImGui::Begin("About", (bool*)0, window_flags);
 	{
 		ImGui::Text("Programmer: \n");
-		ImGui::TextColored(v4Color, "Jake Sands");
+		ImGui::TextColored(v4Color, "Vulkan Team");
 		ImGui::Text("FrameRate: %.2f [FPS] -> %.3f [ms/frame]\n",
 			ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
 		ImGui::Separator();
