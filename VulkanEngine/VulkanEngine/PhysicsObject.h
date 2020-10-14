@@ -105,5 +105,10 @@ public:
 	/// </summary>
 	void Update();
 
+	/// <summary>
+	/// Draws the physics object's handles
+	/// </summary>
+	void DrawHandles();
+
 #pragma endregion
 };

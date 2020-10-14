@@ -344,12 +344,12 @@ void VulkanManager::Cleanup()
 	//Cleanup Meshes
 	EntityManager::GetInstance()->CleanupMeshes();
 
+	//Cleanup Debug Manager
+	DebugManager::GetInstance()->Cleanup();
+
 	//Destroy Logical Device
 	vkDestroyDevice(logicalDevice, nullptr);
 
-	//Cleanup Debug Manager
-	DebugManager::GetInstance()->Cleanup();
-	
 	//Destroy Surface
 	vkDestroySurfaceKHR(vulkanInstance, surface, nullptr);
 
@@ -369,11 +369,11 @@ void VulkanManager::Cleanup()
 
 void VulkanManager::MainLoop()
 {
-	//Set starting time values
-	Time::Reset();
-
 	//Initialize GameManager
 	GameManager::GetInstance()->Init();
+
+	//Set starting time values
+	Time::Reset();
 
 	//Loop until the window is closed
 	while (!glfwWindowShouldClose(WindowManager::GetInstance()->GetWindow())) {
@@ -416,6 +416,8 @@ void VulkanManager::Update()
 	GameManager::GetInstance()->Update();
 
 	PhysicsManager::GetInstance()->Update();
+
+	DebugManager::GetInstance()->Update();
 
 	EntityManager::GetInstance()->Update();
 	

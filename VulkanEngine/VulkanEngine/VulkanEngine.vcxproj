@@ -212,6 +212,7 @@
     <ClInclude Include="CommandBuffer.h" />
     <ClInclude Include="Controls.h" />
     <ClInclude Include="DebugManager.h" />
+    <ClInclude Include="DebugShape.h" />
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="GameManager.h" />
@@ -243,9 +244,23 @@
     <ClInclude Include="WindowManager.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="compile.bat" />
+    <CustomBuild Include="compile.bat">
+      <FileType>Document</FileType>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)shaders\frag.spv;$(ProjectDir)shaders\vert.spv;$(ProjectDir)shaders\SkyFrag.spv;$(ProjectDir)shaders\SkyVert.spv;$(ProjectDir)shaders\DebugFrag.spv;$(ProjectDir)shaders\DebugVert.spv;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)shaders\BasicShader.frag;$(ProjectDir)shaders\BasicShader.vert;$(ProjectDir)shaders\DebugShader.frag;$(ProjectDir)shaders\DebugShader.vert;$(ProjectDir)shaders\SkuBox.frag;$(ProjectDir)shaders\SkyBox.vert;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)shaders\frag.spv;$(ProjectDir)shaders\vert.spv;$(ProjectDir)shaders\SkyFrag.spv;$(ProjectDir)shaders\SkyVert.spv;$(ProjectDir)shaders\DebugFrag.spv;$(ProjectDir)shaders\DebugVert.spv;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)shaders\BasicShader.frag;$(ProjectDir)shaders\BasicShader.vert;$(ProjectDir)shaders\DebugShader.frag;$(ProjectDir)shaders\DebugShader.vert;$(ProjectDir)shaders\SkuBox.frag;$(ProjectDir)shaders\SkyBox.vert;%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling Shaders</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compiling Shaders</Message>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">compile.bat</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">compile.bat</Command>
+    </CustomBuild>
     <None Include="shaders\BasicShader.frag" />
     <None Include="shaders\BasicShader.vert" />
+    <None Include="shaders\DebugShader.frag" />
+    <None Include="shaders\DebugShader.vert" />
     <None Include="shaders\SkyBox.frag" />
     <None Include="shaders\SkyBox.vert" />
   </ItemGroup>

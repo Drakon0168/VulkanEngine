@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "GameManager.h"
 
+#include "DebugManager.h"
 #include "EntityManager.h"
 #include "InputManager.h"
 #include "Camera.h"
@@ -33,9 +34,6 @@ std::vector<std::shared_ptr<Light>> GameManager::GetLights()
 
 void GameManager::Init()
 {
-    //Reset time so that it doesn't include initialization in totalTime
-    Time::Reset();
-
     //Setup Lights
     lights.push_back(std::make_shared<Light>(glm::vec3(1.5f, 1.1f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), 5.0f));
     lights.push_back(std::make_shared<Light>(glm::vec3(0.0f, 2.0f, -1.5f), glm::vec3(1.0f, 0.988f, 0.769f), 3.0f, 4.0f));
@@ -71,9 +69,15 @@ void GameManager::Init()
     gameObjects[4]->GetTransform()->SetOrientation(glm::vec3(-90.0f, -90.0f, 0.0f));
     gameObjects[4]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[4]->GetTransform(), PhysicsLayers::Static, 1.0f, false, true));
 
+    // setup skybox
+    gameObjects[5]->SetTransform(std::make_shared<Transform>(glm::vec3(0)));
+    gameObjects[5]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[5]->GetTransform(), PhysicsLayers::Trigger, 1.0f, false, false));
+
     for (size_t i = 0; i < gameObjects.size(); i++) {
         gameObjects[i]->Spawn();
     }
+
+    DebugManager::GetInstance()->DrawWireSphere(glm::vec3(0, 1, 0), glm::vec3(0, 0, 1), 0.25f);
 }
 
 void GameManager::Update()

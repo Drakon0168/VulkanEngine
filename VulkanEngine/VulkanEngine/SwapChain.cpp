@@ -2,6 +2,7 @@
 #include "SwapChain.h"
 
 #include "VulkanManager.h"
+#include "DebugManager.h"
 #include "EntityManager.h"
 #include "GameManager.h"
 #include "WindowManager.h"
@@ -124,6 +125,9 @@ void SwapChain::CreateSwapChainResources()
 
 	//Load Meshes and materials
 	EntityManager::GetInstance()->Init();
+
+	//Initialize the debug manager
+	DebugManager::GetInstance()->Init();
 
 	//Create material resources
 	EntityManager::GetInstance()->CreateMaterialResources();
@@ -266,11 +270,10 @@ void SwapChain::Cleanup()
 	//Cleanup Depth Image
 	depthImage.Cleanup();
 	//TESTING HERE
-
 	vkDestroySampler(logicalDevice, TextureImages::GetInstance()->GetSampler(), nullptr);
-	vkDestroyImageView(logicalDevice, TextureImages::GetInstance()->GetTextureImageView(), nullptr);
 
 	vkDestroyImage(logicalDevice, TextureImages::GetInstance()->TextureImageImage(), nullptr);
+	vkDestroyImageView(logicalDevice, TextureImages::GetInstance()->GetTextureImageView(), nullptr);
 	vkFreeMemory(logicalDevice, TextureImages::GetInstance()->TextureImageMemory(), nullptr);
 	//end tresting
 }
@@ -289,7 +292,6 @@ void SwapChain::FullCleanup()
 		vkDestroySemaphore(logicalDevice, renderFinishedSemaphores[i], nullptr);
 		vkDestroyFence(logicalDevice, inFlightFences[i], nullptr);
 	}
-
 }
 
 void SwapChain::CreateImageViews()
