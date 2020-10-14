@@ -7,6 +7,7 @@
 #include "WindowManager.h"
 #include "Camera.h"
 #include "TextureImages.h"
+#include "GuiManager.h"
 
 #define logicalDevice VulkanManager::GetInstance()->GetLogicalDevice()
 #define physicalDevice VulkanManager::GetInstance()->GetPhysicalDevice()
@@ -92,6 +93,7 @@ VkCommandBuffer* SwapChain::GetCommandBuffer(uint32_t index)
 {
 	return &commandBuffers[index];
 }
+
 
 #pragma endregion
 
@@ -242,7 +244,6 @@ void SwapChain::Cleanup()
 
 	//Free Command Buffers
 	vkFreeCommandBuffers(logicalDevice, commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
-
 	//Cleanup Materials
 	EntityManager::GetInstance()->CleanupMaterials();
 
@@ -276,7 +277,7 @@ void SwapChain::Cleanup()
 
 void SwapChain::FullCleanup()
 {
-	
+	GuiManager::GetInstance()->FullCleanup();
 	Cleanup();
 
 	//Destroy Command Pool
@@ -378,6 +379,8 @@ void SwapChain::CreateRenderPass()
 	colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
 	colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 	colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+	if (VulkanManager::GetInstance()->initGui)
+	colorAttachment.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
 	//Setup Depth Attachment
 	VkAttachmentDescription depthAttachment = {};
@@ -459,11 +462,16 @@ void SwapChain::CreateCommandPool()
 	if (vkCreateCommandPool(logicalDevice, &createInfo, nullptr, &commandPool) != VK_SUCCESS) {
 		throw std::runtime_error("Failed to create Command Pool!");
 	}
+	/*if (vkCreateCommandPool(logicalDevice, &createInfo, nullptr, &imGuiCommandPool) != VK_SUCCESS) {
+		throw std::runtime_error("Failed to create Command Pool!");
+	}*/
 }
+
 
 void SwapChain::CreateCommandBuffers()
 {
 	commandBuffers.resize(GetFrameBuffers().size());
+	// imGuiCommandBuffers.resize(GetFrameBuffers().size());
 
 	VkCommandBufferAllocateInfo allocateInfo = {};
 	allocateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -475,9 +483,19 @@ void SwapChain::CreateCommandBuffers()
 		throw std::runtime_error("Failed to allocate Command Buffers");
 	}
 
+
+	/*allocateInfo.commandPool = imGuiCommandPool; 
+	allocateInfo.commandBufferCount = (uint32_t)imGuiCommandBuffers.size();
+	if (vkAllocateCommandBuffers(logicalDevice, &allocateInfo, imGuiCommandBuffers.data()) != VK_SUCCESS) {
+		throw std::runtime_error("Failed to allocate Command Buffers");
+	}*/
+
+
+
 	for (uint32_t i = 0; i < commandBuffers.size(); i++) {
 		EntityManager::GetInstance()->Draw(i, &commandBuffers[i]);
 	}
+	// initial draw for GUI buffers here?
 }
 
 #pragma endregion
@@ -546,8 +564,17 @@ void SwapChain::EndDraw(uint32_t imageIndex)
 	submitInfo.pWaitSemaphores = waitSemaphores;
 	submitInfo.pWaitDstStageMask = waitStages;
 
-	submitInfo.commandBufferCount = 1;
-	submitInfo.pCommandBuffers = &commandBuffers[imageIndex];
+	// Check if GUI was initialized
+	if (GuiManager::GetInstance()->guiInitialized) {
+		std::array<VkCommandBuffer, 2> submitCommandBuffers =
+		{ commandBuffers[imageIndex], GuiManager::GetInstance()->GetCommandBuffers()[imageIndex] };
+		submitInfo.commandBufferCount = 2;
+		submitInfo.pCommandBuffers = submitCommandBuffers.data();
+	}
+	else {
+		submitInfo.commandBufferCount = 1;
+		submitInfo.pCommandBuffers = &commandBuffers[imageIndex];
+	}
 
 	VkSemaphore signalSemaphores[] = { renderFinishedSemaphores[currentFrame] };
 	submitInfo.signalSemaphoreCount = 1;

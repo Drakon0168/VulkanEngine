@@ -10,6 +10,9 @@ class VulkanManager
 private:
 	static VulkanManager* instance;
 
+	// TO MOVE GUI STUFF
+	std::vector<VkFramebuffer> guiFrameBuffers;
+	VkRenderPass imGuiRenderPass;
 
 
 	VkInstance vulkanInstance = VK_NULL_HANDLE;
@@ -109,7 +112,14 @@ private:
 
 #pragma endregion
 
+
+#pragma region GUI
+	void InitImGui(void);
+	void DrawGUI(void);
+#pragma endregion
+
 public:
+	inline static bool initGui;
 
 #pragma region Singleton
 

@@ -31,6 +31,7 @@ private:
 	VkCommandPool commandPool = VK_NULL_HANDLE;
 	std::vector<VkCommandBuffer> commandBuffers;
 
+
 	std::vector<Buffer> uniformBuffers;
 	Image depthImage;
 
@@ -127,6 +128,8 @@ public:
 	/// <returns>The command buffer at index</returns>
 	VkCommandBuffer* GetCommandBuffer(uint32_t index);
 
+	VkCommandBuffer* GetGuiCommandBuffer(uint32_t index);
+
 #pragma endregion
 
 #pragma region Memory Management
@@ -190,6 +193,7 @@ public:
 	/// Creates and allocates the command pool
 	/// </summary>
 	void CreateCommandPool();
+
 
 	/// <summary>
 	/// Creates and allocates the command buffers
