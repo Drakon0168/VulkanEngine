@@ -208,20 +208,13 @@ bool PhysicsManager::SAT(std::shared_ptr<Collider> collider1, std::shared_ptr<Co
     };
     float minOverlap = -1;
     glm::vec3 closestAxis = SATaxis[0];
-
+    float time = Time::GetTotalTime();
     for (int i = 0; i < SATaxis.size(); i++) {
         ProjectionData projection1 = collider1->ProjectOntoAxis(SATaxis[i]);
         ProjectionData projection2 = collider2->ProjectOntoAxis(SATaxis[i]);
 
         //Calculate overlap
-        float overlap = 0;
-
-        if (projection1.minMax.x < projection2.minMax.x) {
-            overlap = projection1.minMax.x - projection2.minMax.y;
-        }
-        else {
-            overlap = projection2.minMax.x - projection1.minMax.y;
-        }
+        float overlap = glm::min(projection1.minMax.y, projection2.minMax.y) - glm::max(projection1.minMax.x, projection2.minMax.x);
 
         //Exit if there is no overlap
         if (overlap <= 0) {
@@ -267,6 +260,7 @@ bool PhysicsManager::SAT(std::shared_ptr<Collider> collider1, std::shared_ptr<Co
         data.contactPoint = (collisionPoints[0][0] + collisionPoints[1][0]) * 0.5f;
         break;
     case 3: //Point on Edge collision
+    {
         glm::vec3 point;
         glm::vec3 edge[2];
 
@@ -281,13 +275,16 @@ bool PhysicsManager::SAT(std::shared_ptr<Collider> collider1, std::shared_ptr<Co
             edge[1] = collisionPoints[0][1];
         }
 
-        glm::vec3 edgeDirection = edge[1] - edge[0];
-        glm::vec3 projectedPoint = edge[0] + (glm::dot(point - edge[0], edgeDirection) / glm::dot(edgeDirection, edgeDirection)) * edgeDirection;
-        data.contactPoint = (point + projectedPoint) * 0.5f;
+        data.contactPoint = (point + ProjectPointOnEdge(point, edge, true)) * 0.5f;
         break;
+    }
     case 4: //Edge on Edge or Point on Face collision
+    {
         if (collisionPoints[0].size() == 2) { //Edge on Edge
+            glm::vec3* projectedEdge1 = ProjectEdgeOnEdge(collisionPoints[0].data(), collisionPoints[1].data(), true);
+            glm::vec3* projectedEdge2 = ProjectEdgeOnEdge(collisionPoints[1].data(), collisionPoints[0].data(), true);
 
+            data.contactPoint = ((projectedEdge1[0] + projectedEdge1[1]) * 0.5f + (projectedEdge1[0] + projectedEdge1[1]) * 0.5f) * 0.5f;
         }
         else {
             glm::vec3 point;
@@ -299,36 +296,65 @@ bool PhysicsManager::SAT(std::shared_ptr<Collider> collider1, std::shared_ptr<Co
                 face[1] = collisionPoints[1][1];
                 face[2] = collisionPoints[1][2];
             }
+            else {
+                point = collisionPoints[1][0];
+                face[0] = collisionPoints[0][0];
+                face[1] = collisionPoints[0][1];
+                face[2] = collisionPoints[0][2];
+            }
 
-            glm::vec3 planeAxis[2];
-            planeAxis[0] = face[1] - face[0];
-            planeAxis[1] = face[2] - face[0];
-
-            glm::vec3 projectedPoint = face[0] + (planeAxis[0] * (glm::dot(planeAxis[0], point - face[0]) / glm::dot(planeAxis[0], planeAxis[0]))) + (planeAxis[1] * (glm::dot(planeAxis[1], point - face[0]) / glm::dot(planeAxis[1], planeAxis[1])));
-            data.contactPoint = (point + projectedPoint) * 0.5f;
+            data.contactPoint = (point + ProjectPointOnFace(point, face, true)) * 0.5f;
         }
         break;
+    }
     case 5: //Edge on Face collision
+    {
+        glm::vec3 edge[2];
+        glm::vec3 face[3];
 
+        if (collisionPoints[0].size() == 2) {
+            edge[0] = collisionPoints[0][0];
+            edge[1] = collisionPoints[0][1];
+            face[0] = collisionPoints[1][0];
+            face[1] = collisionPoints[1][1];
+            face[2] = collisionPoints[1][2];
+        }
+        else {
+            edge[0] = collisionPoints[1][0];
+            edge[1] = collisionPoints[1][1];
+            face[0] = collisionPoints[0][0];
+            face[1] = collisionPoints[0][1];
+            face[2] = collisionPoints[0][2];
+        }
+
+        glm::vec3* projectedEdge = ProjectEdgeOnFace(edge, face, true);
+
+        data.contactPoint = ((projectedEdge[0] + projectedEdge[1]) * 0.5f + (edge[0] + edge[1]) * 0.5f) * 0.5f;
         break;
+    }
     default: //Face on Face collision
-        glm::vec3 centerPoint[2] = {
-            glm::vec3(),
-            glm::vec3()
+    {
+        glm::vec3* projectedFace1;
+        glm::vec3* projectedFace2;
+
+        projectedFace1 = ProjectFaceOnFace(collisionPoints[0].data(), collisionPoints[1].data(), true);
+        projectedFace2 = ProjectFaceOnFace(collisionPoints[1].data(), collisionPoints[0].data(), true);
+
+        glm::vec3 midpoints[2] = {
+            glm::vec3(0,0,0),
+            glm::vec3(0,0,0)
         };
-
-        for (int i = 0; i < collisionPoints[0].size(); i++) {
-            centerPoint[0] += collisionPoints[0][i];
+        for (int i = 0; i < 3; i++) {
+            midpoints[0] += projectedFace1[i];
+            midpoints[1] += projectedFace2[i];
         }
-        centerPoint[0] *= 1.0f / collisionPoints[0].size();
 
-        for (int i = 0; i < collisionPoints[1].size(); i++) {
-            centerPoint[1] += collisionPoints[1][i];
-        }
-        centerPoint[1] *= 1.0f / collisionPoints[0].size();
+        midpoints[0] /= 3.0f;
+        midpoints[1] /= 3.0f;
 
-        data.contactPoint = (centerPoint[0] + centerPoint[1]) * 0.5f;
+        data.contactPoint = (midpoints[0] + midpoints[1]) * 0.5f;
         break;
+    }
     }
 
     return true;
@@ -430,6 +456,74 @@ void PhysicsManager::ResolveVelocity(std::shared_ptr<PhysicsObject> physicsObjec
         glm::vec3 velocityProjection = (glm::dot(reflectDirection, startingVelocity) / glm::dot(reflectDirection, reflectDirection)) * reflectDirection;
         dynamicObject->SetVelocity(velocityProjection * -elasticityCoefficient + (startingVelocity - velocityProjection));
     }
+}
+
+#pragma endregion
+
+#pragma region Helper Functions
+
+glm::vec3 PhysicsManager::ProjectPointOnEdge(glm::vec3 point, glm::vec3 edge[2], bool sizeClamp)
+{
+    glm::vec3 direction = point - edge[0];
+    glm::vec3 edgeDirection = edge[1] - edge[0];
+    float projectionMult = glm::dot(edgeDirection, direction) / glm::dot(edgeDirection, edgeDirection);
+
+    if (sizeClamp) {
+        projectionMult = glm::clamp(projectionMult, 0.0f, 1.0f);
+    }
+
+    return edge[0] + projectionMult * edgeDirection;
+}
+
+glm::vec3 PhysicsManager::ProjectPointOnFace(glm::vec3 point, glm::vec3 face[3], bool sizeClamp)
+{
+    glm::vec3 axis[2];
+    axis[0] = face[1] - face[0];
+    axis[1] = face[2] - face[0];
+
+    glm::vec3 direction = point - face[0];
+
+    float projectionMult[2];
+    projectionMult[0] = glm::dot(axis[0], direction) / glm::dot(axis[0], axis[0]);
+    projectionMult[1] = glm::dot(axis[1], direction) / glm::dot(axis[1], axis[1]);
+
+    if (sizeClamp) {
+        projectionMult[0] = glm::clamp(projectionMult[0], 0.0f, 1.0f);
+        projectionMult[1] = glm::clamp(projectionMult[1], 0.0f, 1.0f);
+    }
+
+    return face[0] + axis[0] * projectionMult[0] + axis[1] * projectionMult[1];
+}
+
+glm::vec3* PhysicsManager::ProjectEdgeOnEdge(glm::vec3 edge1[2], glm::vec3 edge2[2], bool sizeClamp)
+{
+    glm::vec3 projectedEdge[2];
+
+    projectedEdge[0] = ProjectPointOnEdge(edge1[0], edge2, sizeClamp);
+    projectedEdge[1] = ProjectPointOnEdge(edge1[1], edge2, sizeClamp);
+
+    return projectedEdge;
+}
+
+glm::vec3* PhysicsManager::ProjectEdgeOnFace(glm::vec3 edge[2], glm::vec3 face[3], bool sizeClamp)
+{
+    glm::vec3 projectedEdge[2];
+
+    projectedEdge[0] = ProjectPointOnFace(edge[0], face, sizeClamp);
+    projectedEdge[1] = ProjectPointOnFace(edge[1], face, sizeClamp);
+
+    return projectedEdge;
+}
+
+glm::vec3* PhysicsManager::ProjectFaceOnFace(glm::vec3 face1[3], glm::vec3 face2[3], bool sizeClamp)
+{
+    glm::vec3 projectedFace[3];
+
+    for (int i = 0; i < 3; i++) {
+        projectedFace[i] = ProjectPointOnFace(face1[0], face2, sizeClamp);
+    }
+
+    return projectedFace;
 }
 
 #pragma endregion
