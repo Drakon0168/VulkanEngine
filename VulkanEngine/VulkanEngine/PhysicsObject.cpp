@@ -101,6 +101,11 @@ std::shared_ptr<Collider> PhysicsObject::GetCollider()
 
 void PhysicsObject::ApplyForce(glm::vec3 force, bool applyMass)
 {
+	if (physicsLayer == PhysicsLayers::Static) {
+		std::cout << "Tried to apply force to static object" << std::endl;
+		return;
+	}
+
 	if (applyMass) {
 		force /= mass;
 	}
