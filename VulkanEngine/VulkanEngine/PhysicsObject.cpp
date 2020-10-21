@@ -65,7 +65,7 @@ glm::vec3 PhysicsObject::GetVelocity()
 glm::vec3 PhysicsObject::GetVelocityAtPoint(glm::vec3 point)
 {
 	glm::vec3 direction = point - transform->GetPosition();
-	float distance = direction.length();
+	float distance = glm::length(direction);
 	direction /= distance;
 	float angle = 2 * glm::acos(angularVelocity.w);
 	glm::vec3 axis;
@@ -160,7 +160,9 @@ void PhysicsObject::ApplyForce(glm::vec3 force, glm::vec3 point, bool applyMass)
 	glm::vec3 direction = point - transform->GetPosition();
 	glm::vec3 axis = glm::normalize(glm::cross(-direction, force));
 	glm::vec3 perpendicularForce = force - ((glm::dot(direction, force) / glm::dot(direction, direction)) * direction);
-	float angularForce = perpendicularForce.length() * direction.length();
+	float angularForce = glm::length(perpendicularForce) * glm::length(direction);
+
+	std::cout << "Angular Force: " << angularForce << std::endl;
 
 	angularAcceleration *= glm::angleAxis(angularForce, axis);
 	acceleration += force;
