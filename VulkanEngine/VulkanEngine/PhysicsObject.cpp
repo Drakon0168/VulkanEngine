@@ -14,10 +14,10 @@ bool PhysicsObject::SharesDimension(std::shared_ptr<PhysicsObject> other)
 {
 	// early return to test framerate
 	// return true;
-	/*if (0 == dimensionCount) {
+	if (0 == dimensionCount) {
 		if (0 == other->dimensionCount)
 			return true;
-	}*/
+	}
 	std::vector<size_t> t2 = other->GetDimensions();
 
 	// return true;
