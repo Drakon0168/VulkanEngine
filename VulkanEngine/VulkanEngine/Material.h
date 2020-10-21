@@ -22,7 +22,7 @@ protected:
 
 	char type;
 
-	bool wireframe;
+	// bool wireframe;
 
 public:
 

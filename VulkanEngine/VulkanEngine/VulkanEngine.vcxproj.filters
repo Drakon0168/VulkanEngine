@@ -39,6 +39,7 @@
     </Filter>
     <Filter Include="Source Files\Components\Colliders">
       <UniqueIdentifier>{e93e7adb-7fa9-4066-8c60-6e0faa0df169}</UniqueIdentifier>
+    </Filter>
     <Filter Include="imgui">
       <UniqueIdentifier>{5042c99a-be94-4eeb-bb37-0b2c77365711}</UniqueIdentifier>
     </Filter>
@@ -127,6 +128,7 @@
     </ClCompile>
     <ClCompile Include="Octant.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="TextureImages.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
