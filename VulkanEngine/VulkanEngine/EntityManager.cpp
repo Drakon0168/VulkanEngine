@@ -71,6 +71,7 @@ void EntityManager::LoadMeshes()
     meshes[MeshTypes::Model] = std::make_shared<Mesh>(materials[0]);
     meshes[MeshTypes::Model]->LoadModel("models/room.obj");
 
+
     meshes[MeshTypes::SphereCollider] = std::make_shared<Mesh>(materials[1]);
     meshes[MeshTypes::SphereCollider]->GenerateSphere(10);
 
