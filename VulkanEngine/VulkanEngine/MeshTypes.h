@@ -8,6 +8,10 @@ namespace MeshTypes {
 		Model,
 		SphereCollider,
 		CubeCollider,
+		Skybox,
+		WireCube,
+		WireSphere,
+		Line,
 		// Octant,
 		MeshTypeCount
 	};

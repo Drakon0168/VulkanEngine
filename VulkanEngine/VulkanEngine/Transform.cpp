@@ -2,6 +2,8 @@
 #include "Transform.h"
 #include <glm/gtx/quaternion.hpp>
 
+#include "DebugManager.h"
+
 #pragma region Constructor
 
 Transform::Transform(glm::vec3 postition, glm::quat orientation, glm::vec3 scale, std::shared_ptr<Transform> parent)
@@ -137,11 +139,20 @@ void Transform::Rotate(glm::vec3 eulerRotation, bool degrees)
 void Transform::LookAt(glm::vec3 target, glm::vec3 up)
 {
 	//Find normalized direction
-	glm::vec3 direction = position - target;
-	float length = glm::distance(target, position);
-	direction /= length;
+	glm::vec3 direction = glm::normalize(position - target);
 
 	orientation = glm::quatLookAt(direction, up);
+}
+
+#pragma endregion
+
+#pragma region Handles
+
+void Transform::DrawHandles()
+{
+	DebugManager::GetInstance()->DrawLine(position, position + orientation * glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), 0.0f);
+	DebugManager::GetInstance()->DrawLine(position, position + orientation * glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 0.0f);
+	DebugManager::GetInstance()->DrawLine(position, position + orientation * glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 1.0f), 0.0f);
 }
 
 #pragma endregion

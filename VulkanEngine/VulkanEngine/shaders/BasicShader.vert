@@ -5,6 +5,7 @@ struct Light{
 	vec3 position;
 	vec3 color;
 	float range;
+	float intensity;
 };
 
 layout(binding = 0) uniform UniformBufferObject{
@@ -17,8 +18,7 @@ layout(binding = 0) uniform UniformBufferObject{
 layout(location = 0) in vec3 inPosition;
 layout(location = 1) in vec3 inColor;
 layout(location = 2) in vec3 inNormal;
-layout(location = 3) in vec2 texCoord;
-
+layout(location = 3) in vec3 texCoord;
 //Instanced Data
 layout(location = 4) in mat4 model;
 
@@ -43,6 +43,6 @@ void main(){
 	lights = ubo.lights;
 	vertColor = inColor;
 	normal = inNormal;
-	uv = texCoord;
+	uv = texCoord.xy;
 	cameraPosition = ubo.cameraPosition;
 }

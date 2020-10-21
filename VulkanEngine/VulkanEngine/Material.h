@@ -7,13 +7,20 @@ protected:
 
 	std::string vertexShaderPath;
 	std::string fragmentShaderPath;
+	bool wireframe;
 
 	VkPipelineLayout pipelineLayout;
 	VkPipeline pipeline;
+
+	std::vector<VkVertexInputAttributeDescription> attributeDescriptions;
+	std::vector<VkVertexInputBindingDescription> bindingDescriptions;
 	
 	VkDescriptorPool descriptorPool;
 	VkDescriptorSetLayout descriptorSetLayout;
 	std::vector<VkDescriptorSet> descriptorSets;
+	std::string matPath;
+
+	char type;
 
 	bool wireframe;
 
@@ -21,7 +28,7 @@ public:
 
 #pragma region Memory Management
 
-	Material(std::string vertexShaderPath, std::string fragmentShaderPath, bool wireframe = false);
+	Material(std::string vertexShaderPath, std::string fragmentShaderPath, bool wireframe, std::vector<std::vector<VkVertexInputAttributeDescription>> attributes, std::vector<VkVertexInputBindingDescription> bindings, std::string materialPath, char type = ' ');
 
 	/// <summary>
 	/// Creates and allocates Material resources
@@ -47,6 +54,13 @@ public:
 	/// Creates and allocates the descriptor sets used by this material
 	/// </summary>
 	void CreateDescriptorSets();
+
+	/// <summary>
+	/// Sets the vertex input attribute and binding descriptions used by this material
+	/// </summary>
+	/// <param name="attributes">A list of the vertex attributes used by tis material</param>
+	/// <param name="bindings">A list of the vertex bindings used by tis material</param>
+	void SetupVertexInput(std::vector<std::vector<VkVertexInputAttributeDescription>> attributes, std::vector<VkVertexInputBindingDescription> bindings);
 
 	/// <summary>
 	/// Cleans up the resources used by this material

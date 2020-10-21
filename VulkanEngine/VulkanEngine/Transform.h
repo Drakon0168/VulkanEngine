@@ -131,4 +131,10 @@ public:
 	void LookAt(glm::vec3 target, glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f));;
 
 #pragma endregion
+
+#pragma region Handles
+
+	void DrawHandles();
+
+#pragma endregion
 };

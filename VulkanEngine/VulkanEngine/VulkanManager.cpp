@@ -9,8 +9,10 @@
 #include "PhysicsManager.h"
 #include "SwapChain.h"
 #include "Camera.h"
+#include "GuiManager.h"
 
 #define mainCamera Camera::GetMainCamera()
+#define shouldInitGui true
 
 #pragma region Singleton
 
@@ -117,6 +119,7 @@ QueueFamilyIndices VulkanManager::FindQueueFamilies(VkPhysicalDevice physicalDev
 
 #pragma endregion
 
+
 #pragma region Run
 
 void VulkanManager::Run()
@@ -137,11 +140,10 @@ void VulkanManager::Run()
 	mainCamera->GetTransform()->LookAt(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
 	InitVulkan();
-
+	
 	if (DebugManager::GetInstance()->GetEnableValidationLayers()) {
 		std::cout << "Finished Setup" << std::endl;
 	}
-
 	MainLoop();
 	Cleanup();
 
@@ -169,7 +171,12 @@ void VulkanManager::InitVulkan()
 	//Create the logical device
 	CreateLogicalDevice();
 
+	initGui = shouldInitGui;
 	SwapChain::GetInstance()->CreateSwapChainResources();
+
+	// IF you init the GUI, you must draw with it. Otherwise, Vulkan will get mad
+	// (There's no point in initializing it if you're not gonna draw anything w/ it)
+	if (shouldInitGui)  GuiManager::GetInstance()->InitImGui();
 }
 
 void VulkanManager::CreateInstance()
@@ -292,7 +299,7 @@ void VulkanManager::CreateLogicalDevice()
 
 	//Set used device features
 	VkPhysicalDeviceFeatures deviceFeatures = {};
-
+	deviceFeatures.samplerAnisotropy = VK_TRUE;
 	//Setup Logical Device
 	VkDeviceCreateInfo createInfo = {};
 	createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
@@ -337,11 +344,11 @@ void VulkanManager::Cleanup()
 	//Cleanup Meshes
 	EntityManager::GetInstance()->CleanupMeshes();
 
-	//Destroy Logical Device
-	vkDestroyDevice(logicalDevice, nullptr);
-
 	//Cleanup Debug Manager
 	DebugManager::GetInstance()->Cleanup();
+
+	//Destroy Logical Device
+	vkDestroyDevice(logicalDevice, nullptr);
 
 	//Destroy Surface
 	vkDestroySurfaceKHR(vulkanInstance, surface, nullptr);
@@ -362,11 +369,11 @@ void VulkanManager::Cleanup()
 
 void VulkanManager::MainLoop()
 {
-	//Set starting time values
-	Time::Reset();
-
 	//Initialize GameManager
 	GameManager::GetInstance()->Init();
+
+	//Set starting time values
+	Time::Reset();
 
 	//Loop until the window is closed
 	while (!glfwWindowShouldClose(WindowManager::GetInstance()->GetWindow())) {
@@ -374,7 +381,6 @@ void VulkanManager::MainLoop()
 
 		Update();
 		Draw();
-
 		//Exit the application when the exit key is pressed
 		if (InputManager::GetInstance()->GetKeyPressed(Controls::Exit)) {
 			break;
@@ -388,9 +394,14 @@ void VulkanManager::Draw()
 {
 	uint32_t imageIndex = SwapChain::GetInstance()->BeginDraw();
 
+
+
 	if (imageIndex != -1) {
 		//Re-record command buffer
 		EntityManager::GetInstance()->Draw(imageIndex, SwapChain::GetInstance()->GetCommandBuffer(imageIndex));
+
+		if (shouldInitGui)
+			GuiManager::GetInstance()->Draw(imageIndex);
 
 		SwapChain::GetInstance()->EndDraw(imageIndex);
 	}
@@ -406,7 +417,11 @@ void VulkanManager::Update()
 
 	PhysicsManager::GetInstance()->Update();
 
+	DebugManager::GetInstance()->Update();
+
 	EntityManager::GetInstance()->Update();
+	
+	
 }
 
 #pragma endregion
@@ -518,7 +533,7 @@ bool VulkanManager::IsDeviceSuitable(VkPhysicalDevice physicalDevice, VkPhysical
 		return false;
 	}
 
-	//Device cannot render wireframes
+	//Device does not support wireframes
 	if (!deviceFeatures.fillModeNonSolid) {
 		return false;
 	}

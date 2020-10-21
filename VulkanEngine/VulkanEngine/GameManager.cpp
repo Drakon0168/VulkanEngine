@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "GameManager.h"
 
+#include "DebugManager.h"
 #include "EntityManager.h"
 #include "InputManager.h"
 #include "Camera.h"
@@ -48,13 +49,18 @@ void GameManager::Init()
     // gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::CubeCollider]));
     //gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Sphere]));
 
+    gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Skybox]));
+    
     //Setup Plane
     gameObjects[0]->SetTransform(std::make_shared<Transform>(glm::vec3(0.0f, 0.0f, 0.0f)));
     gameObjects[0]->GetTransform()->SetScale(glm::vec3(5.0f, 1.0f, 5.0f));
     gameObjects[0]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[0]->GetTransform(), PhysicsLayers::Static, ColliderTypes::ARBB, 1.0f, false, true));
 
+    gameObjects[0]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[0]->GetTransform(), PhysicsLayers::Static, 1.0f, false, true));
+    
     //Setup Cube
-    gameObjects[1]->SetTransform(std::make_shared<Transform>(glm::vec3(-1.5f, 0.5f, 0.0f)));
+    gameObjects[1]->SetTransform(std::make_shared<Transform>(glm::vec3()));
+    gameObjects[1]->GetTransform()->SetPosition(glm::vec3(-1.5f, 0, 0));
     gameObjects[1]->GetTransform()->SetOrientation(glm::vec3(0.0f, 45.0f, 0.0f));
     gameObjects[1]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[1]->GetTransform(), PhysicsLayers::Static, ColliderTypes::ARBB, 1.0f, false, true));
 
@@ -115,7 +121,7 @@ void GameManager::Update()
     //Rotate Camera
     //  Toggle camera lock on right click
     if (InputManager::GetInstance()->GetKeyPressed(Controls::RightClick)) {
-        lockCamera = !lockCamera;
+        lockCamera = !lockCamera; 
     }
 
     //  Rotate camera if not locked
@@ -164,6 +170,11 @@ void GameManager::Update()
     lights[0]->position = glm::vec3(0.0f, 1.1f, 0.0f) + glm::vec3(cos(scaledTime), 0.0f, sin(scaledTime)) * 1.5f;
 
     //gameObjects[0]->GetTransform()->Rotate(glm::vec3(0.0f, 10.0f, 0.0f) * Time::GetDeltaTime());
+    
+    //Update Game Objects
+    for (size_t i = 0; i < gameObjects.size(); i++) {
+        gameObjects[i]->Update();
+    }
 
     if (InputManager::GetInstance()->GetKeyPressed(Controls::Jump)) {
         gameObjects[2]->GetPhysicsObject()->ApplyForce(glm::vec3(0.0f, 5000.0f, 0.0f));

@@ -1,12 +1,15 @@
 #include "pch.h"
 #include "PhysicsObject.h"
 
+#include "DebugManager.h"
 #include "PhysicsManager.h"
 
+// LOOK AT THIS!!!!
 #include "Collider.h"
 #include "SphereCollider.h"
 #include "AABBCollider.h"
 #include "ARBBCollider.h"
+#define DebugInstance DebugManager::GetInstance()
 
 #pragma region Constructor
 
@@ -191,6 +194,22 @@ void PhysicsObject::Update()
 	if (collider != nullptr) {
 		collider->Update();
 	}
+
+	if (DebugInstance->GetDrawHandles()) {
+		DrawHandles();
+	}
+}
+
+void PhysicsObject::DrawHandles()
+{
+	//Draw velocity
+	DebugInstance->DrawLine(transform->GetPosition(), transform->GetPosition() + velocity, glm::vec3(1.0f, 1.0f, 0.0f), 0.0f);
+	//Draw acceleration
+	DebugInstance->DrawLine(transform->GetPosition() + velocity, transform->GetPosition() + velocity + acceleration, glm::vec3(1.0f, 0.0f, 0.0f), 0.0f);
+
+	//TODO: Draw collider when this is merged with Physics Branch
+
+	transform->DrawHandles();
 }
 
 #pragma endregion

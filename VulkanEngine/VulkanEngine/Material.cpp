@@ -4,17 +4,20 @@
 #include "VulkanManager.h"
 #include "FileManager.h"
 #include "SwapChain.h"
+#include "TextureImages.h"
 
 #define logicalDevice VulkanManager::GetInstance()->GetLogicalDevice()
 #define swapChainImages SwapChain::GetInstance()->GetImages()
 
 #pragma region Memory Management
 
-Material::Material(std::string vertexShaderPath, std::string fragmentShaderPath, bool wireframe)
+Material::Material(std::string vertexShaderPath, std::string fragmentShaderPath, bool wireframe, std::vector<std::vector<VkVertexInputAttributeDescription>> attributes, std::vector<VkVertexInputBindingDescription> bindings, std::string materialPath, char type)
 {
+	this->matPath = materialPath;
 	this->vertexShaderPath = vertexShaderPath;
 	this->fragmentShaderPath = fragmentShaderPath;
 	this->wireframe = wireframe;
+	this->type = type;
 
 	pipelineLayout = VkPipelineLayout();
 	pipeline = VkPipeline();
@@ -22,10 +25,23 @@ Material::Material(std::string vertexShaderPath, std::string fragmentShaderPath,
 	descriptorPool = VkDescriptorPool();
 	descriptorSetLayout = VkDescriptorSetLayout();
 	descriptorSets = std::vector<VkDescriptorSet>();
+
+	SetupVertexInput(attributes, bindings);
 }
 
 void Material::Init()
 {
+	
+	if (type == 'S') {
+		// Skybox loading
+		TextureImages::GetInstance()->LoadCubeMap(matPath);
+		TextureImages::GetInstance()->CreateTextureImageViewCube();
+	}
+	else {
+		TextureImages::GetInstance()->LoadTexture(matPath);
+		TextureImages::GetInstance()->CreateTextureImageView();
+	}
+	TextureImages::GetInstance()->CreateTextureSampler();
 	CreateDescriptorSetLayout();
 
 	CreateGraphicsPipeline();
@@ -64,24 +80,6 @@ void Material::CreateGraphicsPipeline()
 	};
 
 	//Setup the Vertex input
-	std::array<VkVertexInputAttributeDescription, 4> vertexDescriptions = Vertex::GetAttributeDescriptions();
-	std::array<VkVertexInputAttributeDescription, 4> transformDescriptions = TransformData::GetAttributeDescriptions();
-	std::array<VkVertexInputAttributeDescription, 8> attributeDescriptions = {
-		vertexDescriptions[0],
-		vertexDescriptions[1],
-		vertexDescriptions[2],
-		vertexDescriptions[3],
-		transformDescriptions[0],
-		transformDescriptions[1],
-		transformDescriptions[2],
-		transformDescriptions[3]
-	};
-
-	std::array<VkVertexInputBindingDescription, 2> bindingDescriptions = {
-		Vertex::GetBindingDescription(),
-		TransformData::GetBindingDescription()
-	};
-
 	VkPipelineVertexInputStateCreateInfo vertexInputCreateInfo = {};
 	vertexInputCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
 	vertexInputCreateInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size());
@@ -122,16 +120,20 @@ void Material::CreateGraphicsPipeline()
 	rasterizerCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
 	rasterizerCreateInfo.depthClampEnable = VK_FALSE;
 	rasterizerCreateInfo.rasterizerDiscardEnable = VK_FALSE;
-	
+
 	if (wireframe) {
 		rasterizerCreateInfo.polygonMode = VK_POLYGON_MODE_LINE;
+		rasterizerCreateInfo.lineWidth = 1.0f;
 	}
 	else {
 		rasterizerCreateInfo.polygonMode = VK_POLYGON_MODE_FILL;
+		rasterizerCreateInfo.lineWidth = 1.0f;
 	}
 
-	rasterizerCreateInfo.lineWidth = 1.0f;
 	rasterizerCreateInfo.cullMode = VK_CULL_MODE_BACK_BIT;
+	if (type == 'S')
+		rasterizerCreateInfo.cullMode = VK_CULL_MODE_FRONT_BIT;
+	// rasterizerCreateInfo.cullMode = VK_CULL_MODE_BACK_BIT;
 	rasterizerCreateInfo.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
 	rasterizerCreateInfo.depthBiasEnable = VK_FALSE;
 	rasterizerCreateInfo.depthBiasConstantFactor = 0.0f;
@@ -176,6 +178,7 @@ void Material::CreateGraphicsPipeline()
 	depthStencilCreateInfo.depthTestEnable = VK_TRUE;
 	depthStencilCreateInfo.depthWriteEnable = VK_TRUE;
 	depthStencilCreateInfo.depthCompareOp = VK_COMPARE_OP_LESS;
+	if (type == 'S') depthStencilCreateInfo.depthCompareOp = VK_COMPARE_OP_LESS_OR_EQUAL;
 	depthStencilCreateInfo.depthBoundsTestEnable = VK_FALSE;
 	depthStencilCreateInfo.minDepthBounds = 0.0f;
 	depthStencilCreateInfo.maxDepthBounds = 1.0f;
@@ -240,15 +243,21 @@ void Material::CreateGraphicsPipeline()
 
 void Material::CreateDescriptorSetLayout()
 {
-	std::vector<VkDescriptorSetLayoutBinding> bindings(1);
+	/*std::vector<VkDescriptorSetLayoutBinding> bindings(1);
 
 	bindings[0] = {};
 	bindings[0].binding = 0;
 	bindings[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 	bindings[0].descriptorCount = 1;
 	bindings[0].stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
-	bindings[0].pImmutableSamplers = nullptr;
+	bindings[0].pImmutableSamplers = nullptr;*/
+	VkDescriptorSetLayoutBinding uboLayoutBinding = {};
+	uboLayoutBinding.binding = 0;
 
+	uboLayoutBinding.descriptorCount = 1; //pg 184
+	uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+	uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+	uboLayoutBinding.pImmutableSamplers = nullptr; // Optional
 	/// <summary>
 	/// newwwww
 	/// </summary>
@@ -258,14 +267,14 @@ void Material::CreateDescriptorSetLayout()
 	samplerLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 	samplerLayoutBinding.pImmutableSamplers = nullptr;
 	samplerLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
-	std::array<VkDescriptorSetLayoutBinding, 2> bdgs = { bindings[0], samplerLayoutBinding };
+	std::array<VkDescriptorSetLayoutBinding, 2> bdgs = { uboLayoutBinding/*bindings[0]*/, samplerLayoutBinding };
 	/// <summary>
 	/// /new end
 	/// </summary>
 
 	VkDescriptorSetLayoutCreateInfo createInfo = {};
 	createInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-	createInfo.bindingCount = 1;
+	createInfo.bindingCount = static_cast<uint32_t>(bdgs.size());
 	createInfo.pBindings = bdgs.data();
 
 
@@ -275,7 +284,7 @@ void Material::CreateDescriptorSetLayout()
 	VkDescriptorSetLayoutCreateInfo layoutInfo = {};
 	layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
 
-	layoutInfo.pBindings = &bindings[0];
+	layoutInfo.pBindings = &uboLayoutBinding;//&bindings[0];
 	layoutInfo.bindingCount = static_cast<uint32_t>(bdgs.size());
 	layoutInfo.pBindings = bdgs.data();
 	/// <summary>
@@ -288,14 +297,21 @@ void Material::CreateDescriptorSetLayout()
 
 void Material::CreateDescriptorPool()
 {
+	std::array<VkDescriptorPoolSize, 2> poolSizes = {};
+	poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+	poolSizes[0].descriptorCount = static_cast<uint32_t>(swapChainImages.size());
+	poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+	poolSizes[1].descriptorCount = static_cast<uint32_t>(swapChainImages.size());
+
+
 	VkDescriptorPoolSize poolSize = {};
 	poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 	poolSize.descriptorCount = static_cast<uint32_t>(swapChainImages.size());
 
 	VkDescriptorPoolCreateInfo createInfo = {};
 	createInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-	createInfo.poolSizeCount = 1;
-	createInfo.pPoolSizes = &poolSize;
+	createInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());//1;
+	createInfo.pPoolSizes = poolSizes.data();//&poolSize;
 	createInfo.maxSets = static_cast<uint32_t>(swapChainImages.size());
 
 	if (vkCreateDescriptorPool(logicalDevice, &createInfo, nullptr, &descriptorPool)) {
@@ -324,7 +340,12 @@ void Material::CreateDescriptorSets()
 		bufferInfo.offset = 0;
 		bufferInfo.range = sizeof(UniformBufferObject);
 
-		VkWriteDescriptorSet descriptorWrite = {};
+		VkDescriptorImageInfo imageInfo = {};
+		imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+		imageInfo.imageView = TextureImages::GetInstance()->GetTextureImageView();
+		imageInfo.sampler = TextureImages::GetInstance()->GetSampler();
+
+		/*VkWriteDescriptorSet descriptorWrite = {};
 		descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 		descriptorWrite.dstSet = descriptorSets[i];
 		descriptorWrite.dstBinding = 0;
@@ -335,12 +356,47 @@ void Material::CreateDescriptorSets()
 		descriptorWrite.pImageInfo = nullptr;
 		descriptorWrite.pTexelBufferView = nullptr;
 
-		vkUpdateDescriptorSets(logicalDevice, 1, &descriptorWrite, 0, nullptr);
+		vkUpdateDescriptorSets(logicalDevice, 1, &descriptorWrite, 0, nullptr);*/
+
+		std::array<VkWriteDescriptorSet, 2> descriptorWrites = {};
+		descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		descriptorWrites[0].dstSet = descriptorSets[i];
+		descriptorWrites[0].dstBinding = 0;
+		descriptorWrites[0].dstArrayElement = 0;
+		descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		descriptorWrites[0].descriptorCount = 1;
+		descriptorWrites[0].pBufferInfo = &bufferInfo;
+
+		descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		descriptorWrites[1].dstSet = descriptorSets[i];
+		descriptorWrites[1].dstBinding = 1;
+		descriptorWrites[1].dstArrayElement = 0;
+		descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+		descriptorWrites[1].descriptorCount = 1;
+		descriptorWrites[1].pImageInfo = &imageInfo;
+
+		vkUpdateDescriptorSets(logicalDevice, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
 	}
+}
+
+void Material::SetupVertexInput(std::vector<std::vector<VkVertexInputAttributeDescription>> attributes, std::vector<VkVertexInputBindingDescription> bindings)
+{
+	//Set attribute descriptions
+	attributeDescriptions = std::vector<VkVertexInputAttributeDescription>();
+
+	for (size_t i = 0; i < attributes.size(); i++) {
+		for (size_t j = 0; j < attributes[i].size(); j++) {
+			attributeDescriptions.push_back(attributes[i][j]);
+		}
+	}
+
+	//Set binding descriptions
+	bindingDescriptions = bindings;
 }
 
 void Material::Cleanup()
 {
+
 	vkDestroyPipeline(logicalDevice, pipeline, nullptr);
 	vkDestroyPipelineLayout(logicalDevice, pipelineLayout, nullptr);
 	vkDestroyDescriptorPool(logicalDevice, descriptorPool, nullptr);

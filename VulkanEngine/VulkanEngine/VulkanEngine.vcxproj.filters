@@ -39,6 +39,8 @@
     </Filter>
     <Filter Include="Source Files\Components\Colliders">
       <UniqueIdentifier>{e93e7adb-7fa9-4066-8c60-6e0faa0df169}</UniqueIdentifier>
+    <Filter Include="imgui">
+      <UniqueIdentifier>{5042c99a-be94-4eeb-bb37-0b2c77365711}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -125,6 +127,29 @@
     </ClCompile>
     <ClCompile Include="Octant.cpp">
       <Filter>Source Files</Filter>
+    <ClCompile Include="TextureImages.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\imgui\imgui.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\imgui\imgui_demo.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\imgui\imgui_draw.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\imgui\imgui_widgets.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\imgui\imgui_impl_glfw.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\imgui\imgui_impl_vulkan.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="GuiManager.cpp">
+      <Filter>Source Files\Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -253,6 +278,15 @@
     <CustomBuild Include="..\compile.bat">
       <Filter>Resource Files\Shaders</Filter>
     </CustomBuild>
+    <ClInclude Include="TextureImages.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="GuiManager.h">
+      <Filter>Header Files\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugShape.h">
+      <Filter>Header Files\Structs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\BasicShader.frag">
@@ -264,5 +298,22 @@
     <None Include="shaders\BasicShaderUnlit.frag">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="shaders\SkyBox.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="shaders\SkyBox.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="shaders\DebugShader.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="shaders\DebugShader.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="compile.bat">
+      <Filter>Resource Files\Shaders</Filter>
+    </CustomBuild>
   </ItemGroup>
 </Project>
