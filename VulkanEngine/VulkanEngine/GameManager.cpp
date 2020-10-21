@@ -40,7 +40,7 @@ void GameManager::Init()
     lights.push_back(std::make_shared<Light>(glm::vec3(1.5f, 1.1f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), 5.0f));
     lights.push_back(std::make_shared<Light>(glm::vec3(0.0f, 2.0f, -1.5f), glm::vec3(1.0f, 0.988f, 0.769f), 3.0f));
     
-    // gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Plane]));
+    gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Plane]));
     // gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Cube]));
     // gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Cube]));
     // gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Cube]));
@@ -50,12 +50,12 @@ void GameManager::Init()
     //gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Sphere]));
 
     gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Skybox]));
-    gameObjects[0]->SetTransform(std::make_shared<Transform>(glm::vec3(0,0,0)));
-    gameObjects[0]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[0]->GetTransform(), PhysicsLayers::Static, ColliderTypes::ARBB, 1.0f, false, true));
+    gameObjects[1]->SetTransform(std::make_shared<Transform>(glm::vec3(0,0,0)));
+    gameObjects[1]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[1]->GetTransform(), PhysicsLayers::Trigger, ColliderTypes::AABB, 1.0f, false, false));
     //Setup Plane
-    // gameObjects[0]->SetTransform(std::make_shared<Transform>(glm::vec3(0.0f, 0.0f, 0.0f)));
-    // gameObjects[0]->GetTransform()->SetScale(glm::vec3(5.0f, 1.0f, 5.0f));
-    // gameObjects[0]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[0]->GetTransform(), PhysicsLayers::Static, ColliderTypes::ARBB, 1.0f, false, true));
+    gameObjects[0]->SetTransform(std::make_shared<Transform>(glm::vec3(0.0f, 0.0f, 0.0f)));
+    gameObjects[0]->GetTransform()->SetScale(glm::vec3(5.0f, 1.0f, 5.0f));
+    gameObjects[0]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[0]->GetTransform(), PhysicsLayers::Static, ColliderTypes::ARBB, 1.0f, false, true));
     // 
     // gameObjects[0]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[0]->GetTransform(), PhysicsLayers::Static, 1.0f, false, true));
     // 
@@ -92,19 +92,19 @@ void GameManager::Init()
     
 
     // Setup octant
-    // octree = std::make_shared<Octant>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::CubeCollider], glm::vec3(0.0f, 0.0f, 0.0f), 20.0f);
+    octree = std::make_shared<Octant>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::CubeCollider], glm::vec3(0.0f, 0.0f, 0.0f), 20.0f);
     
-    // // octree = new Octant(EntityManager::GetInstance()->GetMeshes()[MeshTypes::CubeCollider], glm::vec3(0.0f, 0.0f, 0.0f), 20.0f);
-    // for (int i = 0; i < 300; i++) {
-    //     octObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Cube]));
-    //     octObjects[i]->SetTransform(std::make_shared<Transform>(glm::vec3(rand() % 20 - 10, rand() % 20 - 10, rand() % 20 - 10)));
-    //     octObjects[i]->SetPhysicsObject(std::make_shared<PhysicsObject>(octObjects[i]->GetTransform(), PhysicsLayers::Dynamic, ColliderTypes::AABB, 1.0f, false, true));
-    // 
-    //     octObjects[i]->Init();
-    //     octObjects[i]->Spawn();
-    //     octObjects[i]->GetPhysicsObject()->GetCollider()->ToggleVisible(false);
-    //     octree->AddObject(octObjects[i]->GetPhysicsObject(), octree);
-    // }
+    // octree = new Octant(EntityManager::GetInstance()->GetMeshes()[MeshTypes::CubeCollider], glm::vec3(0.0f, 0.0f, 0.0f), 20.0f);
+    for (int i = 0; i < 100; i++) {
+        octObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Cube]));
+        octObjects[i]->SetTransform(std::make_shared<Transform>(glm::vec3(rand() % 20 - 10, rand() % 20 - 10, rand() % 20 - 10)));
+        octObjects[i]->SetPhysicsObject(std::make_shared<PhysicsObject>(octObjects[i]->GetTransform(), PhysicsLayers::Dynamic, ColliderTypes::AABB, 1.0f, false, true));
+    
+        octObjects[i]->Init();
+        octObjects[i]->Spawn();
+        octObjects[i]->GetPhysicsObject()->GetCollider()->ToggleVisible(false);
+        octree->AddObject(octObjects[i]->GetPhysicsObject(), octree);
+    }
     // gameObjects[0]->GetPhysicsObject()->GetCollider()
     // octree->AddObject(gameObjects[0]);
     //Initialize GameObjects

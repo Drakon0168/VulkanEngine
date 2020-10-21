@@ -66,7 +66,7 @@ void EntityManager::LoadMeshes()
     meshes[MeshTypes::Plane] = std::make_shared<Mesh>(materials[0]);
     meshes[MeshTypes::Plane]->GeneratePlane();
 
-    meshes[MeshTypes::Cube] = std::make_shared<Mesh>(materials[1]);
+    meshes[MeshTypes::Cube] = std::make_shared<Mesh>(materials[0]);
     meshes[MeshTypes::Cube]->GenerateCube();
     
     meshes[MeshTypes::Sphere] = std::make_shared<Mesh>(materials[0]);
@@ -125,6 +125,7 @@ void EntityManager::LoadMaterials()
     bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_INSTANCE;
     bindingDescriptions.push_back(bindingDescription);
     materials.push_back(std::make_shared<Material>("shaders/DebugVert.spv", "shaders/DebugFrag.spv", true, attributeDescriptions, bindingDescriptions, "textures/room.png"));
+    materials.push_back(std::make_shared<Material>("shaders/vert.spv", "shaders/unlitfrag.spv", true, attributeDescriptions, bindingDescriptions, "textures/room.png"));
 }
 
 #pragma endregion
