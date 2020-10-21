@@ -71,7 +71,7 @@ void GameManager::Init()
     gameObjects[5]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[5]->GetTransform(), PhysicsLayers::Static, ColliderTypes::AABB, 1.0f, false, true));
 
     //Dynamic v Dynamic collision test
-    gameObjects[6]->SetTransform(std::make_shared<Transform>(glm::vec3(1.5f, 5.0f, 0.0f)));
+    gameObjects[6]->SetTransform(std::make_shared<Transform>(glm::vec3(1.2f, 5.0f, 0.0f)));
     gameObjects[6]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[6]->GetTransform(), PhysicsLayers::Dynamic, ColliderTypes::Sphere, 1.0f, true, true));
 
     //Initialize GameObjects

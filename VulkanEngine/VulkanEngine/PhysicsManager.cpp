@@ -396,72 +396,23 @@ void PhysicsManager::ResolveVelocity(std::shared_ptr<PhysicsObject> physicsObjec
 
     glm::vec3 force[2];
     
-    if (projectionMult[0] > 0) {
+    if (physicsObject1->GetPhysicsLayer() == PhysicsLayers::Dynamic && projectionMult[0] > 0) {
         force[0] = (data.collisionNormal * projectionMult[0] * -1.0f) / Time::GetDeltaTime();
         physicsObject1->ApplyForce(force[0]);
+
+        if (physicsObject2->GetPhysicsLayer() == PhysicsLayers::Dynamic) {
+            physicsObject2->ApplyForce(-force[0]);
+        }
     }
 
-    if (projectionMult[1] < 0) {
+    if (physicsObject2->GetPhysicsLayer() == PhysicsLayers::Dynamic && projectionMult[1] < 0) {
         force[1] = (data.collisionNormal * projectionMult[1] * -1.0f) / Time::GetDeltaTime();
         physicsObject2->ApplyForce(force[1]);
+
+        if (physicsObject1->GetPhysicsLayer() == PhysicsLayers::Dynamic) {
+            physicsObject1->ApplyForce(-force[1]);
+        }
     }
-
-    //float elasticityCoefficient = 0.8f;
-
-    //if (physicsObject1->GetPhysicsLayer() == PhysicsLayers::Dynamic && physicsObject2->GetPhysicsLayer() == PhysicsLayers::Dynamic) { //Two Dynamic Objects
-    //    glm::vec3 obj1StartingVelocity = physicsObject1->GetVelocity();
-    //    glm::vec3 obj2StartingVelocity = physicsObject2->GetVelocity();
-
-    //    //Calculate the coefficient representing the difference in mass between the two objects
-    //    float massCoefficient = physicsObject1->GetMass() / (physicsObject1->GetMass() + physicsObject2->GetMass());
-
-    //    if (obj1StartingVelocity == glm::vec3(0, 0, 0) || obj2StartingVelocity == glm::vec3(0, 0, 0)) {
-    //        //If one of the objects is still bounce based on the other's velocity
-    //        if (obj1StartingVelocity == glm::vec3(0, 0, 0)) {
-    //            physicsObject1->SetVelocity(obj2StartingVelocity * massCoefficient * elasticityCoefficient);
-    //            physicsObject2->SetVelocity(-obj2StartingVelocity * (1 - massCoefficient) * elasticityCoefficient);
-    //        }
-    //        else {
-    //            physicsObject1->SetVelocity(obj1StartingVelocity * massCoefficient * elasticityCoefficient);
-    //            physicsObject2->SetVelocity(-obj1StartingVelocity * (1 - massCoefficient) * elasticityCoefficient);
-    //        }
-    //        return;
-    //    }
-    //    else {
-    //        //Calculate the vector to reflect off of using the object's velocities scaled by the difference in their mass
-    //        glm::vec3 reflectDirection = obj1StartingVelocity * massCoefficient + obj2StartingVelocity * (1 - massCoefficient);
-
-    //        glm::vec3 projMult = (1.0f / glm::dot(reflectDirection, reflectDirection)) * reflectDirection;
-    //        glm::vec3 obj1ProjectedVelocity = glm::dot(obj1StartingVelocity, reflectDirection) * projMult;
-    //        glm::vec3 obj2ProjectedVelocity = glm::dot(obj2StartingVelocity, reflectDirection) * projMult;
-
-    //        physicsObject1->SetVelocity(obj1ProjectedVelocity + (obj1StartingVelocity - obj1ProjectedVelocity) * elasticityCoefficient);
-    //        physicsObject2->SetVelocity(obj2ProjectedVelocity + (obj2StartingVelocity - obj2ProjectedVelocity) * elasticityCoefficient);
-    //    }
-    //}
-    //else { //One Dynamic One Static
-    //    //Find which object is Static and which is Dynamic
-    //    std::shared_ptr<PhysicsObject> dynamicObject;
-    //    std::shared_ptr<PhysicsObject> staticObject;
-
-    //    if (physicsObject1->GetPhysicsLayer() == PhysicsLayers::Dynamic) {
-    //        dynamicObject = physicsObject1;
-    //        staticObject = physicsObject2;
-    //    }
-    //    else {
-    //        dynamicObject = physicsObject2;
-    //        staticObject = physicsObject1;
-    //    }
-
-    //    //Bounce the dynamic object off of the static object
-    //    //  Find the point of contact on the static object to the dynamic object
-    //    glm::vec3 dynamicPosition = dynamicObject->GetTransform()->GetPosition();
-    //    glm::vec3 startingVelocity = dynamicObject->GetVelocity();
-    //    glm::vec3 contactPoint = staticObject->GetCollider()->ClosestToPoint(dynamicPosition);
-    //    glm::vec3 reflectDirection = contactPoint - dynamicPosition;
-    //    glm::vec3 velocityProjection = (glm::dot(reflectDirection, startingVelocity) / glm::dot(reflectDirection, reflectDirection)) * reflectDirection;
-    //    dynamicObject->SetVelocity(velocityProjection * -elasticityCoefficient + (startingVelocity - velocityProjection));
-    //}
 }
 
 #pragma endregion

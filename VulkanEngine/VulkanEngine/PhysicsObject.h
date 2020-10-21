@@ -12,6 +12,8 @@ private:
 	float mass;
 	glm::vec3 velocity;
 	glm::vec3 acceleration;
+	glm::quat angularVelocity;
+	glm::quat angularAcceleration;
 
 	bool affectedByGravity;
 	bool alive;
@@ -53,10 +55,29 @@ public:
 	glm::vec3 GetVelocity();
 
 	/// <summary>
+	/// Returns the linear velocity of the object at a point
+	/// </summary>
+	/// <param name="point">The point to check the velocity at</param>
+	/// <returns>The velocity at the specified point</returns>
+	glm::vec3 GetVelocityAtPoint(glm::vec3 point);
+
+	/// <summary>
 	/// Sets the velocity of the object to the specified value
 	/// </summary>
 	/// <param name="value">The value to set velocity to</param>
 	void SetVelocity(glm::vec3 value);
+
+	/// <summary>
+	/// Returns the angular velocity of the object
+	/// </summary>
+	/// <returns>The objects angular velocity</returns>
+	glm::quat GetAngularVelocity();
+
+	/// <summary>
+	/// Sets the object's angular velocity
+	/// </summary>
+	/// <param name="value">The value to set the angular velocity to</param>
+	void SetAngularVelocity(glm::quat value);
 
 	/// <summary>
 	/// Returns the physics layer that this object belongs to
@@ -104,6 +125,14 @@ public:
 	/// <param name="force">The force to apply</param>
 	/// <param namme="applyMass">Whether or not the force is affected by the mass of the object</param>
 	void ApplyForce(glm::vec3 force, bool applyMass = true);
+
+	/// <summary>
+	/// Applies a force to the object at the specified point
+	/// </summary>
+	/// <param name="force">The force to apply</param>
+	/// <param name="point">The point to apply the force to</param>
+	/// <param name="applyMass">Whether or not the force is affected by the mass of the object</param>
+	void ApplyForce(glm::vec3 force, glm::vec3 point, bool applyMass = true);
 
 #pragma endregion
 
