@@ -343,11 +343,8 @@ void Material::Cleanup()
 {
 	vkDestroyPipeline(logicalDevice, pipeline, nullptr);
 	vkDestroyPipelineLayout(logicalDevice, pipelineLayout, nullptr);
-	// VkResult t = 
-	// vkFreeDescriptorSets(logicalDevice, descriptorPool, descriptorSets.size(), &(descriptorSets[0]));
 	vkDestroyDescriptorPool(logicalDevice, descriptorPool, nullptr);
 	vkDestroyDescriptorSetLayout(logicalDevice, descriptorSetLayout, nullptr);
-	printf("We at descriptor sets");
 }
 
 #pragma endregion
