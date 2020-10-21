@@ -124,8 +124,9 @@ glm::vec3 AABBCollider::ClosestToPoint(glm::vec3 point)
     return closest;
 }
 
-glm::vec2 AABBCollider::ProjectOntoAxis(glm::vec3 axis)
+ProjectionData AABBCollider::ProjectOntoAxis(glm::vec3 axis)
 {
+    ProjectionData data = {};
     glm::vec3 center = transform->GetPosition();
     glm::vec3 corners[8] = {
         center + glm::vec3(extents.x, extents.y, extents.z),
@@ -139,20 +140,65 @@ glm::vec2 AABBCollider::ProjectOntoAxis(glm::vec3 axis)
     };
 
     float sqrLength = glm::dot(axis, axis);
-    glm::vec2 projections = glm::vec2(glm::dot(corners[0], axis) / sqrLength, glm::dot(corners[0], axis) / sqrLength);
+    data.minMax = glm::vec2(glm::dot(corners[0], axis) / sqrLength, glm::dot(corners[0], axis) / sqrLength);
+    data.minPoints = std::vector<glm::vec3>();
+    data.minPoints.push_back(corners[0]);
+    data.maxPoints = std::vector<glm::vec3>();
+    data.maxPoints.push_back(corners[0]);
 
     for (int i = 1; i < 8; i++) {
         float projectionMult = glm::dot(corners[i], axis) / sqrLength;
 
-        if (projectionMult < projections.x) {
-            projections.x = projectionMult;
+        if (projectionMult < data.minMax.x) {
+            data.minMax.x = projectionMult;
+            data.minPoints.clear();
+            data.minPoints.push_back(corners[i]);
         }
-        else if (projectionMult > projections.y) {
-            projections.y = projectionMult;
+        else if (projectionMult == data.minMax.x) {
+            data.minPoints.push_back(corners[i]);
+        }
+        else if (projectionMult > data.minMax.y) {
+            data.minMax.y = projectionMult;
+            data.maxPoints.clear();
+            data.maxPoints.push_back(corners[i]);
+        }
+        else if (projectionMult == data.minMax.y) {
+            data.maxPoints.push_back(corners[i]);
         }
     }
 
-    return projections;
+    return data;
+}
+
+glm::vec3 AABBCollider::FindSurfaceNormal(glm::vec3 surfacePoint)
+{
+    //TODO: Make sure surface point is actually on the surface of the shape
+
+    glm::vec3 direction = surfacePoint - transform->GetPosition();
+    glm::vec3 normal = glm::vec3(0, 0, 0);
+
+    if (direction.x >= extents.x) {
+        normal += glm::vec3(1, 0, 0);
+    }
+    else if (direction.x <= -extents.x) {
+        normal += glm::vec3(-1, 0, 0);
+    }
+
+    if (direction.y >= extents.y) {
+        normal += glm::vec3(0, 1, 0);
+    }
+    else if (direction.y <= -extents.y) {
+        normal += glm::vec3(0, -1, 0);
+    }
+
+    if (direction.z >= extents.z) {
+        normal += glm::vec3(0, 0, 1);
+    }
+    else if (direction.z <= -extents.z) {
+        normal += glm::vec3(0, 0, -1);
+    }
+
+    return glm::normalize(normal);
 }
 
 void AABBCollider::ToggleVisible(bool visible)

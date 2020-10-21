@@ -192,6 +192,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="ColliderTypes.h" />
+    <ClInclude Include="CollisionData.h" />
     <ClInclude Include="CommandBuffer.h" />
     <ClInclude Include="Controls.h" />
     <ClInclude Include="DebugManager.h" />
@@ -213,6 +214,7 @@
     <ClInclude Include="PhysicsLayers.h" />
     <ClInclude Include="PhysicsManager.h" />
     <ClInclude Include="PhysicsObject.h" />
+    <ClInclude Include="ProjectionData.h" />
     <ClInclude Include="QueueFamilyIndices.h" />
     <ClInclude Include="SphereCollider.h" />
     <ClInclude Include="SwapChain.h" />

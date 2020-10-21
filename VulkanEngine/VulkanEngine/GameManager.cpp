@@ -41,8 +41,8 @@ void GameManager::Init()
     /**
     gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Plane]));
     gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Cube]));
-    gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Sphere]));
-    gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Sphere]));
+    gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Cube]));
+    gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Cube]));
     gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Sphere]));
     gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Model]));
     // gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::CubeCollider]));
@@ -50,7 +50,7 @@ void GameManager::Init()
 
     //Setup Plane
     gameObjects[0]->SetTransform(std::make_shared<Transform>(glm::vec3(0.0f, 0.0f, 0.0f)));
-    gameObjects[0]->GetTransform()->SetScale(glm::vec3(5.0f, 1.0f, 1.0f));
+    gameObjects[0]->GetTransform()->SetScale(glm::vec3(5.0f, 1.0f, 5.0f));
     gameObjects[0]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[0]->GetTransform(), PhysicsLayers::Static, ColliderTypes::ARBB, 1.0f, false, true));
 
     //Setup Cube
@@ -60,10 +60,10 @@ void GameManager::Init()
 
     //Setup Sphere
     gameObjects[2]->SetTransform(std::make_shared<Transform>(glm::vec3(-1.5f, 2.5f, 0.0f)));
-    gameObjects[2]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[2]->GetTransform(), PhysicsLayers::Dynamic, ColliderTypes::Sphere, 1.0f, true, true));
+    gameObjects[2]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[2]->GetTransform(), PhysicsLayers::Dynamic, ColliderTypes::ARBB, 1.0f, true, true));
 
-    gameObjects[3]->SetTransform(std::make_shared<Transform>(glm::vec3(0.0f, 2.5f, -1.5f)));
-    gameObjects[3]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[3]->GetTransform(), PhysicsLayers::Dynamic, ColliderTypes::Sphere, 1.0f, true, true));
+    gameObjects[3]->SetTransform(std::make_shared<Transform>(glm::vec3(0.85f, 2.5f, -1.5f)));
+    gameObjects[3]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[3]->GetTransform(), PhysicsLayers::Dynamic, ColliderTypes::AABB, 1.0f, true, true));
 
     gameObjects[4]->SetTransform(std::make_shared<Transform>(glm::vec3(1.5f, 2.5f, 0.0f)));
     gameObjects[4]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[4]->GetTransform(), PhysicsLayers::Dynamic, ColliderTypes::Sphere, 1.0f, true, true));
@@ -163,7 +163,7 @@ void GameManager::Update()
     float scaledTime = Time::GetTotalTime() / 2.5f;
     lights[0]->position = glm::vec3(0.0f, 1.1f, 0.0f) + glm::vec3(cos(scaledTime), 0.0f, sin(scaledTime)) * 1.5f;
 
-    // gameObjects[0]->GetTransform()->Rotate(glm::vec3(0.0f, 10.0f, 0.0f) * Time::GetDeltaTime());
+    //gameObjects[0]->GetTransform()->Rotate(glm::vec3(0.0f, 10.0f, 0.0f) * Time::GetDeltaTime());
 
     if (InputManager::GetInstance()->GetKeyPressed(Controls::Jump)) {
         gameObjects[2]->GetPhysicsObject()->ApplyForce(glm::vec3(0.0f, 5000.0f, 0.0f));

@@ -38,6 +38,8 @@
 #include "UniformBufferObject.h"
 #include "TransformData.h"
 #include "Vertex.h"
+#include "CollisionData.h"
+#include "ProjectionData.h"
 
 //Enums
 #include "MeshTypes.h"
