@@ -20,6 +20,8 @@ private:
 	std::shared_ptr<Collider> collider;
 
 	std::vector<size_t> dimensions;
+
+	glm::vec3 colliderColor;
 public:
 	size_t dimensionCount = 0;
 
@@ -102,6 +104,7 @@ public:
 	void AddDimension(unsigned int d);
 	void RemoveDimension(unsigned int d);
 	bool ContainsDimension(unsigned int d);
+	void SetColliderColor(glm::vec3 c = { 1.0f, 1.0f, 1.0f });
 
 	std::vector<size_t> GetDimensions();
 

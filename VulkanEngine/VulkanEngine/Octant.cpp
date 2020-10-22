@@ -103,21 +103,28 @@ void Octant::AddObject(std::shared_ptr<PhysicsObject> g, std::shared_ptr<Octant>
 	// If the smallest octant has no children
 	 if (temp->children[0] == nullptr) {
 	 	// then the object ONLY exists in this octant
-	 	// g->AddDimension(temp->octantId);
-		glm::vec3 t = g->GetTransform()->GetPosition();
+	 	g->AddDimension(temp->octantId);
+		// glm::vec3 t = g->GetTransform()->GetPosition();
 		// std::cout << "Added object at position: (" << t.x << "," << t.y << "," << t.z << ") with ID: " << temp->octantId << " because there are no children" << std::endl;
 	 }
 	else { // otherwise, octant has children
 		// check if this object COLLIDES with any of the octant children
-		// if it does, then it exists in those dimensions, as well
-		for (unsigned int i = 0; i < 8; i++) {
-			// object collides with octant
-			if (children[i]->IsColliding(g)) {
-				// add octant to object's dimensions (at most will be 8)
-				g->AddDimension(children[i]->octantId);
-				glm::vec3 t = g->GetTransform()->GetPosition();
-				// std::cout << "Added object at position: (" << t.x << "," << t.y << "," << t.z << ") with ID: " << children[i]->octantId << std::endl;
-			}
+		// if it does, then it may exist in those dimensions, as well (and the chidren's children)
+		AddCollidingChildren(g, temp);
+		
+	}
+}
+
+void Octant::AddCollidingChildren(std::shared_ptr<PhysicsObject> g, std::shared_ptr<Octant> self)
+{
+	for (unsigned int i = 0; i < 8; i++) {
+		// object collides with octant
+		if (self->children[i]->IsColliding(g)) {
+			// add octant to object's dimensions (at most will be 8)
+			g->AddDimension(self->children[i]->octantId);
+			if (self->children[i]->children[0] != nullptr) AddCollidingChildren(g, self->children[i]);
+			// glm::vec3 t = g->GetTransform()->GetPosition();
+			// std::cout << "Added object at position: (" << t.x << "," << t.y << "," << t.z << ") with ID: " << children[i]->octantId << std::endl;
 		}
 	}
 }

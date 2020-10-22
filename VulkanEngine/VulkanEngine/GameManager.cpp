@@ -95,9 +95,10 @@ void GameManager::Init()
     octree = std::make_shared<Octant>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::CubeCollider], glm::vec3(0.0f, 0.0f, 0.0f), 20.0f);
     
     // octree = new Octant(EntityManager::GetInstance()->GetMeshes()[MeshTypes::CubeCollider], glm::vec3(0.0f, 0.0f, 0.0f), 20.0f);
-    for (int i = 0; i < 50; i++) {
+    for (int i = 0; i < 200; i++) {
         octObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Cube]));
-        octObjects[i]->SetTransform(std::make_shared<Transform>(glm::vec3(rand() % 20 - 10, rand() % 20 - 10, rand() % 20 - 10)));
+         
+        octObjects[i]->SetTransform(std::make_shared<Transform>(glm::sphericalRand(10.0f)));
         octObjects[i]->SetPhysicsObject(std::make_shared<PhysicsObject>(octObjects[i]->GetTransform(), PhysicsLayers::Dynamic, ColliderTypes::AABB, 1.0f, false, true));
     
         octObjects[i]->Init();

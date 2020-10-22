@@ -51,6 +51,7 @@ public:
 	void Subdivide();
 
 	void AddObject(std::shared_ptr<PhysicsObject> g, std::shared_ptr<Octant> self);
+	void AddCollidingChildren(std::shared_ptr<PhysicsObject> g, std::shared_ptr<Octant> self);
 	
 	// std::shared_ptr<Octant> GetSmallestContainingOctant(std::shared_ptr<PhysicsObject> g);
 	std::shared_ptr<Octant> GetSmallestContainingOctant(std::shared_ptr<PhysicsObject> g, std::shared_ptr<Octant> self);

@@ -123,7 +123,12 @@ bool PhysicsManager::CheckCollision(std::shared_ptr<PhysicsObject> physicsObject
 
     //If both objects are AABB do the AABB check
     if (physicsObject1->GetCollider()->GetColliderType() == ColliderTypes::AABB && physicsObject2->GetCollider()->GetColliderType() == ColliderTypes::AABB) {
-        return CheckAABBCollision(std::static_pointer_cast<AABBCollider>(physicsObject1->GetCollider()), std::static_pointer_cast<AABBCollider>(physicsObject2->GetCollider()), data);
+        if (CheckAABBCollision(std::static_pointer_cast<AABBCollider>(physicsObject1->GetCollider()), std::static_pointer_cast<AABBCollider>(physicsObject2->GetCollider()), data)) {
+            physicsObject1->SetColliderColor(glm::vec3(1.0f, 0.0f, 0.0f));
+            physicsObject2->SetColliderColor(glm::vec3(1.0f, 0.0f, 0.0f));
+            return true;
+        }
+        return false;
     }
 
     //Otherwise do the SAT check

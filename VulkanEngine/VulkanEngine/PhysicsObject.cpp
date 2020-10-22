@@ -16,14 +16,13 @@
 
 bool PhysicsObject::SharesDimension(std::shared_ptr<PhysicsObject> other)
 {
-	// early return to test framerate
-	// return true;
 	if (0 == dimensionCount) {
 		if (0 == other->dimensionCount)
 			return true;
 	}
 	std::vector<size_t> t2 = other->GetDimensions();
 
+	// return early to test framerate
 	// return true;
 	for (size_t i = 0; i < dimensionCount; ++i) {
 		for (size_t j = 0; j < other->dimensionCount; j++) {
@@ -58,6 +57,7 @@ PhysicsObject::PhysicsObject(std::shared_ptr<Transform> transform, PhysicsLayers
 		break;
 	}
 
+	colliderColor = glm::vec3(1, 1, 1);
 	collider->SetParentTransform(transform);
 }
 
@@ -149,6 +149,11 @@ bool PhysicsObject::ContainsDimension(unsigned int d)
 	return false;
 }
 
+void PhysicsObject::SetColliderColor(glm::vec3 c)
+{
+	colliderColor = c;
+}
+
 std::vector<size_t> PhysicsObject::GetDimensions()
 {
 	return dimensions;
@@ -204,12 +209,13 @@ void PhysicsObject::Update()
 void PhysicsObject::DrawHandles()
 {
 	//Draw velocity
-	DebugInstance->DrawLine(transform->GetPosition(), transform->GetPosition() + velocity, glm::vec3(1.0f, 1.0f, 0.0f), 0.0f);
+	// DebugInstance->DrawLine(transform->GetPosition(), transform->GetPosition() + velocity, glm::vec3(1.0f, 1.0f, 0.0f), 0.0f);
 	//Draw acceleration
-	DebugInstance->DrawLine(transform->GetPosition() + velocity, transform->GetPosition() + velocity + acceleration, glm::vec3(1.0f, 0.0f, 0.0f), 0.0f);
+	// DebugInstance->DrawLine(transform->GetPosition() + velocity, transform->GetPosition() + velocity + acceleration, glm::vec3(1.0f, 0.0f, 0.0f), 0.0f);
 
 	//TODO: Draw collider when this is merged with Physics Branch
-
+	DebugInstance->DrawWireCube(transform->GetPosition(), colliderColor, glm::vec3(1,1,1), 0.0f);
+	// DebugInstance->DrawWireSphere(transform->GetPosition(), glm::vec3(1, 0, 0));
 	transform->DrawHandles();
 }
 
