@@ -4,7 +4,6 @@
 #include "DebugManager.h"
 #include "PhysicsManager.h"
 
-// LOOK AT THIS!!!!
 
 #include "Collider.h"
 #include "SphereCollider.h"
@@ -16,14 +15,14 @@
 
 bool PhysicsObject::SharesDimension(std::shared_ptr<PhysicsObject> other)
 {
+	// return early to test framerate
+	// return true;
 	if (0 == dimensionCount) {
 		if (0 == other->dimensionCount)
 			return true;
 	}
 	std::vector<size_t> t2 = other->GetDimensions();
 
-	// return early to test framerate
-	// return true;
 	for (size_t i = 0; i < dimensionCount; ++i) {
 		for (size_t j = 0; j < other->dimensionCount; j++) {
 			if (dimensions[i] == t2[j])
