@@ -19,9 +19,12 @@ private:
 
 	std::shared_ptr<Collider> collider;
 
-	std::vector<size_t> dimensions;
+	// std::vector<size_t> dimensions;
+	size_t* dimensionArray;
 
 	glm::vec3 colliderColor;
+
+	void SortDimensions(void);
 public:
 	size_t dimensionCount = 0;
 
@@ -106,7 +109,7 @@ public:
 	bool ContainsDimension(unsigned int d);
 	void SetColliderColor(glm::vec3 c = { 1.0f, 1.0f, 1.0f });
 
-	std::vector<size_t> GetDimensions();
+	// std::vector<size_t> GetDimensions();
 
 #pragma endregion
 

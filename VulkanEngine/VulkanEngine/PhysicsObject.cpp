@@ -13,6 +13,11 @@
 
 #pragma region Constructor
 
+void PhysicsObject::SortDimensions(void)
+{
+	std::sort(dimensionArray, dimensionArray + dimensionCount);
+}
+
 bool PhysicsObject::SharesDimension(std::shared_ptr<PhysicsObject> other)
 {
 	// return early to test framerate
@@ -21,11 +26,10 @@ bool PhysicsObject::SharesDimension(std::shared_ptr<PhysicsObject> other)
 		if (0 == other->dimensionCount)
 			return true;
 	}
-	std::vector<size_t> t2 = other->GetDimensions();
-
+	
 	for (size_t i = 0; i < dimensionCount; ++i) {
 		for (size_t j = 0; j < other->dimensionCount; j++) {
-			if (dimensions[i] == t2[j])
+			if (dimensionArray[i] == other->dimensionArray[j])
 				return true; // As soon as we find one we know they share dimensions
 		}
 	}
@@ -58,6 +62,8 @@ PhysicsObject::PhysicsObject(std::shared_ptr<Transform> transform, PhysicsLayers
 
 	colliderColor = glm::vec3(1, 1, 1);
 	collider->SetParentTransform(transform);
+	dimensionArray = nullptr;
+	dimensionCount = 0;
 }
 
 #pragma endregion
@@ -121,27 +127,52 @@ std::shared_ptr<Collider> PhysicsObject::GetCollider()
 
 void PhysicsObject::AddDimension(unsigned int d)
 {
-	if (!ContainsDimension(d)) {
-		dimensions.push_back(d);
+	if (ContainsDimension(d)) return;
+
+	size_t* pTemp;
+	pTemp = new size_t[dimensionCount + 1];
+	if (dimensionArray)
+	{
+		memcpy(pTemp, dimensionArray, sizeof(size_t) * dimensionCount);
+		delete[] dimensionArray;
+		dimensionArray = nullptr;
 	}
-	dimensionCount++;
+	pTemp[dimensionCount] = d;
+	dimensionArray = pTemp;
+	// dimensions.push_back(d);
+	++dimensionCount;
+	SortDimensions();
 }
 
 void PhysicsObject::RemoveDimension(unsigned int d)
 {
-	for (int i = 0; i < dimensions.size(); i++) {
-		if (d == dimensions[i]) {
-			dimensions.erase(dimensions.begin() + i);
+	if (dimensionCount == 0) return;
+
+
+	for (unsigned int i = 0; i < dimensionCount; i++) {
+		if (d == dimensionArray[i]) {
+			// swap this index with the last one then pop
+			std::swap(dimensionArray[i], dimensionArray[dimensionCount - 1]);
+			size_t* pTemp;
+			pTemp = new size_t[dimensionCount - 1];
+			if (dimensionArray)
+			{
+				memcpy(pTemp, dimensionArray, sizeof(size_t) * (dimensionCount - 1));
+				delete[] dimensionArray;
+				dimensionArray = nullptr;
+			}
+			dimensionArray = pTemp;
+			--dimensionCount;
+			SortDimensions();
 			return;
 		}
 	}
-	dimensionCount--;
 }
 
 bool PhysicsObject::ContainsDimension(unsigned int d)
 {
-	for (int i = 0; i < dimensions.size(); i++) {
-		if (d == dimensions[i]) {
+	for (int i = 0; i < dimensionCount; i++) {
+		if (d == dimensionArray[i]) {
 			return true;
 		}
 	}
@@ -153,10 +184,6 @@ void PhysicsObject::SetColliderColor(glm::vec3 c)
 	colliderColor = c;
 }
 
-std::vector<size_t> PhysicsObject::GetDimensions()
-{
-	return dimensions;
-}
 
 #pragma endregion
 
