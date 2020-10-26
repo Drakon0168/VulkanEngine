@@ -280,7 +280,7 @@ void PhysicsObject::Update()
 		transform->Translate(velocity * Time::GetDeltaTime());
 
 		glm::quat orientation = transform->GetOrientation();
-		transform->Rotate(glm::slerp(orientation, angularVelocity * orientation, Time::GetDeltaTime()));
+		transform->SetOrientation(glm::slerp(orientation, angularVelocity * orientation, Time::GetDeltaTime()));
 	}
 
 	//Update collider
