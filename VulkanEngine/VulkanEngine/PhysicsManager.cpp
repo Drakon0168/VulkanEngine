@@ -108,6 +108,10 @@ void PhysicsManager::DetectCollisions()
 
 bool PhysicsManager::CheckCollision(std::shared_ptr<PhysicsObject> physicsObject1, std::shared_ptr<PhysicsObject> physicsObject2, CollisionData& data)
 {
+    // If the 2 objects don't share a dimension::
+    if (!physicsObject1->SharesDimension(physicsObject2))
+        return false;
+
     //If one of the objects is a sphere do the sphere collider check
     if (physicsObject1->GetCollider()->GetColliderType() == ColliderTypes::Sphere) {
         return CheckSphereCollision(std::static_pointer_cast<SphereCollider>(physicsObject1->GetCollider()), physicsObject2->GetCollider(), data);
@@ -119,11 +123,21 @@ bool PhysicsManager::CheckCollision(std::shared_ptr<PhysicsObject> physicsObject
 
     //If both objects are AABB do the AABB check
     if (physicsObject1->GetCollider()->GetColliderType() == ColliderTypes::AABB && physicsObject2->GetCollider()->GetColliderType() == ColliderTypes::AABB) {
-        return CheckAABBCollision(std::static_pointer_cast<AABBCollider>(physicsObject1->GetCollider()), std::static_pointer_cast<AABBCollider>(physicsObject2->GetCollider()), data);
+        if (CheckAABBCollision(std::static_pointer_cast<AABBCollider>(physicsObject1->GetCollider()), std::static_pointer_cast<AABBCollider>(physicsObject2->GetCollider()), data)) {
+            physicsObject1->SetColliderColor(glm::vec3(1.0f, 0.0f, 0.0f));
+            physicsObject2->SetColliderColor(glm::vec3(1.0f, 0.0f, 0.0f));
+            return true;
+        }
+        return false;
     }
 
     //Otherwise do the SAT check
     return SAT(physicsObject1->GetCollider(), physicsObject2->GetCollider(), data);
+}
+
+bool PhysicsManager::SharesDimension(std::shared_ptr<PhysicsObject> physicsObject1, std::shared_ptr<PhysicsObject> physicsObject2)
+{
+    return false;
 }
 
 bool PhysicsManager::CheckSphereCollision(std::shared_ptr<SphereCollider> sphereCollider, std::shared_ptr<Collider> other, CollisionData& data)

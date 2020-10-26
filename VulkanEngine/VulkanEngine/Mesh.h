@@ -28,7 +28,6 @@ private:
 	//Material
 	std::shared_ptr<Material> material;
 
-	const std::string TEXTURE_PATH = "textures/room.jpg";
 
 	bool instanceBufferDirty = true;
 public:
@@ -218,12 +217,17 @@ public:
 	/// <summary>
 	/// Sets the vertices and indices to generate a cube
 	/// </summary>
-	void GenerateCube();
+	void GenerateCube(glm::vec3 color = glm::vec3(1,1,1));
 
 	/// <summary>
 	/// Sets the vertices and indices to generate a sphere
 	/// </summary>
 	void GenerateSphere(int resolution = 5);
+
+	/// <summary>
+	/// Sets the vertices and indicee to generate a line between two points
+	/// </summary>
+	void GenerateLine(glm::vec3 point1, glm::vec3 point2);
 
 	/// <summary>
 	/// Loads the model specified by the model path

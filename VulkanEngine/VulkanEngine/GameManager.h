@@ -2,6 +2,7 @@
 #include "pch.h"
 
 #include "GameObject.h"
+#include "Octant.h";
 
 class GameManager
 {
@@ -9,7 +10,11 @@ private:
 	static GameManager* instance;
 
 	std::vector<std::shared_ptr<GameObject>> gameObjects;
+	std::vector<std::shared_ptr<GameObject>> octObjects;
 	std::vector<std::shared_ptr<Light>> lights;
+
+	std::shared_ptr<Octant> octree = nullptr;
+	// Octant* octree = nullptr;
 
 	float cameraSpeed = 2.5f;
 	bool lockCamera = true;

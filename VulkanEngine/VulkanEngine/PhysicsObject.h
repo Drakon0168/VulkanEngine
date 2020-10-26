@@ -20,7 +20,17 @@ private:
 	PhysicsLayers physicsLayer;
 
 	std::shared_ptr<Collider> collider;
+
+	// std::vector<size_t> dimensions;
+	size_t* dimensionArray;
+
+	glm::vec3 colliderColor;
+
+	void SortDimensions(void);
 public:
+	size_t dimensionCount = 0;
+
+	bool SharesDimension(std::shared_ptr<PhysicsObject> other);
 
 #pragma region Constructor
 
@@ -115,6 +125,13 @@ public:
 	/// <returns>The collider that is used by this physics object</returns>
 	std::shared_ptr<Collider> GetCollider();
 
+	void AddDimension(unsigned int d);
+	void RemoveDimension(unsigned int d);
+	bool ContainsDimension(unsigned int d);
+	void SetColliderColor(glm::vec3 c = { 1.0f, 1.0f, 1.0f });
+
+	// std::vector<size_t> GetDimensions();
+
 #pragma endregion
 
 #pragma region Physics
@@ -142,6 +159,11 @@ public:
 	/// Updates the velocity and position of the object
 	/// </summary>
 	void Update();
+
+	/// <summary>
+	/// Draws the physics object's handles
+	/// </summary>
+	void DrawHandles();
 
 #pragma endregion
 };

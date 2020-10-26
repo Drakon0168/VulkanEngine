@@ -116,7 +116,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\VulkanSDK\1.2.135.0\Include;$(SolutionDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\rando\Documents\VulkanEngine\VulkanEngine\VulkanEngine\include\stb;C:\VulkanSDK\1.2.135.0\Include;$(SolutionDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -137,7 +137,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\VulkanSDK\1.2.135.0\Include;$(SolutionDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\rando\Documents\VulkanEngine\VulkanEngine\VulkanEngine\include\stb;C:\VulkanSDK\1.2.135.0\Include;$(SolutionDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -155,6 +155,30 @@
   <ItemGroup>
     <ClCompile Include="AABBCollider.cpp" />
     <ClCompile Include="ARBBCollider.cpp" />
+    <ClCompile Include="..\include\imgui\imgui.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\include\imgui\imgui_demo.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\include\imgui\imgui_draw.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\include\imgui\imgui_impl_glfw.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\include\imgui\imgui_impl_vulkan.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\include\imgui\imgui_widgets.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Collider.cpp" />
@@ -164,12 +188,14 @@
     <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GuiManager.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="InputAxis.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="Octant.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -178,6 +204,7 @@
     <ClCompile Include="PhysicsObject.cpp" />
     <ClCompile Include="SphereCollider.cpp" />
     <ClCompile Include="SwapChain.cpp" />
+    <ClCompile Include="TextureImages.cpp" />
     <ClCompile Include="Time.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="VulkanManager.cpp" />
@@ -195,10 +222,12 @@
     <ClInclude Include="CommandBuffer.h" />
     <ClInclude Include="Controls.h" />
     <ClInclude Include="DebugManager.h" />
+    <ClInclude Include="DebugShape.h" />
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GuiManager.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="InputAxis.h" />
@@ -208,6 +237,7 @@
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshTypes.h" />
+    <ClInclude Include="Octant.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PhysicsLayers.h" />
     <ClInclude Include="PhysicsManager.h" />
@@ -217,6 +247,7 @@
     <ClInclude Include="SphereCollider.h" />
     <ClInclude Include="SwapChain.h" />
     <ClInclude Include="SwapChainSupportDetails.h" />
+    <ClInclude Include="TextureImages.h" />
     <ClInclude Include="Time.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="TransformData.h" />
@@ -226,22 +257,26 @@
     <ClInclude Include="WindowManager.h" />
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="..\compile.bat">
+    <CustomBuild Include="compile.bat">
       <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">call $(SolutionDir)compile.bat</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Shaders</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)shaders\frag.spv;$(ProjectDir)shaders\vert.spv;$(ProjectDir)shaders\unlitFrag.spv;%(Outputs)</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)shaders\BasicShader.frag;$(ProjectDir)shaders\BasicShaderUnlit.frag;$(ProjectDir)shaders\BasicShader.vert;%(AdditionalInputs)</AdditionalInputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">call $(SolutionDir)compile.bat</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Shaders</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)shaders\frag.spv;$(ProjectDir)shaders\vert.spv;$(ProjectDir)shaders\unlitFrag.spv;%(Outputs)</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)shaders\BasicShader.frag;$(ProjectDir)shaders\BasicShaderUnlit.frag;$(ProjectDir)shaders\BasicShader.vert;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)shaders\frag.spv;$(ProjectDir)shaders\vert.spv;$(ProjectDir)shaders\SkyFrag.spv;$(ProjectDir)shaders\SkyVert.spv;$(ProjectDir)shaders\DebugFrag.spv;$(ProjectDir)shaders\DebugVert.spv;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)shaders\BasicShader.frag;$(ProjectDir)shaders\BasicShader.vert;$(ProjectDir)shaders\DebugShader.frag;$(ProjectDir)shaders\DebugShader.vert;$(ProjectDir)shaders\SkuBox.frag;$(ProjectDir)shaders\SkyBox.vert;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)shaders\frag.spv;$(ProjectDir)shaders\vert.spv;$(ProjectDir)shaders\SkyFrag.spv;$(ProjectDir)shaders\SkyVert.spv;$(ProjectDir)shaders\DebugFrag.spv;$(ProjectDir)shaders\DebugVert.spv;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)shaders\BasicShader.frag;$(ProjectDir)shaders\BasicShader.vert;$(ProjectDir)shaders\DebugShader.frag;$(ProjectDir)shaders\DebugShader.vert;$(ProjectDir)shaders\SkuBox.frag;$(ProjectDir)shaders\SkyBox.vert;%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling Shaders</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compiling Shaders</Message>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">compile.bat</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">compile.bat</Command>
     </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="shaders\BasicShader.frag" />
     <None Include="shaders\BasicShader.vert" />
     <None Include="shaders\BasicShaderUnlit.frag" />
+    <None Include="shaders\DebugShader.frag" />
+    <None Include="shaders\DebugShader.vert" />
+    <None Include="shaders\SkyBox.frag" />
+    <None Include="shaders\SkyBox.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

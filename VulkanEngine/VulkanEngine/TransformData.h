@@ -8,35 +8,35 @@ struct TransformData {
 	glm::vec4 row3;
 	glm::vec4 row4;
 
-	static VkVertexInputBindingDescription GetBindingDescription() {
+	static VkVertexInputBindingDescription GetBindingDescription(int offset = 0) {
 		VkVertexInputBindingDescription bindingDescription = {};
-		bindingDescription.binding = 1;
+		bindingDescription.binding = offset;
 		bindingDescription.stride = sizeof(TransformData);
 		bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_INSTANCE;
 
 		return bindingDescription;
 	}
 
-	static std::array<VkVertexInputAttributeDescription, 4> GetAttributeDescriptions() {
+	static std::vector<VkVertexInputAttributeDescription> GetAttributeDescriptions(int offset = 0, int binding = 0) {
 		//Setup attributes
-		std::array<VkVertexInputAttributeDescription, 4> attributeDescriptions = {};
-		attributeDescriptions[0].binding = 1;
-		attributeDescriptions[0].location = 4;
+		std::vector<VkVertexInputAttributeDescription> attributeDescriptions = std::vector<VkVertexInputAttributeDescription>(4);
+		attributeDescriptions[0].binding = binding;
+		attributeDescriptions[0].location = offset;
 		attributeDescriptions[0].format = VK_FORMAT_R32G32B32A32_SFLOAT;
 		attributeDescriptions[0].offset = offsetof(TransformData, row1);
 
-		attributeDescriptions[1].binding = 1;
-		attributeDescriptions[1].location = 5;
+		attributeDescriptions[1].binding = binding;
+		attributeDescriptions[1].location = offset + 1;
 		attributeDescriptions[1].format = VK_FORMAT_R32G32B32A32_SFLOAT;
 		attributeDescriptions[1].offset = offsetof(TransformData, row2);
 
-		attributeDescriptions[2].binding = 1;
-		attributeDescriptions[2].location = 6;
+		attributeDescriptions[2].binding = binding;
+		attributeDescriptions[2].location = offset + 2;
 		attributeDescriptions[2].format = VK_FORMAT_R32G32B32A32_SFLOAT;
 		attributeDescriptions[2].offset = offsetof(TransformData, row3);
 
-		attributeDescriptions[3].binding = 1;
-		attributeDescriptions[3].location = 7;
+		attributeDescriptions[3].binding = binding;
+		attributeDescriptions[3].location = offset + 3;
 		attributeDescriptions[3].format = VK_FORMAT_R32G32B32A32_SFLOAT;
 		attributeDescriptions[3].offset = offsetof(TransformData, row4);
 

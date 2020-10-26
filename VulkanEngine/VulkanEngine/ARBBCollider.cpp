@@ -2,6 +2,7 @@
 #include "ARBBCollider.h"
 
 #include "EntityManager.h"
+#include "DebugManager.h"
 
 #pragma region Contructor
 
@@ -251,14 +252,9 @@ glm::vec3 ARBBCollider::FindSurfaceNormal(glm::vec3 surfacePoint)
     return glm::normalize(normal);
 }
 
-void ARBBCollider::ToggleVisible(bool visible)
+void ARBBCollider::DrawHandles()
 {
-    if (visible) {
-        entityID = EntityManager::GetInstance()->GetMeshes()[MeshTypes::CubeCollider]->AddInstance(transform);
-    }
-    else {
-        EntityManager::GetInstance()->GetMeshes()[MeshTypes::CubeCollider]->RemoveInstance(entityID);
-    }
+    DebugManager::GetInstance()->DrawWireCube(transform->GetPosition(), transform->GetOrientation(), glm::vec3(1.0f, 1.0f, 0.0f), extents * 2.0f, 0.0f);
 }
 
 #pragma endregion

@@ -13,6 +13,7 @@ namespace Controls {
 		Exit,
 		LeftClick,
 		RightClick,
+		ToggleDebug,
 		ControlCount
 	};
 

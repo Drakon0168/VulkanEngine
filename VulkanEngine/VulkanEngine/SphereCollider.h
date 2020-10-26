@@ -75,10 +75,9 @@ public:
 	glm::vec3 FindSurfaceNormal(glm::vec3 surfacePoint) override;
 
 	/// <summary>
-	/// Makes this collider visible or invisible to the user
+	/// Draws the collider with the debugger
 	/// </summary>
-	/// <param name="visible">Whether to show or hide the collider true to show</param>
-	void ToggleVisible(bool visible) override;
+	void DrawHandles() override;
 
 #pragma endregion
 };

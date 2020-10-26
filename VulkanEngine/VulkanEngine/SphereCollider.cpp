@@ -2,6 +2,7 @@
 #include "SphereCollider.h"
 
 #include "EntityManager.h"
+#include "DebugManager.h"
 
 #pragma region Contructor
 
@@ -150,14 +151,9 @@ glm::vec3 SphereCollider::FindSurfaceNormal(glm::vec3 surfacePoint)
     return glm::normalize(surfacePoint - transform->GetPosition());
 }
 
-void SphereCollider::ToggleVisible(bool visible)
+void SphereCollider::DrawHandles()
 {
-    if (visible) {
-        entityID = EntityManager::GetInstance()->GetMeshes()[MeshTypes::SphereCollider]->AddInstance(transform);
-    }
-    else {
-        EntityManager::GetInstance()->GetMeshes()[MeshTypes::SphereCollider]->RemoveInstance(entityID);
-    }
+    DebugManager::GetInstance()->DrawWireSphere(transform->GetPosition(), glm::vec3(1.0f, 1.0f, 0.0f), radius, 0.0f);
 }
 
 #pragma endregion

@@ -11,7 +11,6 @@ protected:
 	std::shared_ptr<Transform> parent;
 	std::shared_ptr<Transform> transform;
 	glm::vec3 offset;
-	int entityID;
 	ColliderTypes::ColliderTypes colliderType;
 
 public:
@@ -118,10 +117,9 @@ public:
 	virtual glm::vec3 FindSurfaceNormal(glm::vec3 surfacePoint) = 0;
 
 	/// <summary>
-	/// Makes this collider visible or invisible to the user
+	/// Draws the collider with the debugger
 	/// </summary>
-	/// <param name="visible">Whether to show or hide the collider true to show</param>
-	virtual void ToggleVisible(bool visible) = 0;
+	virtual void DrawHandles() = 0;
 
 #pragma endregion
 };

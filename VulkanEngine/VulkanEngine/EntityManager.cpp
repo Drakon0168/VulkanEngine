@@ -1,9 +1,10 @@
 #include "pch.h"
 #include "EntityManager.h"
 
+#include "DebugManager.h"
 #include "VulkanManager.h"
 #include "SwapChain.h"
-
+#include "Image.h"
 #pragma region Singleton
 
 EntityManager* EntityManager::instance = nullptr;
@@ -41,47 +42,90 @@ void EntityManager::Init()
 
     LoadMeshes();
 
+    int count = 0;
+
     //Setup entity list
     //  Add Materials and Mesh Lists
     for (std::shared_ptr<Material> material : materials) {
         entities.insert(std::pair <std::shared_ptr<Material>, std::vector<std::shared_ptr<Mesh>>>(material, std::vector<std::shared_ptr<Mesh>>()));
+        count++;
     }
-
+  
     //  Populate Mesh Lists
     for (std::shared_ptr<Mesh> mesh : meshes) {
         entities[mesh->GetMaterial()].push_back(mesh);
+       
     }
+    std::cout << count;
 }
 
 void EntityManager::LoadMeshes()
 {
     meshes.resize(MeshTypes::MeshTypeCount);
- 
-   //meshes.resize(MeshTypes::Count);
 
     meshes[MeshTypes::Plane] = std::make_shared<Mesh>(materials[0]);
     meshes[MeshTypes::Plane]->GeneratePlane();
 
     meshes[MeshTypes::Cube] = std::make_shared<Mesh>(materials[0]);
     meshes[MeshTypes::Cube]->GenerateCube();
-
+    
     meshes[MeshTypes::Sphere] = std::make_shared<Mesh>(materials[0]);
     meshes[MeshTypes::Sphere]->GenerateSphere(50);
-
-    meshes[MeshTypes::Model] = std::make_shared<Mesh>(materials[0]);
+    
+    meshes[MeshTypes::Model] = std::make_shared<Mesh>(materials[1]);
     meshes[MeshTypes::Model]->LoadModel("models/room.obj");
+
 
     meshes[MeshTypes::SphereCollider] = std::make_shared<Mesh>(materials[1]);
     meshes[MeshTypes::SphereCollider]->GenerateSphere(10);
 
     meshes[MeshTypes::CubeCollider] = std::make_shared<Mesh>(materials[1]);
-    meshes[MeshTypes::CubeCollider]->GenerateCube();
+    meshes[MeshTypes::CubeCollider]->GenerateCube(glm::vec3(1.0f, 1.0f, 1.0f));
+
+    // meshes[MeshTypes::Octant] = std::make_shared<Mesh>(materials[1]);
+    // meshes[MeshTypes::Octant]->GenerateCube(glm::vec3(1.0f, 1.0f, 0.0f));
+    meshes[MeshTypes::Skybox] = std::make_shared<Mesh>(materials[2]);
+    meshes[MeshTypes::Skybox]->GenerateCube();
+
+    meshes[MeshTypes::WireCube] = std::make_shared<Mesh>(materials[3]);
+    meshes[MeshTypes::WireCube]->GenerateCube();
+
+    meshes[MeshTypes::WireSphere] = std::make_shared<Mesh>(materials[3]);
+    meshes[MeshTypes::WireSphere]->GenerateSphere(10);
+
+    meshes[MeshTypes::Line] = std::make_shared<Mesh>(materials[3]);
+    meshes[MeshTypes::Line]->GenerateLine(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 }
 
 void EntityManager::LoadMaterials()
 {
-    materials.push_back(std::make_shared<Material>("shaders/vert.spv", "shaders/frag.spv"));
-    materials.push_back(std::make_shared<Material>("shaders/vert.spv", "shaders/unlitfrag.spv", true));
+    std::vector<std::vector<VkVertexInputAttributeDescription>> attributeDescriptions;
+    attributeDescriptions.push_back(Vertex::GetAttributeDescriptions(0, 0));
+    attributeDescriptions.push_back(TransformData::GetAttributeDescriptions(attributeDescriptions[0].size(), 1));
+
+    std::vector<VkVertexInputBindingDescription> bindingDescriptions;
+    bindingDescriptions.push_back(Vertex::GetBindingDescription(0));
+    bindingDescriptions.push_back(TransformData::GetBindingDescription(bindingDescriptions.size()));
+
+    materials.push_back(std::make_shared<Material>("shaders/vert.spv", "shaders/frag.spv", false, attributeDescriptions, bindingDescriptions, "textures/frog.jpg"));
+    //materials.push_back(std::make_shared<Material>("shaders/vert.spv", "shaders/unlitfrag.spv", true, attributeDescriptions, bindingDescriptions, "textures/room.png"));
+    materials.push_back(std::make_shared<Material>("shaders/vert.spv", "shaders/frag.spv", false, attributeDescriptions, bindingDescriptions, "textures/room.png"));
+    materials.push_back(std::make_shared<Material>("shaders/SkyVert.spv", "shaders/SkyFrag.spv", false, attributeDescriptions, bindingDescriptions, "textures/Skybox/", 'S'));
+
+    //TODO: Find a better way of doing this that will work for multiple types of inputs
+    std::vector<VkVertexInputAttributeDescription> attributeDescription(1);
+    attributeDescription[0].binding = 2;
+    attributeDescription[0].location = 8;
+    attributeDescription[0].format = VK_FORMAT_R32G32B32_SFLOAT;
+    attributeDescription[0].offset = 0;
+    attributeDescriptions.push_back(attributeDescription);
+
+    VkVertexInputBindingDescription bindingDescription = {};
+    bindingDescription.binding = 2;
+    bindingDescription.stride = sizeof(glm::vec3);
+    bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_INSTANCE;
+    bindingDescriptions.push_back(bindingDescription);
+    materials.push_back(std::make_shared<Material>("shaders/DebugVert.spv", "shaders/DebugFrag.spv", true, attributeDescriptions, bindingDescriptions, "textures/room.png"));
 }
 
 #pragma endregion
@@ -91,7 +135,8 @@ void EntityManager::LoadMaterials()
 void EntityManager::Update()
 {
     for (std::shared_ptr<Mesh> mesh : meshes) {
-        mesh->UpdateInstanceBuffer();
+        if (mesh->GetActiveInstanceCount() > 0)
+            mesh->UpdateInstanceBuffer();
     }
 }
 
@@ -138,12 +183,20 @@ void EntityManager::Draw(uint32_t imageIndex, VkCommandBuffer* commandBuffer)
         //Begin Per Mesh Commands
         for (std::shared_ptr<Mesh> mesh : entities[material]) {
             if (mesh->GetActiveInstanceCount() > 0) {
+                //TODO: Make sure this changes based on the attributes used by the current material
                 VkBuffer vertexBuffers[] = { mesh->GetVertexBuffer()->GetBuffer() };
                 VkDeviceSize offsets[] = { 0 };
                 vkCmdBindVertexBuffers(*commandBuffer, 0, 1, vertexBuffers, offsets);//Per mesh
 
                 VkBuffer instanceBuffers[] = { mesh->GetInstanceBuffer()->GetBuffer() };
                 vkCmdBindVertexBuffers(*commandBuffer, 1, 1, instanceBuffers, offsets);//Per mesh
+
+                //Add the color instance buffer only for the debug shapes
+                VkBuffer colorBuffer[1];
+                if (DebugManager::GetInstance()->GetInstanceBuffers().count(mesh) != 0) {
+                     colorBuffer[0] = DebugManager::GetInstance()->GetInstanceBuffers()[mesh]->GetBuffer();
+                    vkCmdBindVertexBuffers(*commandBuffer, 2, 1, colorBuffer, offsets);
+                }
 
                 VkBuffer indexBuffers[] = { mesh->GetIndexBuffer()->GetBuffer() };
                 vkCmdBindIndexBuffer(*commandBuffer, mesh->GetIndexBuffer()->GetBuffer(), 0, VK_INDEX_TYPE_UINT16);//Per mesh

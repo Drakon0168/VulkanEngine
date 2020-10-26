@@ -3,15 +3,16 @@
 
 #include "VulkanManager.h"
 #include "TransformData.h"
-
+#include "Image.h"
 //Tiny OBJ Loader
 #define TINYOBJLOADER_IMPLEMENTATION 
 #include <TinyObjLoader/tiny_obj_loader.h>
+#include "TextureImages.h"
 
 #define logicalDevice VulkanManager::GetInstance()->GetLogicalDevice()
 
 #pragma region Constructor
-
+// WELCOME TO ATLAS!! <3 <3 
 Mesh::Mesh(std::shared_ptr<Material> material, std::vector<Vertex> vertices, std::vector<uint16_t> indices, std::shared_ptr<Buffer> vertexBuffer, uint32_t vertexBufferOffset, std::shared_ptr<Buffer> indexBuffer, uint32_t indexBufferOffset, std::vector<std::shared_ptr<Transform>> instances, std::shared_ptr<Buffer> instanceBuffer)
 {
 	this->material = material;
@@ -129,20 +130,20 @@ void Mesh::UpdateInstanceBuffer()
 	}
 	else {
 		bufferSize = sizeof(TransformData);
+		// return;
 	}
 
 	//Create the buffer if necessary
 	if (instanceBufferDirty) {
 		Buffer::CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, *instanceBuffer);
 	}
+	//Copy Data
+	void* data;
+	vkMapMemory(logicalDevice, instanceBuffer->GetBufferMemory(), 0, bufferSize, 0, &data);
+	memcpy(data, bufferData.data(), bufferSize);
+	vkUnmapMemory(logicalDevice, instanceBuffer->GetBufferMemory());
 
-	//Copy data if there are instances to copy
-	if (bufferData.size() > 0) {
-		void* data;
-		vkMapMemory(logicalDevice, instanceBuffer->GetBufferMemory(), 0, bufferSize, 0, &data);
-		memcpy(data, bufferData.data(), bufferSize);
-		vkUnmapMemory(logicalDevice, instanceBuffer->GetBufferMemory());
-	}
+	instanceBufferDirty = false;
 }
 
 void Mesh::UpdateVertexBuffer()
@@ -185,7 +186,6 @@ void Mesh::UpdateIndexBuffer()
 
 	//Cleanup staging buffer
 	stagingBuffer.Cleanup();
-	instanceBufferDirty = false;
 }
 
 #pragma endregion
@@ -304,7 +304,6 @@ int Mesh::AddInstance(std::shared_ptr<Transform> value)
 		instances.push_back(value);
 		return (instances.size() - 1);
 	}
-
 	instances[freeIndex] = value;
 	instanceBufferDirty = true;
 	return freeIndex;
@@ -355,19 +354,30 @@ void Mesh::GeneratePlane()
 	}
 }
 
-void Mesh::GenerateCube() {
+void Mesh::GenerateCube(glm::vec3 color) {
 	//Set vertices
 	vertices.resize(4);
 
+	/*vertices = {
+		{{0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f},    {1.0f, 1.0f}     , 1.0f },
+		{{0.5f, 0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f},   {1.0f, 1.0f}    , 0.0f},
+		{{0.5f, -0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f},   {1.0f, 0.0f}   , 1.0f },
+		{{0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f},  {1.0f, 0.0f}  , 0.0f},
+		{{-0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f},   {0.0f, 1.0f}   , 1.0f },
+		{{-0.5f, 0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f},  {0.0f, 1.0f}  , 0.0f},
+		{{-0.5f, -0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f},  {0.0f, 0.0f} , 1.0f },
+		{{-0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}, 0.0f},
+	};*/
+
 	vertices = {
-		{{0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
-		{{0.5f, 0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
-		{{0.5f, -0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
-		{{0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
-		{{-0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
-		{{-0.5f, 0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
-		{{-0.5f, -0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
-		{{-0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
+		{{0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f},    {1.0f, 1.0f}  , 1.0f },
+		{{0.5f, 0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f},   {1.0f, 1.0f}  , 0.0f },
+		{{0.5f, -0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f},   {1.0f, 0.0f}  , 1.0f },
+		{{0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f},  {1.0f, 0.0f}  , 0.0f },
+		{{-0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f},   {0.0f, 1.0f}  , 1.0f },
+		{{-0.5f, 0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f},  {0.0f, 1.0f}  , 0.0f },
+		{{-0.5f, -0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f},  {0.0f, 0.0f}  , 1.0f },
+		{{-0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}  , 0.0f },
 	};
 
 	//Set indices
@@ -498,6 +508,30 @@ void Mesh::GenerateSphere(int resolution)
 	}
 }
 
+void Mesh::GenerateLine(glm::vec3 point1, glm::vec3 point2)
+{
+	//Set vertices
+	vertices.resize(3);
+
+	vertices = {
+		{point1, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
+		{(point1 + point2) * 0.5f, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 1.0f}},
+		{point2, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.5f, 0.5f}},
+	};
+
+	//Set indices
+	indices.resize(6);
+
+	indices = {
+		0, 1, 2
+	};
+
+	if (vertexBuffer != nullptr && indexBuffer != nullptr) {
+		UpdateVertexBuffer();
+		UpdateIndexBuffer();
+	}
+}
+
 void Mesh::LoadModel(const std::string modelPath) {
 
 	vertices.clear();
@@ -525,7 +559,8 @@ void Mesh::LoadModel(const std::string modelPath) {
 
 			vertex.textureCoordinate = {
 				attrib.texcoords[2 * index.texcoord_index + 0],
-				1.0f - attrib.texcoords[2 * index.texcoord_index + 1]
+				1.0f - attrib.texcoords[2 * index.texcoord_index + 1],
+				0.0f
 			};
 
 			vertex.color = { 1.0f, 1.0f, 1.0f };
