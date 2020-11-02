@@ -415,6 +415,8 @@ void Material::SetupVertexInput(std::vector<std::vector<VkVertexInputAttributeDe
 
 void Material::Cleanup()
 {
+	
+	tImage->Cleanup();
 
 	vkDestroyPipeline(logicalDevice, pipeline, nullptr);
 	vkDestroyPipelineLayout(logicalDevice, pipelineLayout, nullptr);
@@ -464,8 +466,5 @@ VkShaderModule Material::CreateShaderModule(const std::vector<char>& code)
 
 	return shaderModule;
 }
-
-//create function to get texture images
-//ugh 
 
 #pragma endregion

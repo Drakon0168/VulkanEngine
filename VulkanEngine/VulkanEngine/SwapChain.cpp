@@ -270,13 +270,14 @@ void SwapChain::Cleanup()
 	//Cleanup Depth Image
 	depthImage.Cleanup();
 
-	for (std::shared_ptr<TextureImages> ti : EntityManager::GetInstance()->GetTextureImages()) {
+/*	for (std::shared_ptr<TextureImages> ti : EntityManager::GetInstance()->GetTextureImages()) {
 		vkDestroySampler(logicalDevice, ti->GetSampler(), nullptr);
 
 		vkDestroyImage(logicalDevice, ti->TextureImageImage(), nullptr);
 		vkDestroyImageView(logicalDevice, ti->GetTextureImageView(), nullptr);
 		vkFreeMemory(logicalDevice, ti->TextureImageMemory(), nullptr);
-	}
+		
+	}*/
 
 }
 
