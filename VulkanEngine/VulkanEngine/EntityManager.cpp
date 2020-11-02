@@ -31,15 +31,7 @@ std::vector<std::shared_ptr<Mesh>> EntityManager::GetMeshes()
 {
     return meshes;
 }
-/*
-std::vector<std::shared_ptr<TextureImages>> EntityManager::GetTextureImages()
-{
-    for (std::shared_ptr<Material> material : materials) {
-        tImages.push_back(std::shared_ptr<TextureImages>(material.get()->GetTImage()));
-    }
-    return tImages;
-}
-*/
+
 #pragma endregion
 
 #pragma region Initialization

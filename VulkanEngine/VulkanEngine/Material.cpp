@@ -31,26 +31,16 @@ Material::Material(std::string vertexShaderPath, std::string fragmentShaderPath,
 
 void Material::Init()
 {
-	//AH CRAP
 	if (type == 'S') {
 		tImage->LoadCubeMap(matPath);
 		tImage->CreateTextureImageViewCube();
-		// Skybox loading
-		//TextureImages::GetInstance()->LoadCubeMap(matPath);
-		//TextureImages::GetInstance()->CreateTextureImageViewCube();
 	}
 	else {
-	//	std::unique_ptr<TextureImages> textureImageOne(new TextureImages)
-		//tImage = new TextureImages();
 		tImage->LoadTexture(matPath);
 		tImage->CreateTextureImageView();
-	
-		//TextureImages::GetInstance()->LoadTexture(matPath);
-		//TextureImages::GetInstance()->CreateTextureImageView();
 	}
 	tImage->CreateTextureSampler();
 
-	//TextureImages::GetInstance()->CreateTextureSampler();
 	CreateDescriptorSetLayout();
 
 	CreateGraphicsPipeline();
@@ -351,14 +341,7 @@ void Material::CreateDescriptorSets()
 
 		VkDescriptorImageInfo imageInfo = {};
 		imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-		//AH CRAP 
-
-		//LOOK HERE . thius might not work due to it only wanting like... that one 
-	/*	for (int i = 0; i < tImages.size(); i++) {
-			imageInfo.imageView = tImages[i]->GetTextureImageView();
-			imageInfo.sampler = tImages[i]->GetSampler();
-
-		}*/
+		
 		imageInfo.imageView = tImage->GetTextureImageView();
 		imageInfo.sampler = tImage->GetSampler();
 		//imageInfo.imageView = TextureImages::GetInstance()->GetTextureImageView();

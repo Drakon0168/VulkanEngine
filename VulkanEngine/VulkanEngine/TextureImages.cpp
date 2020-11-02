@@ -10,15 +10,6 @@
 
 #include "Buffer.h"
 
-/*TextureImages* TextureImages::instance = nullptr;
-TextureImages* TextureImages::GetInstance()
-{
-	if (instance == nullptr) {
-		instance = new TextureImages();
-	}
-
-	return instance;
-}*/
 void TextureImages::LoadAll() {
 	LoadTexture("textures/room.jpg");
 }
@@ -241,9 +232,7 @@ void TextureImages::Cleanup() {
 	vkDestroyImageView(VulkanManager::GetInstance()->GetLogicalDevice(), textureImageView, nullptr);
 	vkFreeMemory(VulkanManager::GetInstance()->GetLogicalDevice(), textureImageMemory, nullptr);
 }
-void TextureImages::Create() {
 
-}
 void TextureImages::CreateTextureImageView() {
 	textureImageView = Image::CreateImageView(*textureImage.GetImage(), VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, mipLevels);
 }

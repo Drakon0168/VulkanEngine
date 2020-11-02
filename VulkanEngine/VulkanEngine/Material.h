@@ -26,9 +26,6 @@ protected:
 	TextureImages* tImage = new TextureImages();
 public:
 
-	
-	static std::vector<TextureImages> tImages;
-
 #pragma region Memory Management
 
 	Material(std::string vertexShaderPath, std::string fragmentShaderPath, bool wireframe, std::vector<std::vector<VkVertexInputAttributeDescription>> attributes, std::vector<VkVertexInputBindingDescription> bindings, std::string materialPath, char type = ' ');
