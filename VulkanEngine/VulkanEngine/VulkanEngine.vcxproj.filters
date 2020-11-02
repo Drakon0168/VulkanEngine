@@ -235,6 +235,7 @@
     </ClInclude>
     <ClInclude Include="GuiManager.h">
       <Filter>Header Files\Manager</Filter>
+    </ClInclude>
     <ClInclude Include="DebugShape.h">
       <Filter>Header Files\Structs</Filter>
     </ClInclude>
