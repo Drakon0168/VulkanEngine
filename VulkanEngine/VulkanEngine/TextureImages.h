@@ -1,7 +1,7 @@
 #pragma once
 
 #include "pch.h"
-
+#include "Image.h"
 class TextureImages
 {
 private:
@@ -34,6 +34,10 @@ public:
 	void CreateTextureImageViewCube();
 
 	void CreateTextureSampler();
+
+	void Cleanup();
+
+	void Create();
 	
 #pragma endregion
 

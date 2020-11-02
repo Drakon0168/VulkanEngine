@@ -72,7 +72,7 @@ void GameManager::Init()
     // setup skybox
     gameObjects[5]->SetTransform(std::make_shared<Transform>(glm::vec3(0)));
     gameObjects[5]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[5]->GetTransform(), PhysicsLayers::Trigger, 1.0f, false, false));
-
+    
     for (size_t i = 0; i < gameObjects.size(); i++) {
         gameObjects[i]->Spawn();
     }

@@ -32,6 +32,14 @@ std::vector<std::shared_ptr<Mesh>> EntityManager::GetMeshes()
     return meshes;
 }
 
+std::vector<std::shared_ptr<TextureImages>> EntityManager::GetTextureImages()
+{
+    for (std::shared_ptr<Material> material : materials) {
+        tImages.push_back(std::shared_ptr<TextureImages>(material.get()->GetTImage()));
+    }
+    return tImages;
+}
+
 #pragma endregion
 
 #pragma region Initialization
@@ -90,6 +98,7 @@ void EntityManager::LoadMeshes()
 
 void EntityManager::LoadMaterials()
 {
+    
     std::vector<std::vector<VkVertexInputAttributeDescription>> attributeDescriptions;
     attributeDescriptions.push_back(Vertex::GetAttributeDescriptions(0, 0));
     attributeDescriptions.push_back(TransformData::GetAttributeDescriptions(attributeDescriptions[0].size(), 1));
@@ -100,6 +109,7 @@ void EntityManager::LoadMaterials()
 
     materials.push_back(std::make_shared<Material>("shaders/vert.spv", "shaders/frag.spv", false, attributeDescriptions, bindingDescriptions, "textures/frog.jpg"));
     materials.push_back(std::make_shared<Material>("shaders/vert.spv", "shaders/frag.spv", false, attributeDescriptions, bindingDescriptions, "textures/room.png"));
+    materials.push_back(std::make_shared<Material>("shaders/SkyVert.spv", "shaders/SkyFrag.spv", false, attributeDescriptions, bindingDescriptions, "textures/Skybox/", 'S'));
     materials.push_back(std::make_shared<Material>("shaders/SkyVert.spv", "shaders/SkyFrag.spv", false, attributeDescriptions, bindingDescriptions, "textures/Skybox/", 'S'));
 
     //TODO: Find a better way of doing this that will work for multiple types of inputs
@@ -243,5 +253,6 @@ void EntityManager::CleanupMeshes()
         meshes[i]->Cleanup();
     }
 }
+
 
 #pragma endregion

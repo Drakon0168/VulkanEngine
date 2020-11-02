@@ -7,7 +7,7 @@
 #include "GameManager.h"
 #include "WindowManager.h"
 #include "Camera.h"
-#include "TextureImages.h"
+//#include "TextureImages.h"
 #include "GuiManager.h"
 
 #define logicalDevice VulkanManager::GetInstance()->GetLogicalDevice()
@@ -269,13 +269,15 @@ void SwapChain::Cleanup()
 
 	//Cleanup Depth Image
 	depthImage.Cleanup();
-	//TESTING HERE
-	vkDestroySampler(logicalDevice, TextureImages::GetInstance()->GetSampler(), nullptr);
 
-	vkDestroyImage(logicalDevice, TextureImages::GetInstance()->TextureImageImage(), nullptr);
-	vkDestroyImageView(logicalDevice, TextureImages::GetInstance()->GetTextureImageView(), nullptr);
-	vkFreeMemory(logicalDevice, TextureImages::GetInstance()->TextureImageMemory(), nullptr);
-	//end tresting
+	for (std::shared_ptr<TextureImages> ti : EntityManager::GetInstance()->GetTextureImages()) {
+		vkDestroySampler(logicalDevice, ti->GetSampler(), nullptr);
+
+		vkDestroyImage(logicalDevice, ti->TextureImageImage(), nullptr);
+		vkDestroyImageView(logicalDevice, ti->GetTextureImageView(), nullptr);
+		vkFreeMemory(logicalDevice, ti->TextureImageMemory(), nullptr);
+	}
+
 }
 
 void SwapChain::FullCleanup()
