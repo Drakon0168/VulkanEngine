@@ -99,6 +99,7 @@ void EntityManager::LoadMeshes()
 
 void EntityManager::LoadMaterials()
 {
+    
     std::vector<std::vector<VkVertexInputAttributeDescription>> attributeDescriptions;
     attributeDescriptions.push_back(Vertex::GetAttributeDescriptions(0, 0));
     attributeDescriptions.push_back(TransformData::GetAttributeDescriptions(attributeDescriptions[0].size(), 1));
@@ -110,6 +111,7 @@ void EntityManager::LoadMaterials()
     materials.push_back(std::make_shared<Material>("shaders/vert.spv", "shaders/frag.spv", false, attributeDescriptions, bindingDescriptions, "textures/Square.png"));
     //materials.push_back(std::make_shared<Material>("shaders/vert.spv", "shaders/unlitfrag.spv", true, attributeDescriptions, bindingDescriptions, "textures/room.png"));
     materials.push_back(std::make_shared<Material>("shaders/vert.spv", "shaders/frag.spv", false, attributeDescriptions, bindingDescriptions, "textures/room.png"));
+    materials.push_back(std::make_shared<Material>("shaders/SkyVert.spv", "shaders/SkyFrag.spv", false, attributeDescriptions, bindingDescriptions, "textures/Skybox/", 'S'));
     materials.push_back(std::make_shared<Material>("shaders/SkyVert.spv", "shaders/SkyFrag.spv", false, attributeDescriptions, bindingDescriptions, "textures/Skybox/", 'S'));
 
     //TODO: Find a better way of doing this that will work for multiple types of inputs
@@ -253,5 +255,6 @@ void EntityManager::CleanupMeshes()
         meshes[i]->Cleanup();
     }
 }
+
 
 #pragma endregion

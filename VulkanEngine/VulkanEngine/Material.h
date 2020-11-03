@@ -1,8 +1,9 @@
 #pragma once
 #include "pch.h"
-
+#include "TextureImages.h"
 class Material
 {
+
 protected:
 
 	std::string vertexShaderPath;
@@ -22,8 +23,7 @@ protected:
 
 	char type;
 
-	// bool wireframe;
-
+	TextureImages* tImage = new TextureImages();
 public:
 
 #pragma region Memory Management
@@ -89,6 +89,8 @@ public:
 	/// <returns>The list of the material's descriptor sets</returns>
 	std::vector<VkDescriptorSet> GetDescriptorSets();
 
+
+	TextureImages* GetTImage();
 #pragma endregion
 
 #pragma region Helper Methods

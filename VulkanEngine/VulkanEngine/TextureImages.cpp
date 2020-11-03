@@ -10,15 +10,6 @@
 
 #include "Buffer.h"
 
-TextureImages* TextureImages::instance = nullptr;
-TextureImages* TextureImages::GetInstance()
-{
-	if (instance == nullptr) {
-		instance = new TextureImages();
-	}
-
-	return instance;
-}
 void TextureImages::LoadAll() {
 	LoadTexture("textures/room.jpg");
 }
@@ -29,6 +20,7 @@ void TextureImages::LoadTexture(const std::string texturePath) {
 		throw std::runtime_error("path is null");
 	}
 	stbi_uc* pixels = stbi_load(texturePath.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+
 	VkDeviceSize imageSize = texWidth * texHeight * 4;
 	mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texWidth, texHeight)))) + 1;
 	// mipLevels = 0;
@@ -51,7 +43,7 @@ void TextureImages::LoadTexture(const std::string texturePath) {
 	Image::TransitionImageLayout(textureImage, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, mipLevels);
 
 	Image::CopyBufferToImage(stagingBuffer.GetBuffer(), textureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
-
+	textureImageMemory = *textureImage.GetMemory();
 	vkDestroyBuffer(VulkanManager::GetInstance()->GetLogicalDevice(), stagingBuffer.GetBuffer(), nullptr);
 	vkFreeMemory(VulkanManager::GetInstance()->GetLogicalDevice(), stagingBuffer.GetBufferMemory(), nullptr);
 	GenerateMipmaps(*textureImage.GetImage(), VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, mipLevels);
@@ -85,9 +77,9 @@ void TextureImages::LoadCubeMap(const std::string texturePath)
 	mipLevels = 1;
 
 
-	if (!pixel) { throw std::runtime_error("failed to load texture image!"); }
+	if (!pixel) { throw std::runtime_error("failed to load texture image! jjjjj"); }
 	for (int i = 0; i < 6; i++) {
-		if (!pixels[i]) { throw std::runtime_error("failed to load texture image!"); }
+		if (!pixels[i]) { throw std::runtime_error("failed to load texture image! hhhh"); }
 	}
 
 	Buffer stagingBuffer;
@@ -96,7 +88,7 @@ void TextureImages::LoadCubeMap(const std::string texturePath)
 
 	void *data;
 	// void* dataOffset = &data + layerSize;
-	VkResult res = 
+	//VkResult res = 
 	vkMapMemory(VulkanManager::GetInstance()->GetLogicalDevice(), stagingBuffer.GetBufferMemory(), 0, imageSize, 0, &data);
 	for (uint8_t i = 0; i < 6; ++i) {
 		// since an int is 32-bit, we need to divide layerSize by 4 to get the number of bytes as our offset
@@ -113,7 +105,7 @@ void TextureImages::LoadCubeMap(const std::string texturePath)
 	Image::CreateImage(mipLevels, texWidth, texHeight, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, textureImage, 6);  
 	Image::TransitionImageLayout(textureImage, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, mipLevels, 6);
 	Image::CopyBufferToImage(stagingBuffer.GetBuffer(), textureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight), 6);
-	
+	textureImageMemory = *textureImage.GetMemory();
 	vkDestroyBuffer(VulkanManager::GetInstance()->GetLogicalDevice(), stagingBuffer.GetBuffer(), nullptr);
 	vkFreeMemory(VulkanManager::GetInstance()->GetLogicalDevice(), stagingBuffer.GetBufferMemory(), nullptr);
 	GenerateMipmaps(*textureImage.GetImage(), VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, mipLevels, 6);
@@ -233,10 +225,16 @@ void TextureImages::CreateTextureSampler() {
 	}
 
 }
+void TextureImages::Cleanup() {
+	vkDestroySampler(VulkanManager::GetInstance()->GetLogicalDevice(),textureSampler, nullptr);
+
+	vkDestroyImage(VulkanManager::GetInstance()->GetLogicalDevice(), *textureImage.GetImage(), nullptr);
+	vkDestroyImageView(VulkanManager::GetInstance()->GetLogicalDevice(), textureImageView, nullptr);
+	vkFreeMemory(VulkanManager::GetInstance()->GetLogicalDevice(), textureImageMemory, nullptr);
+}
 
 void TextureImages::CreateTextureImageView() {
 	textureImageView = Image::CreateImageView(*textureImage.GetImage(), VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, mipLevels);
-
 }
 
 void TextureImages::CreateTextureImageViewCube()
@@ -256,6 +254,7 @@ VkImage TextureImages::TextureImageImage() {
 }
 
 VkDeviceMemory TextureImages::TextureImageMemory() {
+	
 	return textureImageMemory;
 }
 VkSampler TextureImages::GetSampler() {

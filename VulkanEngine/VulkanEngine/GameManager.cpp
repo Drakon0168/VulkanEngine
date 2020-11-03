@@ -44,6 +44,7 @@ void GameManager::Init()
     gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Sphere]));
     gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Model]));
     gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Sphere]));
+    gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Skybox]));
 
     //Setup Plane
     gameObjects[0]->SetTransform(std::make_shared<Transform>(glm::vec3(0.0f, 0.0f, 0.0f)));
@@ -69,10 +70,14 @@ void GameManager::Init()
     gameObjects[5]->SetTransform(std::make_shared<Transform>(glm::vec3(0.0f, 0.1f, -1.5f)));
     gameObjects[5]->GetTransform()->SetOrientation(glm::vec3(-90.0f, -90.0f, 0.0f));
     gameObjects[5]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[5]->GetTransform(), PhysicsLayers::Static, ColliderTypes::AABB, 1.0f, false, true));
-
+    
     //Dynamic v Dynamic collision test
     gameObjects[6]->SetTransform(std::make_shared<Transform>(glm::vec3(1.2f, 5.0f, 0.0f)));
     gameObjects[6]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[6]->GetTransform(), PhysicsLayers::Dynamic, ColliderTypes::Sphere, 1.0f, true, true));
+
+    // setup skybox
+    gameObjects[7]->SetTransform(std::make_shared<Transform>(glm::vec3(0)));
+    gameObjects[7]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[7]->GetTransform(), PhysicsLayers::Trigger, ColliderTypes::AABB, 1.0f, false, false));
 
     //Initialize GameObjects
     for (size_t i = 0; i < gameObjects.size(); i++) {

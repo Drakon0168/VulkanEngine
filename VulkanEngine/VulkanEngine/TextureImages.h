@@ -1,11 +1,10 @@
 #pragma once
 
 #include "pch.h"
-
+#include "Image.h"
 class TextureImages
 {
 private:
-	static TextureImages* instance;
 	VkImage image;
 	VkImageView view;
 	VkDeviceMemory memory;
@@ -19,7 +18,7 @@ private:
 	
 public:
 #pragma region Singleton 
-	static TextureImages* GetInstance();
+	//not anymore!
 #pragma endregion
 #pragma region Memory Management
 
@@ -34,6 +33,8 @@ public:
 	void CreateTextureImageViewCube();
 
 	void CreateTextureSampler();
+
+	void Cleanup();
 	
 #pragma endregion
 

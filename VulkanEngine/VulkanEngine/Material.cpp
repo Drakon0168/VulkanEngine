@@ -4,7 +4,7 @@
 #include "VulkanManager.h"
 #include "FileManager.h"
 #include "SwapChain.h"
-#include "TextureImages.h"
+//#include "TextureImages.h"
 
 #define logicalDevice VulkanManager::GetInstance()->GetLogicalDevice()
 #define swapChainImages SwapChain::GetInstance()->GetImages()
@@ -31,17 +31,16 @@ Material::Material(std::string vertexShaderPath, std::string fragmentShaderPath,
 
 void Material::Init()
 {
-	
 	if (type == 'S') {
-		// Skybox loading
-		TextureImages::GetInstance()->LoadCubeMap(matPath);
-		TextureImages::GetInstance()->CreateTextureImageViewCube();
+		tImage->LoadCubeMap(matPath);
+		tImage->CreateTextureImageViewCube();
 	}
 	else {
-		TextureImages::GetInstance()->LoadTexture(matPath);
-		TextureImages::GetInstance()->CreateTextureImageView();
+		tImage->LoadTexture(matPath);
+		tImage->CreateTextureImageView();
 	}
-	TextureImages::GetInstance()->CreateTextureSampler();
+	tImage->CreateTextureSampler();
+
 	CreateDescriptorSetLayout();
 
 	CreateGraphicsPipeline();
@@ -342,8 +341,11 @@ void Material::CreateDescriptorSets()
 
 		VkDescriptorImageInfo imageInfo = {};
 		imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-		imageInfo.imageView = TextureImages::GetInstance()->GetTextureImageView();
-		imageInfo.sampler = TextureImages::GetInstance()->GetSampler();
+		
+		imageInfo.imageView = tImage->GetTextureImageView();
+		imageInfo.sampler = tImage->GetSampler();
+		//imageInfo.imageView = TextureImages::GetInstance()->GetTextureImageView();
+		//imageInfo.sampler = TextureImages::GetInstance()->GetSampler();
 
 		/*VkWriteDescriptorSet descriptorWrite = {};
 		descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
@@ -396,6 +398,8 @@ void Material::SetupVertexInput(std::vector<std::vector<VkVertexInputAttributeDe
 
 void Material::Cleanup()
 {
+	
+	tImage->Cleanup();
 
 	vkDestroyPipeline(logicalDevice, pipeline, nullptr);
 	vkDestroyPipelineLayout(logicalDevice, pipelineLayout, nullptr);
@@ -420,6 +424,11 @@ VkPipeline Material::GetPipeline()
 std::vector<VkDescriptorSet> Material::GetDescriptorSets()
 {
 	return descriptorSets;
+}
+
+TextureImages* Material::GetTImage()
+{
+	return tImage;
 }
 
 #pragma endregion
