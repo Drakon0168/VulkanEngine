@@ -252,10 +252,24 @@ void PhysicsObject::ApplyForce(glm::vec3 force, glm::vec3 point, bool applyMass)
 	glm::vec3 perpendicularForce = force - ((glm::dot(direction, force) / glm::dot(direction, direction)) * direction);
 	float angularForce = glm::length(perpendicularForce) * glm::length(direction);
 
-	std::cout << "Angular Force: " << angularForce << std::endl;
+	//Angular force is already accounting for mass, no need to double calculate
+	if (angularForce > 0.001f) {
+		ApplyTorque(glm::angleAxis(angularForce, axis), false);
+	}
 
-	angularAcceleration *= glm::angleAxis(angularForce, axis);
 	acceleration += force;
+}
+
+void PhysicsObject::ApplyTorque(glm::quat torque, bool applyMass)
+{
+	float torqueAngle = 2 * glm::acos(torque.w);
+
+	if (applyMass) {
+		angularAcceleration = glm::mix(angularAcceleration, torque * angularAcceleration, 1.0f / mass);
+	}
+	else {
+		angularAcceleration = torque * angularAcceleration;
+	}
 }
 
 #pragma endregion
@@ -273,14 +287,14 @@ void PhysicsObject::Update()
 		velocity += acceleration * Time::GetDeltaTime();
 		acceleration = glm::vec3(0.0f, 0.0f, 0.0f);
 
-		angularVelocity = glm::slerp(angularVelocity, angularVelocity * angularVelocity, Time::GetDeltaTime());
+		angularVelocity = angularAcceleration * angularVelocity;//glm::mix(angularVelocity, angularAcceleration * angularVelocity, Time::GetDeltaTime());
 		angularAcceleration = glm::quat(glm::vec3(0, 0, 0));
 
 		//Apply velocity
 		transform->Translate(velocity * Time::GetDeltaTime());
 
 		glm::quat orientation = transform->GetOrientation();
-		transform->SetOrientation(glm::slerp(orientation, angularVelocity * orientation, Time::GetDeltaTime()));
+		transform->SetOrientation(glm::mix(orientation, angularVelocity * orientation, Time::GetDeltaTime()));
 	}
 
 	//Update collider

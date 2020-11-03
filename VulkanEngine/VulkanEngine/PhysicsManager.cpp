@@ -405,26 +405,26 @@ void PhysicsManager::ResolveCollision(std::shared_ptr<PhysicsObject> physicsObje
 void PhysicsManager::ResolveVelocity(std::shared_ptr<PhysicsObject> physicsObject1, std::shared_ptr<PhysicsObject> physicsObject2, CollisionData data)
 {
     float projectionMult[2];
-    projectionMult[0] = glm::dot(physicsObject1->GetVelocity(), data.collisionNormal) / glm::dot(data.collisionNormal, data.collisionNormal);
-    projectionMult[1] = glm::dot(physicsObject2->GetVelocity(), data.collisionNormal) / glm::dot(data.collisionNormal, data.collisionNormal);
+    projectionMult[0] = glm::dot(physicsObject1->GetVelocityAtPoint(data.contactPoint), data.collisionNormal) / glm::dot(data.collisionNormal, data.collisionNormal);
+    projectionMult[1] = glm::dot(physicsObject2->GetVelocityAtPoint(data.contactPoint), data.collisionNormal) / glm::dot(data.collisionNormal, data.collisionNormal);
 
     glm::vec3 force[2];
     
     if (physicsObject1->GetPhysicsLayer() == PhysicsLayers::Dynamic && projectionMult[0] > 0) {
         force[0] = (data.collisionNormal * projectionMult[0] * -1.0f) / Time::GetDeltaTime();
-        physicsObject1->ApplyForce(force[0]);
+        physicsObject1->ApplyForce(force[0], data.contactPoint);
 
         if (physicsObject2->GetPhysicsLayer() == PhysicsLayers::Dynamic) {
-            physicsObject2->ApplyForce(-force[0]);
+            physicsObject2->ApplyForce(-force[0], data.contactPoint);
         }
     }
 
     if (physicsObject2->GetPhysicsLayer() == PhysicsLayers::Dynamic && projectionMult[1] < 0) {
         force[1] = (data.collisionNormal * projectionMult[1] * -1.0f) / Time::GetDeltaTime();
-        physicsObject2->ApplyForce(force[1]);
+        physicsObject2->ApplyForce(force[1], data.contactPoint);
 
         if (physicsObject1->GetPhysicsLayer() == PhysicsLayers::Dynamic) {
-            physicsObject1->ApplyForce(-force[1]);
+            physicsObject1->ApplyForce(-force[1], data.contactPoint);
         }
     }
 }

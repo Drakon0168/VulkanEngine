@@ -26,8 +26,7 @@ void main(){
 	for(int i = 0; i < lightCount; i++){
 		vec3 direction = position - lights[i].position;
 		vec3 cameraDirection = normalize(cameraPosition - position);
-		vec3 lightDistance = vec3(abs(direction.x), abs(direction.y), abs(direction.z));
-		float strength = length(lightDistance) / lights[i].range;
+		float strength = length(direction) / lights[i].range;
 		strength = 1.0f - clamp(strength, 0.0f, 1.0f);
 		direction = normalize(direction);
 
@@ -43,7 +42,7 @@ void main(){
 
 	//Add ambient light
 	finalColor += vec3(0.015f, 0.015f, 0.015f);
+	vec4 textureColor = texture(texSampler, uv);
 
-	outColor = vec4(finalColor * vertColor, 1.0f);
-    outColor *= texture(texSampler, uv);
+	outColor = vec4(finalColor * vertColor, 1.0f) * textureColor;
 }

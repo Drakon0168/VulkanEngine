@@ -107,7 +107,7 @@ void EntityManager::LoadMaterials()
     bindingDescriptions.push_back(Vertex::GetBindingDescription(0));
     bindingDescriptions.push_back(TransformData::GetBindingDescription(bindingDescriptions.size()));
 
-    materials.push_back(std::make_shared<Material>("shaders/vert.spv", "shaders/frag.spv", false, attributeDescriptions, bindingDescriptions, "textures/frog.jpg"));
+    materials.push_back(std::make_shared<Material>("shaders/vert.spv", "shaders/frag.spv", false, attributeDescriptions, bindingDescriptions, "textures/Square.png"));
     //materials.push_back(std::make_shared<Material>("shaders/vert.spv", "shaders/unlitfrag.spv", true, attributeDescriptions, bindingDescriptions, "textures/room.png"));
     materials.push_back(std::make_shared<Material>("shaders/vert.spv", "shaders/frag.spv", false, attributeDescriptions, bindingDescriptions, "textures/room.png"));
     materials.push_back(std::make_shared<Material>("shaders/SkyVert.spv", "shaders/SkyFrag.spv", false, attributeDescriptions, bindingDescriptions, "textures/Skybox/", 'S'));

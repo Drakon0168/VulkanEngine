@@ -151,6 +151,12 @@ public:
 	/// <param name="applyMass">Whether or not the force is affected by the mass of the object</param>
 	void ApplyForce(glm::vec3 force, glm::vec3 point, bool applyMass = true);
 
+	/// <summary>
+	/// Applies an angular force to the object
+	/// </summary>
+	/// <param name="torque">The torque to apply to the object</param>
+	void ApplyTorque(glm::quat torque, bool applyMass = true);
+
 #pragma endregion
 
 #pragma region Update
