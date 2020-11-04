@@ -274,13 +274,11 @@ void PhysicsObject::ApplyForce(glm::vec3 force, glm::vec3 point, bool applyMass)
 
 void PhysicsObject::ApplyTorque(glm::quat torque, bool applyMass)
 {
-	float torqueAngle = 2 * glm::acos(torque.w);
-
 	if (applyMass) {
-		angularAcceleration = glm::mix(angularAcceleration, torque * angularAcceleration, 1.0f / mass);
+		angularAcceleration = glm::mix(angularAcceleration, torque * angularAcceleration, Time::GetDeltaTime() / mass);
 	}
 	else {
-		angularAcceleration = torque * angularAcceleration;
+		angularAcceleration = glm::mix(angularAcceleration, torque * angularAcceleration, Time::GetDeltaTime());
 	}
 }
 
@@ -306,7 +304,7 @@ void PhysicsObject::Update()
 		transform->Translate(velocity * Time::GetDeltaTime());
 
 		glm::quat orientation = transform->GetOrientation();
-		transform->SetOrientation(glm::mix(orientation, angularVelocity * orientation, Time::GetDeltaTime()));
+		transform->SetOrientation(angularVelocity * orientation/*glm::mix(orientation, angularVelocity * orientation, Time::GetDeltaTime())*/);
 	}
 
 	//Update collider
