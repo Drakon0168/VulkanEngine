@@ -16,10 +16,12 @@ private:
 
 	bool active;
 
+	char* name;
+
 public:
 #pragma region Constructor
 
-	GameObject(std::shared_ptr<Mesh> mesh, std::shared_ptr<Transform> transform = nullptr, std::shared_ptr<PhysicsObject> physicsObject = nullptr);
+	GameObject(std::shared_ptr<Mesh> mesh, std::shared_ptr<Transform> transform = nullptr);
 
 #pragma endregion
 
@@ -50,6 +52,13 @@ public:
 	void SetPhysicsObject(std::shared_ptr<PhysicsObject> value);
 
 	/// <summary>
+	/// Creates a new physics object to set this gameObject's physicsObject to
+	/// </summary>
+	/// <param name="layer">The physics layer to set the object to, Dynamic by default</param>
+	/// <param name="colliderType">The type of collider to use for this object, ARBB by default</param>
+	void SetPhysicsObject(PhysicsLayers layer = PhysicsLayers::Dynamic, ColliderTypes::ColliderTypes colliderType = ColliderTypes::ARBB, float mass = 1.0f, bool affectedByGravity = true, bool alive = true);
+
+	/// <summary>
 	/// Returns the mesh that is being used by this game object
 	/// </summary>
 	/// <returns>The gameobject's mesh</returns>
@@ -60,6 +69,18 @@ public:
 	/// </summary>
 	/// <returns>True if the object is active</returns>
 	bool GetActive();
+
+	/// <summary>
+	/// Returns the object's name
+	/// </summary>
+	/// <returns>The name of the game object</returns>
+	char* GetName();
+
+	/// <summary>
+	/// Sets the object's name
+	/// </summary>
+	/// <param name="">The value to set the name to</param>
+	void SetName(const char* value);
 
 #pragma endregion
 
@@ -79,6 +100,12 @@ public:
 	/// Sets the object as inactive and despawns it with the entity manager
 	/// </summary>
 	virtual void Despawn();
+
+	/// <summary>
+	/// Called by the physics system when this object collides with another
+	/// </summary>
+	/// <param name="other">The object that was collided with</param>
+	virtual void OnCollision(GameObject* other);
 
 #pragma endregion
 

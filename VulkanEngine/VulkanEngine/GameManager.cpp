@@ -37,7 +37,7 @@ void GameManager::Init()
     lights.push_back(std::make_shared<Light>(glm::vec3(1.5f, 1.1f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), 20.0f));
     lights.push_back(std::make_shared<Light>(glm::vec3(0.0f, 2.0f, -1.5f), glm::vec3(1.0f, 0.988f, 0.769f), 3.0f));
 
-    gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Plane]));
+    gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Cube]));
     gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Cube]));
     gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Cube]));
     gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Cube]));
@@ -48,36 +48,43 @@ void GameManager::Init()
 
     //Setup Plane
     gameObjects[0]->SetTransform(std::make_shared<Transform>(glm::vec3(0.0f, 0.0f, 0.0f)));
-    gameObjects[0]->GetTransform()->SetScale(glm::vec3(5.0f, 1.0f, 5.0f));
-    gameObjects[0]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[0]->GetTransform(), PhysicsLayers::Static, ColliderTypes::ARBB, 1.0f, false, true));
+    gameObjects[0]->GetTransform()->SetScale(glm::vec3(5.0f, 0.1f, 5.0f));
+    gameObjects[0]->SetPhysicsObject(PhysicsLayers::Static, ColliderTypes::ARBB, 1.0f, false);
+    gameObjects[0]->SetName("Floor");
 
     //Setup Cube
     gameObjects[1]->SetTransform(std::make_shared<Transform>(glm::vec3(-1.5f, 0.5f, 0.0f)));
     gameObjects[1]->GetTransform()->SetOrientation(glm::vec3(0.0f, 45.0f, 0.0f));
-    gameObjects[1]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[1]->GetTransform(), PhysicsLayers::Static, ColliderTypes::ARBB, 1.0f, false, true));
+    gameObjects[1]->SetPhysicsObject(PhysicsLayers::Static, ColliderTypes::ARBB, 1.0f, false);
+    gameObjects[1]->SetName("StaticCube");
 
     //Setup Dynamic Objects
     gameObjects[2]->SetTransform(std::make_shared<Transform>(glm::vec3(-1.5f, 2.5f, 0.0f)));
-    gameObjects[2]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[2]->GetTransform(), PhysicsLayers::Static, ColliderTypes::ARBB, 1.0f, false, true));
-    
+    gameObjects[2]->SetPhysicsObject(PhysicsLayers::Static, ColliderTypes::ARBB, 1.0f, false);
+    gameObjects[2]->SetName("FloatingCube");
+
     gameObjects[3]->SetTransform(std::make_shared<Transform>(glm::vec3(0.95f, 2.5f, -1.5f)));
-    gameObjects[3]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[3]->GetTransform(), PhysicsLayers::Dynamic, ColliderTypes::ARBB, 1.0f, true, true));
+    gameObjects[3]->SetPhysicsObject(PhysicsLayers::Dynamic, ColliderTypes::ARBB);
+    gameObjects[3]->SetName("DynamicCube");
 
     gameObjects[4]->SetTransform(std::make_shared<Transform>(glm::vec3(1.5f, 2.5f, 0.0f)));
-    gameObjects[4]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[4]->GetTransform(), PhysicsLayers::Dynamic, ColliderTypes::Sphere, 1.0f, true, true));
+    gameObjects[4]->SetPhysicsObject(PhysicsLayers::Dynamic, ColliderTypes::Sphere);
+    gameObjects[4]->SetName("DynamicSphere0");
 
     //setup model
     gameObjects[5]->SetTransform(std::make_shared<Transform>(glm::vec3(0.0f, 0.1f, -1.5f)));
     gameObjects[5]->GetTransform()->SetOrientation(glm::vec3(-90.0f, -90.0f, 0.0f));
-    gameObjects[5]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[5]->GetTransform(), PhysicsLayers::Static, ColliderTypes::AABB, 1.0f, false, true));
-    
+    gameObjects[5]->SetPhysicsObject(PhysicsLayers::Static, ColliderTypes::AABB, 1.0f, false);
+    gameObjects[5]->SetName("Model");
+
     //Dynamic v Dynamic collision test
     gameObjects[6]->SetTransform(std::make_shared<Transform>(glm::vec3(1.2f, 5.0f, 0.0f)));
-    gameObjects[6]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[6]->GetTransform(), PhysicsLayers::Dynamic, ColliderTypes::Sphere, 1.0f, true, true));
+    gameObjects[6]->SetPhysicsObject(PhysicsLayers::Dynamic, ColliderTypes::Sphere);
+    gameObjects[6]->SetName("DynamicSphere1");
 
     // setup skybox
     gameObjects[7]->SetTransform(std::make_shared<Transform>(glm::vec3(0)));
-    gameObjects[7]->SetPhysicsObject(std::make_shared<PhysicsObject>(gameObjects[7]->GetTransform(), PhysicsLayers::Trigger, ColliderTypes::AABB, 1.0f, false, false));
+    gameObjects[7]->SetName("Skybox");
 
     //Initialize GameObjects
     for (size_t i = 0; i < gameObjects.size(); i++) {

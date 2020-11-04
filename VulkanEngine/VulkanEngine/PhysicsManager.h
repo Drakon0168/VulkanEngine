@@ -55,8 +55,28 @@ public:
 	/// <summary>
 	/// Adds a physics object to the list of physics objects
 	/// </summary>
-	/// <param name="object">The object to add</param>
-	void AddPhysicsObject(std::shared_ptr<PhysicsObject> object);
+	/// <param name="transform">The transform used by the generated physics object</param>
+	/// <param name="mesh">The mesh to use to generate the collider of the object</param>
+	/// <param name="layer">The physics layer of the object</param>
+	/// <param name="colliderType">The type of collision detection to use for this physics object</param>
+	/// <param name="mass">The mass of the object, 1.0 by default</param>
+	/// <param name="affectedByGravity">Whether or not this object is affected by gravity, true by default</param>
+	/// <param name="alive">Whether or not this object will participate in the physics simulation true by default</param>
+	/// <returns>The ID of the physics object that was added.</returns>
+	int AddPhysicsObject(std::shared_ptr<Transform> transform, std::shared_ptr<Mesh> mesh, PhysicsLayers layer = PhysicsLayers::Dynamic, ColliderTypes::ColliderTypes colliderType = ColliderTypes::ARBB, float mass = 1.0f, bool affectedByGravity = true, bool alive = true);
+
+	/// <summary>
+	/// Removes the physics object at the specified ID
+	/// </summary>
+	/// <param name="ID">The ID of the object to remove</param>
+	void RemovePhysicsObject(int ID);
+
+	/// <summary>
+	/// Returns the physics object stored at the specified ID
+	/// </summary>
+	/// <param name="ID">The ID of the object to get</param>
+	/// <returns>The physics object at the ID</returns>
+	std::shared_ptr<PhysicsObject> GetPhysicsObject(int ID);
 
 #pragma endregion
 
@@ -76,13 +96,6 @@ public:
 	/// </summary>
 	void DetectCollisions();
 
-	/// <summary>
-	/// Checks for a collision between two physics objects
-	/// </summary>
-	/// <param name="physicsObject1">The first object to check</param>
-	/// <param name="physicsObject2">The second object to check</param>
-	/// <param name="data">The collision data used to resolve the collision</param>
-	/// <returns>True if the objects are colliding</returns>
 	bool SharesDimension(std::shared_ptr<PhysicsObject> physicsObject1, std::shared_ptr<PhysicsObject> physicsObject2);
 	bool CheckCollision(std::shared_ptr<PhysicsObject> physicsObject1, std::shared_ptr<PhysicsObject> physicsObject2, CollisionData& data);
 
@@ -103,7 +116,6 @@ public:
 	/// <param name="data">The collision data used to resolve the collision</param>
 	/// <returns>True if the two objects are in collision</returns>
 	bool CheckAABBCollision(std::shared_ptr<AABBCollider> collider1, std::shared_ptr<AABBCollider> collider2, CollisionData& data);
-
 
 	/// <summary>
 	/// Uses the separating axis Theorem to check for a collision between two colliders

@@ -21,10 +21,10 @@ Octant::Octant(std::shared_ptr<Mesh> mesh, glm::vec3 center, float size, std::sh
 	transform = std::make_shared<Transform>(center);
 	transform->SetScale(glm::vec3(size, size, size));
 	this->transform = transform;
-	this->physicsObject = std::make_shared<PhysicsObject>(transform, PhysicsLayers::Static, ColliderTypes::AABB, 1.0f, false, true);
-	if (physicsObject != nullptr) {
-		PhysicsManager::GetInstance()->AddPhysicsObject(physicsObject);
-	}
+
+	int physicsObjectID = PhysicsManager::GetInstance()->AddPhysicsObject(transform, mesh, PhysicsLayers::Static, ColliderTypes::AABB, 1.0f, false);
+	this->physicsObject = PhysicsManager::GetInstance()->GetPhysicsObject(physicsObjectID);
+
 	active = false;
 	octantCount++;
 	octantId = octantCount;
@@ -35,8 +35,6 @@ Octant::Octant(std::shared_ptr<Mesh> mesh, glm::vec3 center, float size, std::sh
 	{
 		 Subdivide();
 	}
-
-
 }
 
 void Octant::Init()
@@ -51,8 +49,7 @@ void Octant::Spawn()
 	}
 
 	if (physicsObject == nullptr) {
-		physicsObject = std::make_shared<PhysicsObject>(transform);
-		PhysicsManager::GetInstance()->AddPhysicsObject(physicsObject);
+		physicsObject = PhysicsManager::GetInstance()->GetPhysicsObject(PhysicsManager::GetInstance()->AddPhysicsObject(transform, mesh));
 	}
 
 	instanceId = mesh->AddInstance(transform);
@@ -110,7 +107,6 @@ void Octant::AddObject(std::shared_ptr<PhysicsObject> g, std::shared_ptr<Octant>
 		// check if this object COLLIDES with any of the octant children
 		// if it does, then it may exist in those dimensions, as well (and the chidren's children)
 		AddCollidingChildren(g, temp);
-		
 	}
 }
 

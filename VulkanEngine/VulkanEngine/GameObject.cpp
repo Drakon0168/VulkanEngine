@@ -7,18 +7,15 @@
 
 #pragma region Constructor
 
-GameObject::GameObject(std::shared_ptr<Mesh> mesh, std::shared_ptr<Transform> transform, std::shared_ptr<PhysicsObject> physicsObject)
+GameObject::GameObject(std::shared_ptr<Mesh> mesh, std::shared_ptr<Transform> transform)
 {
 	this->mesh = mesh;
 	this->transform = transform;
-	this->physicsObject = physicsObject;
-
-	if (physicsObject != nullptr) {
-		PhysicsManager::GetInstance()->AddPhysicsObject(physicsObject);
-	}
-
+	
+	physicsObject = nullptr;
 	instanceId = -1;
 	active = false;
+	name = (char*)"gameObject";
 }
 
 #pragma endregion
@@ -47,7 +44,13 @@ std::shared_ptr<PhysicsObject> GameObject::GetPhysicsObject()
 void GameObject::SetPhysicsObject(std::shared_ptr<PhysicsObject> value)
 {
 	physicsObject = value;
-	PhysicsManager::GetInstance()->AddPhysicsObject(physicsObject);
+}
+
+void GameObject::SetPhysicsObject(PhysicsLayers layer, ColliderTypes::ColliderTypes colliderType, float mass, bool affectedByGravity, bool alive)
+{
+	int ID = PhysicsManager::GetInstance()->AddPhysicsObject(transform, mesh, layer, colliderType, mass, affectedByGravity, alive);
+	physicsObject = PhysicsManager::GetInstance()->GetPhysicsObject(ID);
+	physicsObject->SetGameObject(this);
 }
 
 std::shared_ptr<Mesh> GameObject::GetMesh()
@@ -60,13 +63,22 @@ bool GameObject::GetActive()
 	return active;
 }
 
+char* GameObject::GetName()
+{
+	return name;
+}
+
+void GameObject::SetName(const char* value)
+{
+	name = (char*)value;
+}
+
 #pragma endregion
 
 #pragma region Spawning
 
 void GameObject::Init()
 {
-	physicsObject->GetCollider()->GenerateFromMesh(mesh);
 }
 
 void GameObject::Spawn()
@@ -74,23 +86,29 @@ void GameObject::Spawn()
 	if (transform == nullptr) {
 		transform = std::make_shared<Transform>();
 	}
-
-	if (physicsObject == nullptr) {
-		physicsObject = std::make_shared<PhysicsObject>(transform);
-		PhysicsManager::GetInstance()->AddPhysicsObject(physicsObject);
-	}
 	
+	if (physicsObject != nullptr) {
+		physicsObject->SetAlive(true);
+	}
+
 	instanceId = mesh->AddInstance(transform);
-	physicsObject->SetAlive(true);
 	active = true;
 }
 
 void GameObject::Despawn()
 {
+	if (physicsObject != nullptr) {
+		physicsObject->SetAlive(false);
+	}
+
 	mesh->RemoveInstance(instanceId);
 	instanceId = -1;
-	physicsObject->SetAlive(false);
 	active = false;
+}
+
+void GameObject::OnCollision(GameObject* other)
+{
+	std::cout << name << " collided with " << other->GetName() << std::endl;
 }
 
 #pragma endregion
@@ -99,7 +117,7 @@ void GameObject::Despawn()
 
 void GameObject::Update()
 {
-	if (!physicsObject->GetAlive() && DebugManager::GetInstance()->GetDrawHandles()) {
+	if (active && DebugManager::GetInstance()->GetDrawHandles()) {
 		transform->DrawHandles();
 	}
 }

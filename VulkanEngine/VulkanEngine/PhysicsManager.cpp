@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "PhysicsManager.h"
+#include "GameObject.h"
 
 #pragma region Singleton
 
@@ -43,9 +44,42 @@ void PhysicsManager::SetGravityDirection(glm::vec3 value)
     gravityDirection = value;
 }
 
-void PhysicsManager::AddPhysicsObject(std::shared_ptr<PhysicsObject> object)
+int PhysicsManager::AddPhysicsObject(std::shared_ptr<Transform> transform, std::shared_ptr<Mesh> mesh, PhysicsLayers layer, ColliderTypes::ColliderTypes colliderType, float mass, bool affectedByGravity, bool alive)
 {
-    physicsObjects[object->GetPhysicsLayer()].push_back(object);
+    std::shared_ptr<PhysicsObject> newObject = std::make_shared<PhysicsObject>(transform, layer, colliderType, mass, affectedByGravity, alive);
+    newObject->GetCollider()->GenerateFromMesh(mesh);
+
+    int index = -1;
+
+    for (int i = 0; i < physicsObjects[layer].size(); i++) {
+        if (physicsObjects[layer][i] == nullptr) {
+            physicsObjects[layer][i] = newObject;
+            index = i;
+        }
+    }
+
+    if (index == -1) {
+        physicsObjects[layer].push_back(newObject);
+        index = physicsObjects[layer].size() - 1;
+    }
+
+    return layer + index * 100;
+}
+
+void PhysicsManager::RemovePhysicsObject(int ID)
+{
+    PhysicsLayers layer = (PhysicsLayers)(ID % 100);
+    int index = (ID / 100);
+
+    physicsObjects[layer][index] = nullptr;
+}
+
+std::shared_ptr<PhysicsObject> PhysicsManager::GetPhysicsObject(int ID)
+{
+    PhysicsLayers layer = (PhysicsLayers)(ID % 100);
+    int index = (ID / 100);
+
+    return physicsObjects[layer][index];
 }
 
 #pragma endregion
@@ -54,13 +88,23 @@ void PhysicsManager::AddPhysicsObject(std::shared_ptr<PhysicsObject> object)
 
 void PhysicsManager::Update()
 {
-    //Update dynamic objects
+    //Update physics objects
     for (size_t i = 0; i < physicsObjects[PhysicsLayers::Dynamic].size(); i++) {
-        physicsObjects[PhysicsLayers::Dynamic][i]->Update();
+        if (physicsObjects[PhysicsLayers::Dynamic][i]->GetAlive()) {
+            physicsObjects[PhysicsLayers::Dynamic][i]->Update();
+        }
     }
 
     for (size_t i = 0; i < physicsObjects[PhysicsLayers::Static].size(); i++) {
-        physicsObjects[PhysicsLayers::Static][i]->Update();
+        if (physicsObjects[PhysicsLayers::Static][i]->GetAlive()) {
+            physicsObjects[PhysicsLayers::Static][i]->Update();
+        }
+    }
+
+    for (size_t i = 0; i < physicsObjects[PhysicsLayers::Trigger].size(); i++) {
+        if (physicsObjects[PhysicsLayers::Trigger][i]->GetAlive()) {
+            physicsObjects[PhysicsLayers::Trigger][i]->Update();
+        }
     }
 
     //Check for collisions
@@ -77,30 +121,48 @@ void PhysicsManager::DetectCollisions()
 
     //Check Dynamic objects against all objects
     for (size_t i = 0; i < physicsObjects[PhysicsLayers::Dynamic].size(); i++) {
-        for (size_t j = i + 1; j < physicsObjects[PhysicsLayers::Dynamic].size(); j++) {
-            if (CheckCollision(physicsObjects[PhysicsLayers::Dynamic][i], physicsObjects[PhysicsLayers::Dynamic][j], data)) {
-                ResolveCollision(physicsObjects[PhysicsLayers::Dynamic][i], physicsObjects[PhysicsLayers::Dynamic][j], data);
+        if (physicsObjects[PhysicsLayers::Dynamic][i]->GetAlive()) {
+            for (size_t j = i + 1; j < physicsObjects[PhysicsLayers::Dynamic].size(); j++) {
+                if (physicsObjects[PhysicsLayers::Dynamic][j]->GetAlive()) {
+                    if (CheckCollision(physicsObjects[PhysicsLayers::Dynamic][i], physicsObjects[PhysicsLayers::Dynamic][j], data)) {
+                        ResolveCollision(physicsObjects[PhysicsLayers::Dynamic][i], physicsObjects[PhysicsLayers::Dynamic][j], data);
+                        physicsObjects[PhysicsLayers::Dynamic][j]->GetGameObject()->OnCollision(physicsObjects[PhysicsLayers::Dynamic][i]->GetGameObject());
+                        physicsObjects[PhysicsLayers::Dynamic][i]->GetGameObject()->OnCollision(physicsObjects[PhysicsLayers::Dynamic][j]->GetGameObject());
+                    }
+                }
             }
-        }
 
-        for (size_t j = 0; j < physicsObjects[PhysicsLayers::Static].size(); j++) {
-            if (CheckCollision(physicsObjects[PhysicsLayers::Dynamic][i], physicsObjects[PhysicsLayers::Static][j], data)) {
-                ResolveCollision(physicsObjects[PhysicsLayers::Dynamic][i], physicsObjects[PhysicsLayers::Static][j], data);
+            for (size_t j = 0; j < physicsObjects[PhysicsLayers::Static].size(); j++) {
+                if (physicsObjects[PhysicsLayers::Static][j]->GetAlive()) {
+                    if (CheckCollision(physicsObjects[PhysicsLayers::Dynamic][i], physicsObjects[PhysicsLayers::Static][j], data)) {
+                        ResolveCollision(physicsObjects[PhysicsLayers::Dynamic][i], physicsObjects[PhysicsLayers::Static][j], data);
+                        physicsObjects[PhysicsLayers::Static][j]->GetGameObject()->OnCollision(physicsObjects[PhysicsLayers::Dynamic][i]->GetGameObject());
+                        physicsObjects[PhysicsLayers::Dynamic][i]->GetGameObject()->OnCollision(physicsObjects[PhysicsLayers::Static][j]->GetGameObject());
+                    }
+                }
             }
-        }
 
-        for (size_t j = 0; j < physicsObjects[PhysicsLayers::Trigger].size(); j++) {
-            if (CheckCollision(physicsObjects[PhysicsLayers::Dynamic][i], physicsObjects[PhysicsLayers::Trigger][j], data)) {
-                //TODO: Call the trigger's on collide function
+            for (size_t j = 0; j < physicsObjects[PhysicsLayers::Trigger].size(); j++) {
+                if (physicsObjects[PhysicsLayers::Trigger][j]->GetAlive()) {
+                    if (CheckCollision(physicsObjects[PhysicsLayers::Dynamic][i], physicsObjects[PhysicsLayers::Trigger][j], data)) {
+                        physicsObjects[PhysicsLayers::Trigger][j]->GetGameObject()->OnCollision(physicsObjects[PhysicsLayers::Dynamic][i]->GetGameObject());
+                        physicsObjects[PhysicsLayers::Dynamic][i]->GetGameObject()->OnCollision(physicsObjects[PhysicsLayers::Trigger][j]->GetGameObject());
+                    }
+                }
             }
         }
     }
 
     //Check Static objects against triggers
     for (size_t i = 0; i < physicsObjects[PhysicsLayers::Static].size(); i++) {
-        for (size_t j = 0; j < physicsObjects[PhysicsLayers::Trigger].size(); j++) {
-            if (CheckCollision(physicsObjects[PhysicsLayers::Static][i], physicsObjects[PhysicsLayers::Trigger][j], data)) {
-                //TODO: Call the trigger's on collide function
+        if (physicsObjects[PhysicsLayers::Static][i]->GetAlive()) {
+            for (size_t j = 0; j < physicsObjects[PhysicsLayers::Trigger].size(); j++) {
+                if (physicsObjects[PhysicsLayers::Trigger][j]->GetAlive()) {
+                    if (CheckCollision(physicsObjects[PhysicsLayers::Static][i], physicsObjects[PhysicsLayers::Trigger][j], data)) {
+                        physicsObjects[PhysicsLayers::Trigger][j]->GetGameObject()->OnCollision(physicsObjects[PhysicsLayers::Static][i]->GetGameObject());
+                        physicsObjects[PhysicsLayers::Static][i]->GetGameObject()->OnCollision(physicsObjects[PhysicsLayers::Trigger][j]->GetGameObject());
+                    }
+                }
             }
         }
     }
