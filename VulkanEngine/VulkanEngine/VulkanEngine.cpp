@@ -2,6 +2,7 @@
 
 #include "VulkanManager.h"
 #include "DebugManager.h"
+#include "MeshManager.h"
 #include "EntityManager.h"
 #include "GameManager.h"
 #include "InputManager.h"
@@ -29,6 +30,7 @@ int main()
 	//Cleanup singletons
 	delete VulkanManager::GetInstance();
 	delete DebugManager::GetInstance();
+	delete MeshManager::GetInstance();
 	delete EntityManager::GetInstance();
 	delete GameManager::GetInstance();
 	delete InputManager::GetInstance();

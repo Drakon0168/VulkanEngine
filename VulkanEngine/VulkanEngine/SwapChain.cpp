@@ -3,6 +3,7 @@
 
 #include "VulkanManager.h"
 #include "DebugManager.h"
+#include "MeshManager.h"
 #include "EntityManager.h"
 #include "GameManager.h"
 #include "WindowManager.h"
@@ -122,6 +123,9 @@ void SwapChain::CreateSwapChainResources()
 	//Create Uniform Buffers
 	CreateUniformBuffers();
 
+	// Load Meshes
+	// MeshManager::GetInstance()->Init();
+
 	//Load Meshes and materials
 	EntityManager::GetInstance()->Init();
 
@@ -132,7 +136,8 @@ void SwapChain::CreateSwapChainResources()
 	EntityManager::GetInstance()->CreateMaterialResources();
 
 	//Setup Meshes and Materials
-	EntityManager::GetInstance()->CreateMeshResources();
+	// EntityManager::GetInstance()->CreateMeshResources();
+	MeshManager::GetInstance()->CreateMeshResources();
 
 	//Create the Command Buffers
 	CreateCommandBuffers();

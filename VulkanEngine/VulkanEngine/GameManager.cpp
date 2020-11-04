@@ -3,6 +3,7 @@
 
 #include "DebugManager.h"
 #include "EntityManager.h"
+#include "MeshManager.h"
 #include "InputManager.h"
 #include "Camera.h"
 
@@ -39,12 +40,12 @@ void GameManager::Init()
     lights.push_back(std::make_shared<Light>(glm::vec3(0.0f, 2.0f, -1.5f), glm::vec3(1.0f, 0.988f, 0.769f), 3.0f, 4.0f));
 
     //gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Model]));
-    gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Plane]));
-    gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Cube]));
-    gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Sphere]));
-    gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Sphere]));
-    gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Model]));
-    gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Skybox]));
+    gameObjects.push_back(std::make_shared<GameObject>(MeshManager::GetInstance()->GetMeshes()[MeshTypes::Plane]));
+    gameObjects.push_back(std::make_shared<GameObject>(MeshManager::GetInstance()->GetMeshes()[MeshTypes::Cube]));
+    gameObjects.push_back(std::make_shared<GameObject>(MeshManager::GetInstance()->GetMeshes()[MeshTypes::Sphere]));
+    gameObjects.push_back(std::make_shared<GameObject>(MeshManager::GetInstance()->GetMeshes()[MeshTypes::Sphere]));
+    gameObjects.push_back(std::make_shared<GameObject>(MeshManager::GetInstance()->GetMeshes()[MeshTypes::Model]));
+    gameObjects.push_back(std::make_shared<GameObject>(MeshManager::GetInstance()->GetMeshes()[MeshTypes::Skybox]));
     
     //Setup Plane
     gameObjects[0]->SetTransform(std::make_shared<Transform>());

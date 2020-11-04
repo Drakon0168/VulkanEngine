@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "EntityManager.h"
-
+#include "MeshManager.h"
 #include "DebugManager.h"
 #include "VulkanManager.h"
 #include "SwapChain.h"
@@ -40,7 +40,6 @@ void EntityManager::Init()
 {
     LoadMaterials();
 
-    LoadMeshes();
 
     int count = 0;
 
@@ -52,40 +51,17 @@ void EntityManager::Init()
     }
   
     //  Populate Mesh Lists
-    for (std::shared_ptr<Mesh> mesh : meshes) {
+    for (std::shared_ptr<Mesh> mesh : MeshManager::GetInstance()->GetMeshes()) {
         entities[mesh->GetMaterial()].push_back(mesh);
        
     }
+
     std::cout << count;
 }
 
 void EntityManager::LoadMeshes()
 {
-    meshes.resize(MeshTypes::MeshTypeCount);
-
-    meshes[MeshTypes::Plane] = std::make_shared<Mesh>(materials[0]);
-    meshes[MeshTypes::Plane]->GeneratePlane();
-
-    meshes[MeshTypes::Cube] = std::make_shared<Mesh>(materials[1]);
-    meshes[MeshTypes::Cube]->GenerateCube();
-    
-    meshes[MeshTypes::Sphere] = std::make_shared<Mesh>(materials[0]);
-    meshes[MeshTypes::Sphere]->GenerateSphere(50);
-    
-    meshes[MeshTypes::Model] = std::make_shared<Mesh>(materials[1]);
-    meshes[MeshTypes::Model]->LoadModel("models/room.obj");
-
-    meshes[MeshTypes::Skybox] = std::make_shared<Mesh>(materials[2]);
-    meshes[MeshTypes::Skybox]->GenerateCube();
-
-    meshes[MeshTypes::WireCube] = std::make_shared<Mesh>(materials[3]);
-    meshes[MeshTypes::WireCube]->GenerateCube();
-
-    meshes[MeshTypes::WireSphere] = std::make_shared<Mesh>(materials[3]);
-    meshes[MeshTypes::WireSphere]->GenerateSphere(10);
-
-    meshes[MeshTypes::Line] = std::make_shared<Mesh>(materials[3]);
-    meshes[MeshTypes::Line]->GenerateLine(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    // Code moved to MeshManager
 }
 
 void EntityManager::LoadMaterials()
@@ -125,7 +101,8 @@ void EntityManager::LoadMaterials()
 
 void EntityManager::Update()
 {
-    for (std::shared_ptr<Mesh> mesh : meshes) {
+    // or, just call a MeshManager Update? YES
+    for (std::shared_ptr<Mesh> mesh : MeshManager::GetInstance()->GetMeshes()) {
         if (mesh->GetActiveInstanceCount() > 0)
             mesh->UpdateInstanceBuffer();
     }

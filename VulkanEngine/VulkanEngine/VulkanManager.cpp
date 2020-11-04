@@ -6,6 +6,7 @@
 #include "WindowManager.h"
 #include "DebugManager.h"
 #include "EntityManager.h"
+#include "MeshManager.h"
 #include "PhysicsManager.h"
 #include "SwapChain.h"
 #include "Camera.h"
@@ -342,7 +343,7 @@ void VulkanManager::Cleanup()
 	SwapChain::GetInstance()->FullCleanup();
 
 	//Cleanup Meshes
-	EntityManager::GetInstance()->CleanupMeshes();
+	MeshManager::GetInstance()->CleanupMeshes();
 
 	//Cleanup Debug Manager
 	DebugManager::GetInstance()->Cleanup();
