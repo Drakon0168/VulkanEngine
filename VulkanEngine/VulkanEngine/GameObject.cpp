@@ -108,7 +108,7 @@ void GameObject::Despawn()
 
 void GameObject::OnCollision(GameObject* other)
 {
-	std::cout << name << " collided with " << other->GetName() << std::endl;
+	//std::cout << name << " collided with " << other->GetName() << std::endl;
 }
 
 #pragma endregion

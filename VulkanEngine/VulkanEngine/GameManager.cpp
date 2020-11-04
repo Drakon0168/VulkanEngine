@@ -64,7 +64,7 @@ void GameManager::Init()
     gameObjects[2]->SetName("FloatingCube");
 
     gameObjects[3]->SetTransform(std::make_shared<Transform>(glm::vec3(0.95f, 2.5f, -1.5f)));
-    gameObjects[3]->SetPhysicsObject(PhysicsLayers::Dynamic, ColliderTypes::ARBB);
+    gameObjects[3]->SetPhysicsObject();
     gameObjects[3]->SetName("DynamicCube");
 
     gameObjects[4]->SetTransform(std::make_shared<Transform>(glm::vec3(1.5f, 2.5f, 0.0f)));
@@ -160,18 +160,6 @@ void GameManager::Update()
 
     if (InputManager::GetInstance()->GetKeyPressed(Controls::Jump)) {
         gameObjects[2]->GetPhysicsObject()->ApplyForce(glm::vec3(0.0f, 5000.0f, 0.0f));
-
-        //Spawn Object Sample Code:
-        /*
-        std::shared_ptr<GameObject> newObject = std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Sphere]);
-        gameObjects.push_back(newObject);
-
-        newObject->SetTransform(std::make_shared<Transform>(glm::vec3(0.0f, 2.5f, 0.0f)));
-        newObject->SetPhysicsObject(std::make_shared<PhysicsObject>(newObject->GetTransform(), PhysicsLayers::Dynamic, ColliderTypes::Sphere, 1.0f, true, true));
-
-        newObject->Init();
-        newObject->Spawn();
-        */
     }
 
     //Update Game Objects
