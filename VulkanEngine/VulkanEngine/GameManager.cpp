@@ -7,6 +7,8 @@
 #include "InputManager.h"
 #include "Camera.h"
 
+#define MshMngr MeshManager::GetInstance()
+
 #pragma region Singleton
 
 GameManager* GameManager::instance = nullptr;
@@ -39,8 +41,9 @@ void GameManager::Init()
     lights.push_back(std::make_shared<Light>(glm::vec3(1.5f, 1.1f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), 5.0f));
     lights.push_back(std::make_shared<Light>(glm::vec3(0.0f, 2.0f, -1.5f), glm::vec3(1.0f, 0.988f, 0.769f), 3.0f, 4.0f));
 
-    //gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Model]));
-    gameObjects.push_back(std::make_shared<GameObject>(MeshManager::GetInstance()->GetMeshes()[MeshTypes::Plane]));
+    //gameObjects.push_back(std::make_shared<GameObject>(MeshManager::GetInstance()->GetMeshes()[MeshTypes::Model]));
+    // gameObjects.push_back(std::make_shared<GameObject>(MeshManager::GetInstance()->GetMeshes()[MeshTypes::Plane]));
+    gameObjects.push_back(MshMngr->MakeGameObject(MeshTypes::Plane));
     gameObjects.push_back(std::make_shared<GameObject>(MeshManager::GetInstance()->GetMeshes()[MeshTypes::Cube]));
     gameObjects.push_back(std::make_shared<GameObject>(MeshManager::GetInstance()->GetMeshes()[MeshTypes::Sphere]));
     gameObjects.push_back(std::make_shared<GameObject>(MeshManager::GetInstance()->GetMeshes()[MeshTypes::Sphere]));
@@ -77,10 +80,17 @@ void GameManager::Init()
     for (size_t i = 0; i < gameObjects.size(); i++) {
         gameObjects[i]->Spawn();
     }
+
+    // MeshManager::GetInstance()->DrawCube(glm::vec3(0.0f, 2.0f, 0.0f));
+    MeshManager::GetInstance()->DrawWireCube(glm::vec3(-1.0f, 2.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+    MeshManager::GetInstance()->DrawWireCube(glm::vec3(0.0f, 2.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    MeshManager::GetInstance()->DrawWireCube(glm::vec3(1.0f, 2.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 }
 
 void GameManager::Update()
 {
+    // MshMngr->ClearRenderList();
+    // MeshManager::GetInstance()->DrawWireCube(glm::vec3(1.0f, 2.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
     //Rotate Camera
     //  Toggle camera lock on right click
     if (InputManager::GetInstance()->GetKeyPressed(Controls::RightClick)) {

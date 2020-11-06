@@ -2,6 +2,7 @@
 #include "DebugManager.h"
 
 #include "EntityManager.h"
+#include "MeshManager.h"
 #include "InputManager.h"
 #include "VulkanManager.h"
 
@@ -60,9 +61,9 @@ void DebugManager::Init()
 {
 #ifdef DEBUG 
 	std::vector<std::shared_ptr<Mesh>> debugMeshes;
-	debugMeshes.push_back(EntityManager::GetInstance()->GetMeshes()[MeshTypes::WireSphere]);
-	debugMeshes.push_back(EntityManager::GetInstance()->GetMeshes()[MeshTypes::WireCube]);
-	debugMeshes.push_back(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Line]);
+	debugMeshes.push_back(MeshManager::GetInstance()->GetMeshes()[MeshTypes::WireSphere]);
+	debugMeshes.push_back(MeshManager::GetInstance()->GetMeshes()[MeshTypes::WireCube]);
+	debugMeshes.push_back(MeshManager::GetInstance()->GetMeshes()[MeshTypes::Line]);
 
 	for (int i = 0; i < debugMeshes.size(); i++) {
 		debugShapes.insert(std::pair<std::shared_ptr<Mesh>, std::vector<std::shared_ptr<DebugShape>>>(debugMeshes[i], std::vector<std::shared_ptr<DebugShape>>()));
@@ -180,7 +181,7 @@ void DebugManager::DrawWireSphere(glm::vec3 position, glm::vec3 color, float rad
 {
 	if (enableValidationLayers)
 	{
-		std::shared_ptr<Mesh> mesh = EntityManager::GetInstance()->GetMeshes()[MeshTypes::WireSphere];
+		std::shared_ptr<Mesh> mesh = MeshManager::GetInstance()->GetMeshes()[MeshTypes::WireSphere];
 
 		std::shared_ptr<DebugShape> shape = std::make_shared<DebugShape>();
 		shape->transform = std::make_shared<Transform>(position, glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)), glm::vec3(radius / 0.5f, radius / 0.5f, radius / 0.5f));
@@ -200,7 +201,7 @@ void DebugManager::DrawWireCube(glm::vec3 position, glm::vec3 color, glm::vec3 s
 {
 	if (enableValidationLayers)
 	{
-		std::shared_ptr<Mesh> mesh = EntityManager::GetInstance()->GetMeshes()[MeshTypes::WireCube];
+		std::shared_ptr<Mesh> mesh = MeshManager::GetInstance()->GetMeshes()[MeshTypes::WireCube];
 
 		std::shared_ptr<DebugShape> shape = std::make_shared<DebugShape>();
 		shape->transform = std::make_shared<Transform>(position, glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)), size);
@@ -220,7 +221,7 @@ void DebugManager::DrawLine(glm::vec3 position1, glm::vec3 position2, glm::vec3 
 {
 	if (enableValidationLayers)
 	{
-		std::shared_ptr<Mesh> mesh = EntityManager::GetInstance()->GetMeshes()[MeshTypes::Line];
+		std::shared_ptr<Mesh> mesh = MeshManager::GetInstance()->GetMeshes()[MeshTypes::Line];
 
 		std::shared_ptr<DebugShape> shape = std::make_shared<DebugShape>();
 		float length = glm::distance(position1, position2);

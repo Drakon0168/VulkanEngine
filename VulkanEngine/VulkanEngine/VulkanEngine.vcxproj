@@ -227,6 +227,7 @@
     <ClInclude Include="Light.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="MeshData.h" />
     <ClInclude Include="MeshManager.h" />
     <ClInclude Include="MeshTypes.h" />
     <ClInclude Include="pch.h" />
