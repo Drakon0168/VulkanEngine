@@ -58,29 +58,29 @@ DebugManager* DebugManager::GetInstance()
 
 void DebugManager::Init()
 {
-#ifdef DEBUG 
-	std::vector<std::shared_ptr<Mesh>> debugMeshes;
-	debugMeshes.push_back(EntityManager::GetInstance()->GetMeshes()[MeshTypes::WireSphere]);
-	debugMeshes.push_back(EntityManager::GetInstance()->GetMeshes()[MeshTypes::WireCube]);
-	debugMeshes.push_back(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Line]);
+	if (enableValidationLayers) {
+		std::vector<std::shared_ptr<Mesh>> debugMeshes;
+		debugMeshes.push_back(EntityManager::GetInstance()->GetMeshes()[MeshTypes::WireSphere]);
+		debugMeshes.push_back(EntityManager::GetInstance()->GetMeshes()[MeshTypes::WireCube]);
+		debugMeshes.push_back(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Line]);
 
-	for (int i = 0; i < debugMeshes.size(); i++) {
-		debugShapes.insert(std::pair<std::shared_ptr<Mesh>, std::vector<std::shared_ptr<DebugShape>>>(debugMeshes[i], std::vector<std::shared_ptr<DebugShape>>()));
-		instanceBuffers.insert(std::pair<std::shared_ptr<Mesh>, std::shared_ptr<Buffer>>(debugMeshes[i], nullptr));
-		instanceBufferDirty.insert(std::pair<std::shared_ptr<Mesh>, bool>(debugMeshes[i], true));
+		for (int i = 0; i < debugMeshes.size(); i++) {
+			debugShapes.insert(std::pair<std::shared_ptr<Mesh>, std::vector<std::shared_ptr<DebugShape>>>(debugMeshes[i], std::vector<std::shared_ptr<DebugShape>>()));
+			instanceBuffers.insert(std::pair<std::shared_ptr<Mesh>, std::shared_ptr<Buffer>>(debugMeshes[i], nullptr));
+			instanceBufferDirty.insert(std::pair<std::shared_ptr<Mesh>, bool>(debugMeshes[i], true));
+		}
 	}
-#endif
 }
 
 void DebugManager::Cleanup()
 {
-#ifdef DEBUG
-	for (std::pair<std::shared_ptr<Mesh>, std::shared_ptr<Buffer>> pair : instanceBuffers) {
-		if (pair.second != nullptr) {
-			pair.second->Cleanup();
+	if (enableValidationLayers) {
+		for (std::pair<std::shared_ptr<Mesh>, std::shared_ptr<Buffer>> pair : instanceBuffers) {
+			if (pair.second != nullptr) {
+				pair.second->Cleanup();
+			}
 		}
 	}
-#endif
 
 	if (enableValidationLayers) {
 		DestroyDebugUtilsMessengerEXT(VulkanManager::GetInstance()->GetVulkanInstance(), debugMessenger, nullptr);

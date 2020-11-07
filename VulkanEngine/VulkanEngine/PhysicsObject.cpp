@@ -269,7 +269,7 @@ void PhysicsObject::ApplyForce(glm::vec3 force, glm::vec3 point, bool applyMass)
 		ApplyTorque(glm::angleAxis(angularForce, axis), false);
 	}
 
-	acceleration += force;
+	acceleration += force - perpendicularForce;
 }
 
 void PhysicsObject::ApplyTorque(glm::quat torque, bool applyMass)

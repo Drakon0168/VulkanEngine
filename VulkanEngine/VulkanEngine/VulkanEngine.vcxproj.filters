@@ -277,9 +277,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="..\compile.bat">
-      <Filter>Resource Files\Shaders</Filter>
-    </CustomBuild>
     <ClInclude Include="TextureImages.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
