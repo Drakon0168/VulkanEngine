@@ -166,24 +166,24 @@ std::shared_ptr<GameObject> MeshManager::MakeGameObject(MeshTypes type)
 
 void MeshManager::DrawCube(glm::vec3 position)
 {
-    meshes[MeshTypes::Cube]->AddInstance(std::make_shared<Transform>(position));
+    meshes[MeshTypes::Cube]->AddInstance(std::make_shared<Transform>(position), glm::vec3(0.0f, 0.0f, 0.0f));
 }
 
 void MeshManager::DrawWireCube(glm::vec3 position, glm::vec3 color)
 {
-	std::shared_ptr<Mesh> mesh = meshes[MeshTypes::WireCube];
-
-	std::shared_ptr<MeshData> data = std::make_shared<MeshData>();
-	data->transform = std::make_shared<Transform>(position, glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)));
-	data->color = color;
-	data->meshID = mesh->AddInstance(data->transform);
-
-	AddMeshData(mesh, data);
-
-	if (instanceBuffers[mesh] == nullptr) {
-		CreateInstanceBuffer(mesh);
-	}
-    // meshes[MeshTypes::WireCube]->AddInstance(std::make_shared<Transform>(position));
+	// std::shared_ptr<Mesh> mesh = meshes[MeshTypes::WireCube];
+	// 
+	// std::shared_ptr<MeshData> data = std::make_shared<MeshData>();
+	// data->transform = std::make_shared<Transform>(position, glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)));
+	// data->color = color;
+	// data->meshID = mesh->AddInstance(data->transform);
+	// 
+	// AddMeshData(mesh, data);
+	// 
+	// if (instanceBuffers[mesh] == nullptr) {
+	// 	CreateInstanceBuffer(mesh);
+	// }
+    meshes[MeshTypes::WireCube]->AddInstance(std::make_shared<Transform>(position), color);
 }
 
 void MeshManager::AddCubeToRenderList(glm::mat4x4 model)

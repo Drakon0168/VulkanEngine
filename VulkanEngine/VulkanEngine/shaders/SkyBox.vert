@@ -21,6 +21,7 @@ layout(location = 3) in vec3 texCoord;
 
 //Instanced Data
 layout(location = 4) in mat4 model;
+layout(location = 8) in vec3 instancedColor;
 
 layout(location = 0) out vec3 position;
 layout(location = 1) out vec3 vertColor;

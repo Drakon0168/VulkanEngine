@@ -26,6 +26,7 @@ Mesh::Mesh(std::shared_ptr<Material> material, std::vector<Vertex> vertices, std
 	this->instanceBuffer = instanceBuffer;
 
 	activeInstanceCount = static_cast<uint32_t>(instances.size());
+	activeInstancedDataCount = static_cast<uint32_t>(instances.size());
 }
 
 #pragma endregion
@@ -42,7 +43,7 @@ void Mesh::Init()
 void Mesh::CreateInstanceBuffer()
 {
 	//Create buffer
-	VkDeviceSize bufferSize = sizeof(TransformData);
+	VkDeviceSize bufferSize = sizeof(InstancedData);
 	instanceBuffer = std::make_shared<Buffer>(VkBuffer(), VkDeviceMemory());
 	Buffer::CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, *instanceBuffer);
 
@@ -123,13 +124,28 @@ void Mesh::UpdateInstanceBuffer()
 		bufferData[i] = TransformData::LoadMat4(activeInstances[i]->GetModelMatrix());
 	}
 
+	// UPDATED INSTANCE BUFFER
+	std::vector<InstancedData> bufferColorData = GetActiveInstanceData();
+
+
+
+	// THIS IS CHANGED
 	//Ensure that buffer size is not 0
 	VkDeviceSize bufferSize;
-	if (bufferData.size() > 0) {
-		bufferSize = sizeof(TransformData) * bufferData.size();
+	 //if (bufferData.size() > 0) {
+	 //	bufferSize = sizeof(TransformData) * bufferData.size();
+	 //}
+	 //else {
+	 //	bufferSize = sizeof(TransformData);
+	 //	// return;
+	 //}
+
+	// UPDATED INSTANCE BUFFER STUFF
+	if (bufferColorData.size() > 0) {
+	 bufferSize = sizeof(InstancedData) * bufferColorData.size();
 	}
 	else {
-		bufferSize = sizeof(TransformData);
+		bufferSize = sizeof(InstancedData);
 		// return;
 	}
 
@@ -140,7 +156,8 @@ void Mesh::UpdateInstanceBuffer()
 	//Copy Data
 	void* data;
 	vkMapMemory(logicalDevice, instanceBuffer->GetBufferMemory(), 0, bufferSize, 0, &data);
-	memcpy(data, bufferData.data(), bufferSize);
+	memcpy(data, bufferColorData.data(), bufferSize);
+	// memcpy(data, bufferData.data(), bufferSize);
 	vkUnmapMemory(logicalDevice, instanceBuffer->GetBufferMemory());
 
 	instanceBufferDirty = false;
@@ -247,6 +264,7 @@ void Mesh::SetIndexBuffer(std::shared_ptr<Buffer> value, uint32_t offset)
 uint32_t Mesh::GetActiveInstanceCount()
 {
 	return activeInstanceCount;
+	// return activeInstancedDataCount;
 }
 
 std::vector<std::shared_ptr<Transform>> Mesh::GetActiveInstances()
@@ -254,9 +272,29 @@ std::vector<std::shared_ptr<Transform>> Mesh::GetActiveInstances()
 	std::vector<std::shared_ptr<Transform>> activeInstances;
 	activeInstanceCount = 0;
 
+
 	for (size_t i = 0; i < instances.size(); i++) {
 		if (instances[i] != nullptr) {
 			activeInstances.push_back(instances[i]);
+			activeInstanceCount++;
+		}
+	}
+
+	return activeInstances;
+}
+
+std::vector<InstancedData> Mesh::GetActiveInstanceData()
+{
+	std::vector<InstancedData> activeInstances;
+	activeInstanceCount = 0;
+
+
+	for (size_t i = 0; i < instances.size(); i++) {
+		if (instances[i] != nullptr) {
+			InstancedData temp;
+			temp.transformData = TransformData::LoadMat4(instances[i]->GetModelMatrix());
+			temp.color = instanceColors[i];
+			activeInstances.push_back(temp);
 			activeInstanceCount++;
 		}
 	}
@@ -288,10 +326,15 @@ void Mesh::SetMaterial(std::shared_ptr<Material> value)
 
 #pragma region Instances
 
-int Mesh::AddInstance(std::shared_ptr<Transform> value)
+int Mesh::AddInstance(std::shared_ptr<Transform> value, glm::vec3 color)
 {
 	activeInstanceCount++;
+	// activeInstancedDataCount++;
 	size_t freeIndex = -1;
+	
+	// std::shared_ptr<InstancedData> data = std::make_shared<InstancedData>();
+	// data->transformData = TransformData::LoadMat4(value->GetModelMatrix());
+	// data->color = color;
 
 	for (size_t i = 0; i < instances.size(); i++) {
 		if (instances[i] == nullptr) {
@@ -300,11 +343,24 @@ int Mesh::AddInstance(std::shared_ptr<Transform> value)
 		}
 	}
 
+	// INSTANCED DATA STRUCT
+	for (size_t i = 0; i < instancedData.size(); i++) {
+		if (instancedData[i] == nullptr) {
+			freeIndex = i;
+			break;
+		}
+	}
+
 	if (freeIndex == -1) {
 		instances.push_back(value);
-		return (instances.size() - 1);
+		// Add color data as well
+		instanceColors.push_back(color);
+		// instancedData.push_back(data);
+		return (instancedData.size() - 1);
 	}
 	instances[freeIndex] = value;
+	instanceColors[freeIndex] = color;
+	// instancedData[freeIndex] = data;
 	instanceBufferDirty = true;
 	return freeIndex;
 }
@@ -320,6 +376,7 @@ void Mesh::RemoveInstance(int instanceId)
 	}
 
 	activeInstanceCount--;
+	activeInstancedDataCount--;
 	instances[instanceId] = nullptr;
 	instanceBufferDirty = true;
 }

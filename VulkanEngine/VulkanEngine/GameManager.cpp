@@ -43,12 +43,14 @@ void GameManager::Init()
 
     //gameObjects.push_back(std::make_shared<GameObject>(MeshManager::GetInstance()->GetMeshes()[MeshTypes::Model]));
     // gameObjects.push_back(std::make_shared<GameObject>(MeshManager::GetInstance()->GetMeshes()[MeshTypes::Plane]));
+
     gameObjects.push_back(MshMngr->MakeGameObject(MeshTypes::Plane));
     gameObjects.push_back(std::make_shared<GameObject>(MeshManager::GetInstance()->GetMeshes()[MeshTypes::Cube]));
     gameObjects.push_back(std::make_shared<GameObject>(MeshManager::GetInstance()->GetMeshes()[MeshTypes::Sphere]));
     gameObjects.push_back(std::make_shared<GameObject>(MeshManager::GetInstance()->GetMeshes()[MeshTypes::Sphere]));
     gameObjects.push_back(std::make_shared<GameObject>(MeshManager::GetInstance()->GetMeshes()[MeshTypes::Model]));
     gameObjects.push_back(std::make_shared<GameObject>(MeshManager::GetInstance()->GetMeshes()[MeshTypes::Skybox]));
+    
     
     //Setup Plane
     gameObjects[0]->SetTransform(std::make_shared<Transform>());
@@ -85,6 +87,7 @@ void GameManager::Init()
     MeshManager::GetInstance()->DrawWireCube(glm::vec3(-1.0f, 2.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
     MeshManager::GetInstance()->DrawWireCube(glm::vec3(0.0f, 2.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     MeshManager::GetInstance()->DrawWireCube(glm::vec3(1.0f, 2.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    MshMngr->DrawCube(glm::vec3(1.0f, 1.0f, 1.0f));
 }
 
 void GameManager::Update()

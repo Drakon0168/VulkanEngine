@@ -69,29 +69,31 @@ void EntityManager::LoadMaterials()
     
     std::vector<std::vector<VkVertexInputAttributeDescription>> attributeDescriptions;
     attributeDescriptions.push_back(Vertex::GetAttributeDescriptions(0, 0));
-    attributeDescriptions.push_back(TransformData::GetAttributeDescriptions(attributeDescriptions[0].size(), 1));
+    attributeDescriptions.push_back(InstancedData::GetAttributeDescriptions(attributeDescriptions[0].size(), 1));
+    // attributeDescriptions.push_back(TransformData::GetAttributeDescriptions(attributeDescriptions[0].size(), 1));
 
     std::vector<VkVertexInputBindingDescription> bindingDescriptions;
     bindingDescriptions.push_back(Vertex::GetBindingDescription(0));
-    bindingDescriptions.push_back(TransformData::GetBindingDescription(bindingDescriptions.size()));
+    bindingDescriptions.push_back(InstancedData::GetBindingDescription(bindingDescriptions.size()));
+    // bindingDescriptions.push_back(TransformData::GetBindingDescription(bindingDescriptions.size()));
 
     materials.push_back(std::make_shared<Material>("shaders/vert.spv", "shaders/frag.spv", false, attributeDescriptions, bindingDescriptions, "textures/frog.jpg"));
     materials.push_back(std::make_shared<Material>("shaders/vert.spv", "shaders/frag.spv", false, attributeDescriptions, bindingDescriptions, "textures/room.png"));
     materials.push_back(std::make_shared<Material>("shaders/SkyVert.spv", "shaders/SkyFrag.spv", false, attributeDescriptions, bindingDescriptions, "textures/Skybox/", 'S'));
 
     //TODO: Find a better way of doing this that will work for multiple types of inputs
-    std::vector<VkVertexInputAttributeDescription> attributeDescription(1);
+    /*std::vector<VkVertexInputAttributeDescription> attributeDescription(1);
     attributeDescription[0].binding = 2;
     attributeDescription[0].location = 8;
     attributeDescription[0].format = VK_FORMAT_R32G32B32_SFLOAT;
     attributeDescription[0].offset = 0;
     attributeDescriptions.push_back(attributeDescription);
-
+    
     VkVertexInputBindingDescription bindingDescription = {};
     bindingDescription.binding = 2;
     bindingDescription.stride = sizeof(glm::vec3);
     bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_INSTANCE;
-    bindingDescriptions.push_back(bindingDescription);
+    bindingDescriptions.push_back(bindingDescription);*/
     materials.push_back(std::make_shared<Material>("shaders/DebugVert.spv", "shaders/DebugFrag.spv", true, attributeDescriptions, bindingDescriptions, "textures/room.png"));
 }
 
@@ -104,7 +106,8 @@ void EntityManager::Update()
     // or, just call a MeshManager Update? YES
     MeshManager::GetInstance()->Update();
     for (std::shared_ptr<Mesh> mesh : MeshManager::GetInstance()->GetMeshes()) {
-        if (mesh->GetActiveInstanceCount() > 0)
+        int temp = mesh->GetActiveInstanceCount();
+        if (temp > 0)
             mesh->UpdateInstanceBuffer();
     }
 }
