@@ -122,7 +122,7 @@ void Material::CreateGraphicsPipeline()
 
 	if (wireframe) {
 		rasterizerCreateInfo.polygonMode = VK_POLYGON_MODE_LINE;
-		rasterizerCreateInfo.lineWidth = 1.0f;
+		rasterizerCreateInfo.lineWidth = 2.0f;
 		rasterizerCreateInfo.cullMode = VK_CULL_MODE_NONE;
 	}
 	else {
@@ -187,18 +187,15 @@ void Material::CreateGraphicsPipeline()
 	depthStencilCreateInfo.front = {};
 	depthStencilCreateInfo.back = {};
 
-	/*
 	//Setup Dynamic states
-	VkDynamicState dynamicStates[] = {
-		VK_DYNAMIC_STATE_VIEWPORT,
+	/*VkDynamicState dynamicStates[] = {
 		VK_DYNAMIC_STATE_LINE_WIDTH
 	};
 
 	VkPipelineDynamicStateCreateInfo dynamicStateCreateInfo = {};
 	dynamicStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
-	dynamicStateCreateInfo.dynamicStateCount = 2;
-	dynamicStateCreateInfo.pDynamicStates = dynamicStates;
-	*/
+	dynamicStateCreateInfo.dynamicStateCount = 1;
+	dynamicStateCreateInfo.pDynamicStates = dynamicStates;*/
 
 	//Setup Pipeline Layout
 	VkPipelineLayoutCreateInfo pipelineLayoutCreateInfo = {};
