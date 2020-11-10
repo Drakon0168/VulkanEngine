@@ -119,7 +119,7 @@ public:
 	/// <param name="position2">The position to end the line at</param>
 	/// <param name="color">The color to draw the line in</param>
 	/// <param name="duration">The duration to draw the line for, -1 to draw indefinetly, 0 for only the current frame</param>
-	void DrawLine(glm::vec3 position1, glm::vec3 position2, glm::vec3 color, float duration = -1.0f);
+	void DrawLine(Transform* center, glm::vec3 position1, glm::vec3 position2, glm::vec3 color, float duration = -1.0f);
 
 	/// <summary>
 	/// Removes a shape from the list of debug shapes

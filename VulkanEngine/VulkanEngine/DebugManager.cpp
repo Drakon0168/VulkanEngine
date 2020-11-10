@@ -113,7 +113,7 @@ std::map<std::shared_ptr<Mesh>, std::shared_ptr<Buffer>> DebugManager::GetInstan
 
 bool DebugManager::GetDrawHandles()
 {
-	return drawHandles;
+	return MeshManager::GetInstance()->GetDrawHandles();
 }
 
 #pragma endregion
@@ -217,11 +217,12 @@ void DebugManager::DrawWireCube(glm::vec3 position, glm::vec3 color, glm::vec3 s
 	}
 }
 
-void DebugManager::DrawLine(glm::vec3 position1, glm::vec3 position2, glm::vec3 color, float duration)
+void DebugManager::DrawLine(Transform* center, glm::vec3 position1, glm::vec3 position2, glm::vec3 color, float duration)
 {
 	if (enableValidationLayers)
 	{
-		std::shared_ptr<Mesh> mesh = MeshManager::GetInstance()->GetMeshes()[MeshTypes::Line];
+		MeshManager::GetInstance()->MeshManager::DrawDebugLine(center, position1, position2, color);
+		/*std::shared_ptr<Mesh> mesh = MeshManager::GetInstance()->GetMeshes()[MeshTypes::Line];
 
 		std::shared_ptr<DebugShape> shape = std::make_shared<DebugShape>();
 		float length = glm::distance(position1, position2);
@@ -246,7 +247,7 @@ void DebugManager::DrawLine(glm::vec3 position1, glm::vec3 position2, glm::vec3 
 
 		if (instanceBuffers[mesh] == nullptr) {
 			CreateInstanceBuffer(mesh);
-		}
+		}*/
 	}
 }
 
@@ -286,7 +287,8 @@ void DebugManager::Update()
 	if (enableValidationLayers)
 	{
 		if (InputManager::GetInstance()->GetKeyPressed(Controls::ToggleDebug)) {
-			drawHandles = !drawHandles;
+			// drawHandles = !drawHandles;
+			MeshManager::GetInstance()->ToggleDebug();
 		}
 
 		for (std::pair<std::shared_ptr<Mesh>, std::vector<std::shared_ptr<DebugShape>>> pair : debugShapes) {
