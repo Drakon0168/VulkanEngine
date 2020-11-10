@@ -98,6 +98,11 @@ void GameManager::Update()
     //  Toggle camera lock on right click
     if (InputManager::GetInstance()->GetKeyPressed(Controls::RightClick)) {
         lockCamera = !lockCamera; 
+        gameObjects[0]->Despawn();
+    }
+    if (InputManager::GetInstance()->GetKeyPressed(Controls::LeftClick)) {
+        lockCamera = !lockCamera;
+        gameObjects[0]->Spawn();
     }
 
     //  Rotate camera if not locked

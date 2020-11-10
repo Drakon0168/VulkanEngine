@@ -344,19 +344,19 @@ int Mesh::AddInstance(std::shared_ptr<Transform> value, glm::vec3 color)
 	}
 
 	// INSTANCED DATA STRUCT
-	for (size_t i = 0; i < instancedData.size(); i++) {
+	/*for (size_t i = 0; i < instancedData.size(); i++) {
 		if (instancedData[i] == nullptr) {
 			freeIndex = i;
 			break;
 		}
-	}
+	}*/
 
 	if (freeIndex == -1) {
 		instances.push_back(value);
 		// Add color data as well
 		instanceColors.push_back(color);
 		// instancedData.push_back(data);
-		return (instancedData.size() - 1);
+		return (instances.size() - 1);
 	}
 	instances[freeIndex] = value;
 	instanceColors[freeIndex] = color;
@@ -376,8 +376,10 @@ void Mesh::RemoveInstance(int instanceId)
 	}
 
 	activeInstanceCount--;
-	activeInstancedDataCount--;
+	// activeInstancedDataCount--;
 	instances[instanceId] = nullptr;
+	// We technically don't need to set the instanceColor at this index to anything bc
+	// once a new instance is added to instances, the instanceColor will be overridden.
 	instanceBufferDirty = true;
 }
 
