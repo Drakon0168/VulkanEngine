@@ -28,6 +28,11 @@ private:
 	std::map<std::shared_ptr<Mesh>, std::vector<std::shared_ptr<MeshData>>> meshData;
 	std::vector<int> meshInstances;
 
+	bool prevDrawingDebug = false;
+	bool drawingDebug = false;
+
+	std::map<std::shared_ptr<Mesh>, std::vector<int>> debugMeshInstances;
+
 public:
 #pragma region singleton
 	static MeshManager* GetInstance();
@@ -47,6 +52,10 @@ public:
 	/// </summary>
 	/// <returns>The instance buffer map</returns>
 	std::map<std::shared_ptr<Mesh>, std::shared_ptr<Buffer>> GetInstanceBuffers();
+
+	void ToggleDebug();
+	bool GetDrawHandles();
+	
 #pragma endregion
 
 #pragma region buffer handling
@@ -90,7 +99,14 @@ public:
 	void DrawCube(glm::vec3 position);
 	void DrawWireCube(glm::vec3 position = glm::vec3(0), glm::vec3 color = glm::vec3(1));
 	void AddCubeToRenderList(glm::mat4x4 model);
+	// THIS WAS A TEST, DIDN'T REALLY WORK
 	void ClearRenderList();
+
+	// Debug line drawing
+	void DrawDebugWireSphere(glm::vec3 position, glm::vec3 color, float radius = 1.0f);
+	void DrawDebugWireCube(glm::vec3 position, glm::vec3 color, glm::vec3 size = glm::vec3(1.0f, 1.0f, 1.0f));
+	void DrawDebugLine(Transform* center, glm::vec3 position1, glm::vec3 position2, glm::vec3 color);
+	void RemoveDebugShapes();
 #pragma endregion
 
 #pragma region cleanup
