@@ -133,7 +133,7 @@
       <Filter>Source Files\Manager</Filter>
     </ClCompile>
     <ClCompile Include="MeshManager.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -242,14 +242,14 @@
     <ClInclude Include="DebugShape.h">
       <Filter>Header Files\Structs</Filter>
     </ClInclude>
-    <ClInclude Include="MeshManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MeshData.h">
       <Filter>Header Files\Structs</Filter>
     </ClInclude>
     <ClInclude Include="InstancedData.h">
       <Filter>Header Files\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshManager.h">
+      <Filter>Header Files\Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

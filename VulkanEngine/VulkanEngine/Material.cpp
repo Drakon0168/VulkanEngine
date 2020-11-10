@@ -400,6 +400,7 @@ void Material::Cleanup()
 {
 	
 	tImage->Cleanup();
+	delete tImage;
 
 	vkDestroyPipeline(logicalDevice, pipeline, nullptr);
 	vkDestroyPipelineLayout(logicalDevice, pipelineLayout, nullptr);

@@ -301,6 +301,7 @@ void VulkanManager::CreateLogicalDevice()
 	//Set used device features
 	VkPhysicalDeviceFeatures deviceFeatures = {};
 	deviceFeatures.samplerAnisotropy = VK_TRUE;
+	deviceFeatures.fillModeNonSolid = VK_TRUE;
 	//Setup Logical Device
 	VkDeviceCreateInfo createInfo = {};
 	createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
@@ -341,9 +342,11 @@ void VulkanManager::Cleanup()
 {
 	//Cleanup Swap Chain and associated resources
 	SwapChain::GetInstance()->FullCleanup();
+	delete SwapChain::GetInstance();
 
 	//Cleanup Meshes
 	MeshManager::GetInstance()->CleanupMeshes();
+	delete MeshManager::GetInstance();
 
 	//Cleanup Debug Manager
 	DebugManager::GetInstance()->Cleanup();
