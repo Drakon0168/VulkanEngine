@@ -102,7 +102,7 @@ void PhysicsManager::DetectCollisions()
 
 bool PhysicsManager::CheckCollision(std::shared_ptr<PhysicsObject> physicsObject1, std::shared_ptr<PhysicsObject> physicsObject2)
 {
-    if (!physicsObject1->GetAlive() || !physicsObject2->GetAlive()) return false;
+    // if (!physicsObject1->GetAlive() || !physicsObject2->GetAlive()) return false;
     //TODO: Change this to use colliders rather than a radius check
     glm::vec3 direction = physicsObject1->GetTransform()->GetPosition() - physicsObject2->GetTransform()->GetPosition();
     float distance = direction.x * direction.x + direction.y * direction.y + direction.z * direction.z;
