@@ -207,7 +207,7 @@ public:
 	/// </summary>
 	/// <param name="value">The transform to add</param>
 	/// <returns>The instance ID of the instance that was created</returns>
-	int AddInstance(std::shared_ptr<Transform> value, glm::vec3 color = glm::vec3(1.0f));
+	int AddInstance(std::shared_ptr<Transform> value, glm::vec3 color = glm::vec3(0.0f));
 
 	/// <summary>
 	/// Removes the specified instance from the instance list
