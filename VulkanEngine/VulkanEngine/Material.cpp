@@ -123,15 +123,17 @@ void Material::CreateGraphicsPipeline()
 	if (wireframe) {
 		rasterizerCreateInfo.polygonMode = VK_POLYGON_MODE_LINE;
 		rasterizerCreateInfo.lineWidth = 1.0f;
+		rasterizerCreateInfo.cullMode = VK_CULL_MODE_NONE;
 	}
 	else {
 		rasterizerCreateInfo.polygonMode = VK_POLYGON_MODE_FILL;
 		rasterizerCreateInfo.lineWidth = 1.0f;
+
+		rasterizerCreateInfo.cullMode = VK_CULL_MODE_BACK_BIT;
+		if (type == 'S')
+			rasterizerCreateInfo.cullMode = VK_CULL_MODE_FRONT_BIT;
 	}
 
-	rasterizerCreateInfo.cullMode = VK_CULL_MODE_BACK_BIT;
-	if (type == 'S')
-		rasterizerCreateInfo.cullMode = VK_CULL_MODE_FRONT_BIT;
 	// rasterizerCreateInfo.cullMode = VK_CULL_MODE_BACK_BIT;
 	rasterizerCreateInfo.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
 	rasterizerCreateInfo.depthBiasEnable = VK_FALSE;
