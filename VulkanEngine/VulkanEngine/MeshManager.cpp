@@ -25,10 +25,15 @@ void MeshManager::Init()
 void MeshManager::Update()
 {
 	for (std::pair<std::shared_ptr<Mesh>, std::vector<std::shared_ptr<MeshData>>> pair : meshData) {
-		if (instanceBuffers[pair.first] != nullptr) {
+		/*if (instanceBuffers[pair.first] != nullptr) {
 			UpdateInstanceBuffer(pair.first);
+		}*/
+		for (int i = 0; i < pair.second.size(); i++)
+		{
+			pair.second[i]->transform->SetPosition(pair.second[i]->parent->GetPosition());
 		}
 	}
+	prevDrawingDebug = drawingDebug;
 }
 
 std::vector<std::shared_ptr<Mesh>> MeshManager::GetMeshes()
@@ -39,6 +44,20 @@ std::vector<std::shared_ptr<Mesh>> MeshManager::GetMeshes()
 std::map<std::shared_ptr<Mesh>, std::shared_ptr<Buffer>> MeshManager::GetInstanceBuffers()
 {
     return instanceBuffers;
+}
+
+void MeshManager::ToggleDebug()
+{
+	drawingDebug = !drawingDebug;
+	if (drawingDebug == false)
+	{
+		RemoveDebugShapes();
+	}
+}
+
+bool MeshManager::GetDrawHandles()
+{
+	return drawingDebug && !prevDrawingDebug;
 }
 
 #pragma region buffer handling
@@ -205,6 +224,73 @@ void MeshManager::ClearRenderList()
 		// 	UpdateInstanceBuffer(pair.first);
 		// }
 	}
+}
+
+void MeshManager::DrawDebugWireSphere(glm::vec3 position, glm::vec3 color, float radius)
+{
+	std::shared_ptr<Mesh> mesh = meshes[MeshTypes::WireSphere];
+	debugMeshInstances[mesh].push_back(
+		mesh->AddInstance(
+		std::make_shared<Transform>(
+			position, glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)), glm::vec3(radius / 0.5f, radius / 0.5f, radius / 0.5f)), 
+			color));
+
+
+}
+
+void MeshManager::DrawDebugWireCube(glm::vec3 position, glm::vec3 color, glm::vec3 size)
+{
+	std::shared_ptr<Mesh> mesh = meshes[MeshTypes::WireCube];
+
+	debugMeshInstances[mesh].push_back(
+		mesh->AddInstance(
+			std::make_shared<Transform>(position, glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)), size),
+			color));
+
+}
+
+void MeshManager::DrawDebugLine(Transform* center, glm::vec3 position1, glm::vec3 position2, glm::vec3 color)
+{
+	std::shared_ptr<Mesh> mesh = meshes[MeshTypes::Line];
+
+	glm::vec3 offset = center->GetPosition();
+	position1 += offset;
+	position2 += offset;
+	float length = glm::distance(position1, position2);
+	glm::vec3 direction = (position1 - position2) / length;
+	glm::quat orientation;
+	if (direction == glm::vec3(0.0f, 1.0f, 0.0f)) {
+		orientation = glm::angleAxis((3.14f / 2.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	}
+	else if (direction == glm::vec3(0.0f, -1.0f, 0.0f)) {
+		orientation = glm::angleAxis((-3.14f / 2.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	}
+	else {
+		orientation = glm::quatLookAt(direction, glm::vec3(0.0f, 1.0f, 0.0f));
+	}
+
+	std::shared_ptr<MeshData> temp = std::make_shared<MeshData>();
+	temp->transform = std::make_shared<Transform>(position1, orientation, glm::vec3(1.0f, 1.0f, 1.0f) * length);
+	temp->parent = center;
+	temp->meshID = mesh->AddInstance(temp->transform,color);
+	debugMeshInstances[mesh].push_back(temp->meshID);
+	meshData[mesh].push_back(temp);
+
+}
+
+
+
+void MeshManager::RemoveDebugShapes()
+{
+	for (std::pair<std::shared_ptr<Mesh>, std::vector<int>> pair : debugMeshInstances)
+	{
+		for (int i = 0; i < pair.second.size(); i++)
+		{
+			pair.first->RemoveInstance(pair.second[i]);
+		}
+		pair.second.clear();
+	}
+	debugMeshInstances.clear();
 }
 
 void MeshManager::CleanupMeshes()
