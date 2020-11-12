@@ -121,9 +121,9 @@ void PhysicsObject::Update()
 void PhysicsObject::DrawHandles()
 {
 	//Draw velocity
-	DebugInstance->DrawLine(transform.get(), glm::vec3(0), velocity, glm::vec3(1.0f, 1.0f, 0.0f), 0.0f);
+	DebugInstance->DrawLine(transform->GetPosition(), transform->GetPosition() + velocity, glm::vec3(1.0f, 1.0f, 0.0f), 0.0f);
 	//Draw acceleration
-	DebugInstance->DrawLine(transform.get(), velocity, velocity + acceleration, glm::vec3(1.0f, 0.0f, 0.0f), 0.0f);
+	DebugInstance->DrawLine(transform->GetPosition() + velocity, transform->GetPosition() + velocity + acceleration, glm::vec3(1.0f, 0.0f, 0.0f), 0.0f);
 
 	//TODO: Draw collider when this is merged with Physics Branch
 
