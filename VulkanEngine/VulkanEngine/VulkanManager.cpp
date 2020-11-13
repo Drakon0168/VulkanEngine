@@ -421,10 +421,9 @@ void VulkanManager::Update()
 
 	GameManager::GetInstance()->Update();
 
-	DebugManager::GetInstance()->Update();
-
 	PhysicsManager::GetInstance()->Update();
 
+	DebugManager::GetInstance()->Update();
 
 	EntityManager::GetInstance()->Update();
 	

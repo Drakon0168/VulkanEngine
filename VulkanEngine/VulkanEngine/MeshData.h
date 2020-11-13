@@ -6,7 +6,6 @@
 struct MeshData {
 public:
 	std::shared_ptr<Transform> transform;
-	Transform* parent;
 	glm::vec3 color;
 	// float duration;
 	int meshID;

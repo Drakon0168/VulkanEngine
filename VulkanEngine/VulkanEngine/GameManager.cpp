@@ -84,10 +84,10 @@ void GameManager::Init()
     }
 
     // MeshManager::GetInstance()->DrawCube(glm::vec3(0.0f, 2.0f, 0.0f));
-    // MeshManager::GetInstance()->DrawWireCube(glm::vec3(-1.0f, 2.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-    // MeshManager::GetInstance()->DrawWireCube(glm::vec3(0.0f, 2.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-    // MeshManager::GetInstance()->DrawWireCube(glm::vec3(1.0f, 2.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-    // MshMngr->DrawCube(glm::vec3(1.0f, 1.0f, 1.0f));
+    MeshManager::GetInstance()->DrawWireCube(glm::vec3(-1.0f, 2.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+    MeshManager::GetInstance()->DrawWireCube(glm::vec3(0.0f, 2.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    MeshManager::GetInstance()->DrawWireCube(glm::vec3(1.0f, 2.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    MshMngr->DrawCube(glm::vec3(1.0f, 1.0f, 1.0f));
 }
 
 void GameManager::Update()
@@ -98,6 +98,11 @@ void GameManager::Update()
     //  Toggle camera lock on right click
     if (InputManager::GetInstance()->GetKeyPressed(Controls::RightClick)) {
         lockCamera = !lockCamera; 
+        gameObjects[0]->Despawn();
+    }
+    if (InputManager::GetInstance()->GetKeyPressed(Controls::LeftClick)) {
+        lockCamera = !lockCamera;
+        gameObjects[0]->Spawn();
     }
 
     //  Rotate camera if not locked
