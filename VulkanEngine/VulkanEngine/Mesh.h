@@ -2,7 +2,6 @@
 
 #include "pch.h"
 #include "Vertex.h"
-#include "InstancedData.h"
 #include "Transform.h"
 #include "Material.h"
 #include "Buffer.h"
@@ -23,15 +22,11 @@ private:
 
 	//Instances
 	std::vector<std::shared_ptr<Transform>> instances;
-	std::vector<glm::vec3> instanceColors;
 	uint32_t activeInstanceCount;
 	std::shared_ptr<Buffer> instanceBuffer;
 
 	//Material
 	std::shared_ptr<Material> material;
-
-	std::vector<std::shared_ptr<InstancedData>> instancedData;
-	uint32_t activeInstancedDataCount;
 
 
 	bool instanceBufferDirty = true;
@@ -170,11 +165,6 @@ public:
 	std::vector<std::shared_ptr<Transform>> GetActiveInstances();
 
 	/// <summary>
-	/// Returns a std::vector of all of the active instances of this mesh
-	/// </summary>
-	std::vector<InstancedData> GetActiveInstanceData();
-
-	/// <summary>
 	/// Returns the instance buffer used by this mesh
 	/// </summary>
 	/// <returns>The mesh's instance buffer</returns>
@@ -207,7 +197,7 @@ public:
 	/// </summary>
 	/// <param name="value">The transform to add</param>
 	/// <returns>The instance ID of the instance that was created</returns>
-	int AddInstance(std::shared_ptr<Transform> value, glm::vec3 color = glm::vec3(0.0f));
+	int AddInstance(std::shared_ptr<Transform> value);
 
 	/// <summary>
 	/// Removes the specified instance from the instance list

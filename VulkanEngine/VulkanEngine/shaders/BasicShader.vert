@@ -21,7 +21,6 @@ layout(location = 2) in vec3 inNormal;
 layout(location = 3) in vec3 texCoord;
 //Instanced Data
 layout(location = 4) in mat4 model;
-layout(location = 8) in vec3 instancedColor;
 
 layout(location = 0) out vec3 position;
 layout(location = 1) out vec3 vertColor;
@@ -42,9 +41,7 @@ void main(){
 
 	//Pass variables through to fragment shader
 	lights = ubo.lights;
-	// Use of instanced color. Additive so it applies tint
-	// clamping it reduces brightness (so color is never > 1)
-	vertColor = clamp((inColor + instancedColor),0,1);
+	vertColor = inColor;
 	normal = inNormal;
 	uv = texCoord.xy;
 	cameraPosition = ubo.cameraPosition;

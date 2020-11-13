@@ -48,7 +48,6 @@ void GameManager::Init()
     gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Model]));
     gameObjects.push_back(std::make_shared<GameObject>(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Skybox]));
     
-    
     //Setup Plane
     gameObjects[0]->SetTransform(std::make_shared<Transform>());
     gameObjects[0]->GetTransform()->SetScale(glm::vec3(5.0f, 1.0f, 5.0f));
