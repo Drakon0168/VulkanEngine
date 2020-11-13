@@ -167,9 +167,12 @@ void EntityManager::Draw(uint32_t imageIndex, VkCommandBuffer* commandBuffer)
                 //Add the color instance buffer only for the debug shapes
                 VkBuffer colorBuffer[1];
 <<<<<<< HEAD
+<<<<<<< HEAD
                 if (MeshManager::GetInstance()->GetInstanceBuffers().count(mesh) != 0) {
                      colorBuffer[0] = MeshManager::GetInstance()->GetInstanceBuffers()[mesh]->GetBuffer();
 =======
+=======
+>>>>>>> parent of 9f9f3af... Draw handles now working with Mesh Manager
                 if (DebugManager::GetInstance()->GetInstanceBuffers().count(mesh) != 0) {
                      colorBuffer[0] = DebugManager::GetInstance()->GetInstanceBuffers()[mesh]->GetBuffer();
 >>>>>>> parent of 9f9f3af... Draw handles now working with Mesh Manager
