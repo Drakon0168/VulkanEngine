@@ -60,9 +60,9 @@ void DebugManager::Init()
 {
 #ifdef DEBUG 
 	std::vector<std::shared_ptr<Mesh>> debugMeshes;
-	debugMeshes.push_back(MeshManager::GetInstance()->GetMeshes()[MeshTypes::WireSphere]);
-	debugMeshes.push_back(MeshManager::GetInstance()->GetMeshes()[MeshTypes::WireCube]);
-	debugMeshes.push_back(MeshManager::GetInstance()->GetMeshes()[MeshTypes::Line]);
+	debugMeshes.push_back(EntityManager::GetInstance()->GetMeshes()[MeshTypes::WireSphere]);
+	debugMeshes.push_back(EntityManager::GetInstance()->GetMeshes()[MeshTypes::WireCube]);
+	debugMeshes.push_back(EntityManager::GetInstance()->GetMeshes()[MeshTypes::Line]);
 
 	for (int i = 0; i < debugMeshes.size(); i++) {
 		debugShapes.insert(std::pair<std::shared_ptr<Mesh>, std::vector<std::shared_ptr<DebugShape>>>(debugMeshes[i], std::vector<std::shared_ptr<DebugShape>>()));
