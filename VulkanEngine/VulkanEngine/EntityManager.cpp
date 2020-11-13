@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "EntityManager.h"
-#include "MeshManager.h"
+
 #include "DebugManager.h"
 #include "VulkanManager.h"
 #include "SwapChain.h"
@@ -40,6 +40,7 @@ void EntityManager::Init()
 {
     LoadMaterials();
 
+    LoadMeshes();
 
     int count = 0;
 
@@ -51,17 +52,40 @@ void EntityManager::Init()
     }
   
     //  Populate Mesh Lists
-    for (std::shared_ptr<Mesh> mesh : MeshManager::GetInstance()->GetMeshes()) {
+    for (std::shared_ptr<Mesh> mesh : meshes) {
         entities[mesh->GetMaterial()].push_back(mesh);
        
     }
-
     std::cout << count;
 }
 
 void EntityManager::LoadMeshes()
 {
-    // Code moved to MeshManager
+    meshes.resize(MeshTypes::MeshTypeCount);
+
+    meshes[MeshTypes::Plane] = std::make_shared<Mesh>(materials[0]);
+    meshes[MeshTypes::Plane]->GeneratePlane();
+
+    meshes[MeshTypes::Cube] = std::make_shared<Mesh>(materials[1]);
+    meshes[MeshTypes::Cube]->GenerateCube();
+    
+    meshes[MeshTypes::Sphere] = std::make_shared<Mesh>(materials[0]);
+    meshes[MeshTypes::Sphere]->GenerateSphere(50);
+    
+    meshes[MeshTypes::Model] = std::make_shared<Mesh>(materials[1]);
+    meshes[MeshTypes::Model]->LoadModel("models/room.obj");
+
+    meshes[MeshTypes::Skybox] = std::make_shared<Mesh>(materials[2]);
+    meshes[MeshTypes::Skybox]->GenerateCube();
+
+    meshes[MeshTypes::WireCube] = std::make_shared<Mesh>(materials[3]);
+    meshes[MeshTypes::WireCube]->GenerateCube();
+
+    meshes[MeshTypes::WireSphere] = std::make_shared<Mesh>(materials[3]);
+    meshes[MeshTypes::WireSphere]->GenerateSphere(10);
+
+    meshes[MeshTypes::Line] = std::make_shared<Mesh>(materials[3]);
+    meshes[MeshTypes::Line]->GenerateLine(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 }
 
 void EntityManager::LoadMaterials()
@@ -104,11 +128,8 @@ void EntityManager::LoadMaterials()
 
 void EntityManager::Update()
 {
-    // or, just call a MeshManager Update? YES
-    MeshManager::GetInstance()->Update();
-    for (std::shared_ptr<Mesh> mesh : MeshManager::GetInstance()->GetMeshes()) {
-        int temp = mesh->GetActiveInstanceCount();
-        if (temp > 0)
+    for (std::shared_ptr<Mesh> mesh : meshes) {
+        if (mesh->GetActiveInstanceCount() > 0)
             mesh->UpdateInstanceBuffer();
     }
 }
@@ -166,16 +187,8 @@ void EntityManager::Draw(uint32_t imageIndex, VkCommandBuffer* commandBuffer)
 
                 //Add the color instance buffer only for the debug shapes
                 VkBuffer colorBuffer[1];
-<<<<<<< HEAD
-<<<<<<< HEAD
-                if (MeshManager::GetInstance()->GetInstanceBuffers().count(mesh) != 0) {
-                     colorBuffer[0] = MeshManager::GetInstance()->GetInstanceBuffers()[mesh]->GetBuffer();
-=======
-=======
->>>>>>> parent of 9f9f3af... Draw handles now working with Mesh Manager
                 if (DebugManager::GetInstance()->GetInstanceBuffers().count(mesh) != 0) {
                      colorBuffer[0] = DebugManager::GetInstance()->GetInstanceBuffers()[mesh]->GetBuffer();
->>>>>>> parent of 9f9f3af... Draw handles now working with Mesh Manager
                     vkCmdBindVertexBuffers(*commandBuffer, 2, 1, colorBuffer, offsets);
                 }
 
