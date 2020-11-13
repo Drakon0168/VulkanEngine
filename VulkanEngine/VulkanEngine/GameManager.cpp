@@ -79,12 +79,6 @@ void GameManager::Init()
     for (size_t i = 0; i < gameObjects.size(); i++) {
         gameObjects[i]->Spawn();
     }
-
-    // MeshManager::GetInstance()->DrawCube(glm::vec3(0.0f, 2.0f, 0.0f));
-    MeshManager::GetInstance()->DrawWireCube(glm::vec3(-1.0f, 2.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-    MeshManager::GetInstance()->DrawWireCube(glm::vec3(0.0f, 2.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-    MeshManager::GetInstance()->DrawWireCube(glm::vec3(1.0f, 2.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-    MshMngr->DrawCube(glm::vec3(1.0f, 1.0f, 1.0f));
 }
 
 void GameManager::Update()
