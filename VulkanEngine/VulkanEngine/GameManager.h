@@ -24,6 +24,13 @@ public:
 
 	std::vector<std::shared_ptr<Light>> GetLights();
 
+	/// <summary>
+	/// Finds a gameobject with the specified name
+	/// </summary>
+	/// <param name="name">The name of the object to find</param>
+	/// <returns>The first object created with that name or null if there is no object found with the specified name</returns>
+	std::shared_ptr<GameObject> GetObjectByName(std::string name);
+
 #pragma endregion
 
 #pragma region Game Loop

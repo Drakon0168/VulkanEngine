@@ -14,6 +14,8 @@ private:
 	std::shared_ptr<Mesh> mesh;
 	int instanceId;
 
+	std::string name;
+
 	bool active;
 
 public:
@@ -54,6 +56,18 @@ public:
 	/// </summary>
 	/// <returns>The gameobject's mesh</returns>
 	std::shared_ptr<Mesh> GetMesh();
+
+	/// <summary>
+	/// Returns the name of this gameobject
+	/// </summary>
+	/// <returns>The gameobject's name</returns>
+	std::string GetName();
+
+	/// <summary>
+	/// Sets the name of this gameobject used to display the object and access it in game manager
+	/// </summary>
+	/// <param name="value">The string to set the name to</param>
+	void SetName(std::string value);
 
 	/// <summary>
 	/// Returns whether this object is active (visible and interactable)

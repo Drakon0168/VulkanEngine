@@ -55,6 +55,16 @@ std::shared_ptr<Mesh> GameObject::GetMesh()
 	return mesh;
 }
 
+std::string GameObject::GetName()
+{
+	return name;
+}
+
+void GameObject::SetName(std::string value)
+{
+	name = value;
+}
+
 bool GameObject::GetActive()
 {
 	return active;
