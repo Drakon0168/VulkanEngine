@@ -24,7 +24,6 @@ private:
 	int ID;
 
 	std::shared_ptr<Collider> collider;
-	GameObject* gameObject;
 
 	// std::vector<size_t> dimensions;
 	size_t* dimensionArray;
@@ -129,18 +128,6 @@ public:
 	/// </summary>
 	/// <returns>The collider that is used by this physics object</returns>
 	std::shared_ptr<Collider> GetCollider();
-
-	/// <summary>
-	/// Returns the game object that this physics object is attached to
-	/// </summary>
-	/// <returns>The attached game object</returns>
-	GameObject* GetGameObject();
-
-	/// <summary>
-	/// Sets the attached gameobject
-	/// </summary>
-	/// <param name="value">The game object to attach to</param>
-	void SetGameObject(GameObject* value);
 
 	void AddDimension(unsigned int d);
 	void RemoveDimension(unsigned int d);

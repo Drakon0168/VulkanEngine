@@ -66,8 +66,6 @@ PhysicsObject::PhysicsObject(std::shared_ptr<Transform> transform, PhysicsLayers
 	collider->SetParentTransform(transform);
 	dimensionArray = nullptr;
 	dimensionCount = 0;
-
-	gameObject = nullptr;
 }
 
 #pragma endregion
@@ -158,16 +156,6 @@ void PhysicsObject::SetAlive(bool value)
 std::shared_ptr<Collider> PhysicsObject::GetCollider()
 {
 	return collider;
-}
-
-GameObject* PhysicsObject::GetGameObject()
-{
-	return gameObject;
-}
-
-void PhysicsObject::SetGameObject(GameObject* value)
-{
-	gameObject = value;
 }
 
 void PhysicsObject::AddDimension(unsigned int d)

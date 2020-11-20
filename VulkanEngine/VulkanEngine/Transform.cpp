@@ -150,9 +150,9 @@ void Transform::LookAt(glm::vec3 target, glm::vec3 up)
 
 void Transform::DrawHandles()
 {
-	// DebugManager::GetInstance()->DrawLine(position, position + orientation * glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), 0.0f);
-	// DebugManager::GetInstance()->DrawLine(position, position + orientation * glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 0.0f);
-	// DebugManager::GetInstance()->DrawLine(position, position + orientation * glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 1.0f), 0.0f);
+	DebugManager::GetInstance()->DrawLine(position, position + orientation * glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), 0.0f);
+	DebugManager::GetInstance()->DrawLine(position, position + orientation * glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 0.0f);
+	DebugManager::GetInstance()->DrawLine(position, position + orientation * glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 1.0f), 0.0f);
 }
 
 #pragma endregion

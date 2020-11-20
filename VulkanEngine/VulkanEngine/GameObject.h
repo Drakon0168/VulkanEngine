@@ -35,12 +35,6 @@ public:
 	std::shared_ptr<Transform> GetTransform();
 
 	/// <summary>
-	/// Sets the game object's transform to the specified value
-	/// </summary>
-	/// <param name="value">The transform to set to</param>
-	//void SetTransform(std::shared_ptr<Transform> value);
-
-	/// <summary>
 	/// Returns the physics object that is being used by this game object
 	/// </summary>
 	/// <returns>The game object's physics object</returns>

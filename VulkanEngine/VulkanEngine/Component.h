@@ -7,7 +7,7 @@ class GameObject;
 
 class Component
 {
-private:
+protected:
 	GameObject* gameObject;
 	int ID;
 
