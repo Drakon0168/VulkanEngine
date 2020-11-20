@@ -157,6 +157,21 @@ void Transform::DrawHandles()
 
 #pragma endregion
 
+#pragma region Component
+
+void Transform::Init()
+{
+}
+
+void Transform::Update()
+{
+	if (DebugManager::GetInstance()->GetDrawHandles()) {
+		DrawHandles();
+	}
+}
+
+#pragma endregion
+
 #pragma region Model Matrix
 
 void Transform::GenerateModelMatrix()

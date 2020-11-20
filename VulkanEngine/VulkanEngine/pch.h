@@ -38,6 +38,7 @@
 
 //Engine Classes
 #include "Time.h"
+#include "Component.h"
 
 //Structs
 #include "DebugShape.h"

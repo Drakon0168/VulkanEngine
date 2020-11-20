@@ -107,7 +107,7 @@ QueueFamilyIndices VulkanManager::FindQueueFamilies(VkPhysicalDevice physicalDev
 		}
 
 		//Exit the loop if we've found all of the necessary queue families
-		if (indices.IsConplete()) {
+		if (indices.IsComplete()) {
 			break;
 		}
 
@@ -300,6 +300,9 @@ void VulkanManager::CreateLogicalDevice()
 	//Set used device features
 	VkPhysicalDeviceFeatures deviceFeatures = {};
 	deviceFeatures.samplerAnisotropy = VK_TRUE;
+	deviceFeatures.fillModeNonSolid = VK_TRUE;
+	deviceFeatures.wideLines = VK_TRUE;
+
 	//Setup Logical Device
 	VkDeviceCreateInfo createInfo = {};
 	createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
@@ -340,8 +343,8 @@ void VulkanManager::Cleanup()
 {
 	//Cleanup Swap Chain and associated resources
 	SwapChain::GetInstance()->FullCleanup();
+	delete SwapChain::GetInstance();
 
-	//Cleanup Meshes
 	EntityManager::GetInstance()->CleanupMeshes();
 
 	//Cleanup Debug Manager
@@ -538,9 +541,13 @@ bool VulkanManager::IsDeviceSuitable(VkPhysicalDevice physicalDevice, VkPhysical
 		return false;
 	}
 
+	if (!deviceFeatures.wideLines) {
+		return false;
+	}
+
 	//Device cannot process graphics commands
 	QueueFamilyIndices queueFamilies = FindQueueFamilies(physicalDevice);
-	if (!queueFamilies.IsConplete()) {
+	if (!queueFamilies.IsComplete()) {
 		return false;
 	}
 

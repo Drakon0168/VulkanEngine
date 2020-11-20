@@ -2,7 +2,7 @@
 
 #include "pch.h"
 
-class Transform
+class Transform : public Component
 {
 private:
 
@@ -135,6 +135,14 @@ public:
 #pragma region Handles
 
 	void DrawHandles();
+
+#pragma endregion
+
+#pragma region Component
+
+	virtual void Init() override;
+
+	virtual void Update() override;
 
 #pragma endregion
 };

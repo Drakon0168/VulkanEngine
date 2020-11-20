@@ -284,7 +284,11 @@ void PhysicsObject::ApplyTorque(glm::quat torque, bool applyMass)
 
 #pragma endregion
 
-#pragma region Update
+#pragma region Component
+
+void PhysicsObject::Init()
+{
+}
 
 void PhysicsObject::Update()
 {
@@ -292,6 +296,7 @@ void PhysicsObject::Update()
 		if (affectedByGravity) {
 			ApplyForce(PhysicsManager::GetInstance()->GetGravity() * PhysicsManager::GetInstance()->GetGravityDirection());
 		}
+
 
 		//Apply acceleration
 		velocity += acceleration * Time::GetDeltaTime();
@@ -317,6 +322,10 @@ void PhysicsObject::Update()
 	}
 }
 
+#pragma endregion
+
+#pragma region Debug
+
 void PhysicsObject::DrawHandles()
 {
 	//Draw velocity
@@ -324,7 +333,9 @@ void PhysicsObject::DrawHandles()
 	//Draw acceleration
 	DebugInstance->DrawLine(transform->GetPosition() + velocity, transform->GetPosition() + velocity + acceleration, glm::vec3(1.0f, 0.0f, 0.0f), 0.0f);
 
-	collider->DrawHandles();
+	if (collider != nullptr) {
+		collider->DrawHandles();
+	}
 }
 
 #pragma endregion

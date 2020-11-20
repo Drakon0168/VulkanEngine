@@ -321,6 +321,8 @@ void Mesh::RemoveInstance(int instanceId)
 
 	activeInstanceCount--;
 	instances[instanceId] = nullptr;
+	// We technically don't need to set the instanceColor at this index to anything bc
+	// once a new instance is added to instances, the instanceColor will be overridden.
 	instanceBufferDirty = true;
 }
 

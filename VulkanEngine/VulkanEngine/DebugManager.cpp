@@ -80,9 +80,17 @@ void DebugManager::Cleanup()
 				pair.second->Cleanup();
 			}
 		}
+		
 	}
 
 	if (enableValidationLayers) {
+		// The ifdef was not working so I moved code here.  Validation error fixed
+		for (std::pair<std::shared_ptr<Mesh>, std::shared_ptr<Buffer>> pair : instanceBuffers) {
+			if (pair.second != nullptr) {
+				pair.second->Cleanup();
+			}
+
+		}
 		DestroyDebugUtilsMessengerEXT(VulkanManager::GetInstance()->GetVulkanInstance(), debugMessenger, nullptr);
 	}
 }

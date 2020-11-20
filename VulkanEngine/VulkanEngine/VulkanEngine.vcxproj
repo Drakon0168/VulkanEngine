@@ -183,6 +183,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="CommandBuffer.cpp" />
+    <ClCompile Include="Component.cpp" />
     <ClCompile Include="DebugManager.cpp" />
     <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="FileManager.cpp" />
@@ -220,6 +221,7 @@
     <ClInclude Include="ColliderTypes.h" />
     <ClInclude Include="CollisionData.h" />
     <ClInclude Include="CommandBuffer.h" />
+    <ClInclude Include="Component.h" />
     <ClInclude Include="Controls.h" />
     <ClInclude Include="DebugManager.h" />
     <ClInclude Include="DebugShape.h" />

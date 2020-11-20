@@ -54,9 +54,7 @@ void EntityManager::Init()
     //  Populate Mesh Lists
     for (std::shared_ptr<Mesh> mesh : meshes) {
         entities[mesh->GetMaterial()].push_back(mesh);
-       
     }
-    std::cout << count;
 }
 
 void EntityManager::LoadMeshes()
@@ -111,7 +109,6 @@ void EntityManager::LoadMaterials()
     materials.push_back(std::make_shared<Material>("shaders/vert.spv", "shaders/frag.spv", false, attributeDescriptions, bindingDescriptions, "textures/Square.png"));
     //materials.push_back(std::make_shared<Material>("shaders/vert.spv", "shaders/unlitfrag.spv", true, attributeDescriptions, bindingDescriptions, "textures/room.png"));
     materials.push_back(std::make_shared<Material>("shaders/vert.spv", "shaders/frag.spv", false, attributeDescriptions, bindingDescriptions, "textures/room.png"));
-    materials.push_back(std::make_shared<Material>("shaders/SkyVert.spv", "shaders/SkyFrag.spv", false, attributeDescriptions, bindingDescriptions, "textures/Skybox/", 'S'));
     materials.push_back(std::make_shared<Material>("shaders/SkyVert.spv", "shaders/SkyFrag.spv", false, attributeDescriptions, bindingDescriptions, "textures/Skybox/", 'S'));
 
     //TODO: Find a better way of doing this that will work for multiple types of inputs

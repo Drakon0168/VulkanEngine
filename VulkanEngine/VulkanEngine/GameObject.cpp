@@ -7,15 +7,14 @@
 
 #pragma region Constructor
 
-GameObject::GameObject(std::shared_ptr<Mesh> mesh, std::shared_ptr<Transform> transform)
+GameObject::GameObject(std::shared_ptr<Mesh> mesh)
 {
 	this->mesh = mesh;
-	this->transform = transform;
-	
 	physicsObject = nullptr;
+	transform = nullptr;
+
 	instanceId = -1;
 	active = false;
-	name = (char*)"gameObject";
 }
 
 #pragma endregion
@@ -24,16 +23,11 @@ GameObject::GameObject(std::shared_ptr<Mesh> mesh, std::shared_ptr<Transform> tr
 
 std::shared_ptr<Transform> GameObject::GetTransform()
 {
-	return transform;
-}
-
-void GameObject::SetTransform(std::shared_ptr<Transform> value)
-{
-	transform = value;
-
-	if (physicsObject != nullptr) {
-		physicsObject->SetTransform(value);
+	if (transform == nullptr) {
+		transform = GetComponent<Transform>();
 	}
+
+	return transform;
 }
 
 std::shared_ptr<PhysicsObject> GameObject::GetPhysicsObject()
@@ -41,16 +35,12 @@ std::shared_ptr<PhysicsObject> GameObject::GetPhysicsObject()
 	return physicsObject;
 }
 
-void GameObject::SetPhysicsObject(std::shared_ptr<PhysicsObject> value)
-{
-	physicsObject = value;
-}
-
 void GameObject::SetPhysicsObject(PhysicsLayers layer, ColliderTypes::ColliderTypes colliderType, float mass, bool affectedByGravity, bool alive)
 {
-	int ID = PhysicsManager::GetInstance()->AddPhysicsObject(transform, mesh, layer, colliderType, mass, affectedByGravity, alive);
+	int ID = PhysicsManager::GetInstance()->AddPhysicsObject(GetTransform(), mesh, layer, colliderType, mass, affectedByGravity, alive);
 	physicsObject = PhysicsManager::GetInstance()->GetPhysicsObject(ID);
 	physicsObject->SetGameObject(this);
+	AddComponent<PhysicsObject>(physicsObject);
 }
 
 std::shared_ptr<Mesh> GameObject::GetMesh()
@@ -58,41 +48,46 @@ std::shared_ptr<Mesh> GameObject::GetMesh()
 	return mesh;
 }
 
+std::string GameObject::GetName()
+{
+	return name;
+}
+
+void GameObject::SetName(std::string value)
+{
+	name = value;
+}
+
 bool GameObject::GetActive()
 {
 	return active;
 }
 
-char* GameObject::GetName()
+void GameObject::RemoveComponent(int ID)
 {
-	return name;
-}
-
-void GameObject::SetName(const char* value)
-{
-	name = (char*)value;
+	components[ID]->SetGameObject(nullptr);
+	components[ID]->SetID(-1);
+	components[ID] = nullptr;
 }
 
 #pragma endregion
 
 #pragma region Spawning
 
-void GameObject::Init()
-{
-}
-
 void GameObject::Spawn()
 {
 	if (transform == nullptr) {
 		transform = std::make_shared<Transform>();
 	}
-	
+
 	if (physicsObject != nullptr) {
 		physicsObject->SetAlive(true);
 	}
-
+	
 	instanceId = mesh->AddInstance(transform);
 	active = true;
+
+	Init();
 }
 
 void GameObject::Despawn()
@@ -108,17 +103,24 @@ void GameObject::Despawn()
 
 void GameObject::OnCollision(GameObject* other)
 {
-	std::cout << name << " collided with " << other->GetName() << std::endl;
+	//std::cout << name << " collided with " << other->GetName() << std::endl;
 }
 
 #pragma endregion
 
 #pragma region Update
 
+void GameObject::Init()
+{
+	for (int i = 0; i < components.size(); i++) {
+		components[i]->Init();
+	}
+}
+
 void GameObject::Update()
 {
-	if (active && DebugManager::GetInstance()->GetDrawHandles()) {
-		transform->DrawHandles();
+	for (int i = 0; i < components.size(); i++) {
+		components[i]->Update();
 	}
 }
 

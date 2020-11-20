@@ -43,6 +43,12 @@
     <Filter Include="imgui">
       <UniqueIdentifier>{5042c99a-be94-4eeb-bb37-0b2c77365711}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\GameObjectComponents">
+      <UniqueIdentifier>{0cd110eb-731c-40d1-bb8b-e05a37f68674}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObjectComponents">
+      <UniqueIdentifier>{9b4d0c0b-0b82-43ad-9c5d-0d2cf410dcd4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="VulkanEngine.cpp">
@@ -75,9 +81,6 @@
     <ClCompile Include="FileManager.cpp">
       <Filter>Source Files\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="Transform.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
@@ -105,13 +108,7 @@
     <ClCompile Include="WindowManager.cpp">
       <Filter>Source Files\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="PhysicsObject.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
     <ClCompile Include="Collider.cpp">
@@ -153,6 +150,21 @@
     <ClCompile Include="GuiManager.cpp">
       <Filter>Source Files\Manager</Filter>
     </ClCompile>
+    <ClCompile Include="PhysicsObject.cpp">
+      <Filter>Source Files\GameObjectComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>Source Files\GameObjectComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>Source Files\GameObjectComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsObject.cpp">
+      <Filter>Source Files\GameObjectComponents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -184,9 +196,6 @@
     </ClInclude>
     <ClInclude Include="FileManager.h">
       <Filter>Header Files\Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="Transform.h">
-      <Filter>Header Files\Components</Filter>
     </ClInclude>
     <ClInclude Include="TransformData.h">
       <Filter>Header Files\Structs</Filter>
@@ -227,9 +236,6 @@
     <ClInclude Include="Buffer.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>Header Files\Components</Filter>
-    </ClInclude>
     <ClInclude Include="MeshTypes.h">
       <Filter>Header Files\Enums</Filter>
     </ClInclude>
@@ -247,9 +253,6 @@
     </ClInclude>
     <ClInclude Include="PhysicsLayers.h">
       <Filter>Header Files\Enums</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicsObject.h">
-      <Filter>Header Files\Components</Filter>
     </ClInclude>
     <ClInclude Include="Collider.h">
       <Filter>Header Files\Components\Colliders</Filter>
@@ -275,6 +278,9 @@
     <ClInclude Include="ProjectionData.h">
       <Filter>Header Files\Structs</Filter>
     </ClInclude>
+    <ClInclude Include="PhysicsObject.h">
+      <Filter>Header Files\GameObjectComponents</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TextureImages.h">
@@ -285,6 +291,18 @@
     </ClInclude>
     <ClInclude Include="DebugShape.h">
       <Filter>Header Files\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsObject.h">
+      <Filter>Header Files\GameObjectComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Header Files\GameObjectComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Header Files\GameObjectComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Header Files\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

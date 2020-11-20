@@ -88,25 +88,6 @@ std::shared_ptr<PhysicsObject> PhysicsManager::GetPhysicsObject(int ID)
 
 void PhysicsManager::Update()
 {
-    //Update physics objects
-    for (size_t i = 0; i < physicsObjects[PhysicsLayers::Dynamic].size(); i++) {
-        if (physicsObjects[PhysicsLayers::Dynamic][i]->GetAlive()) {
-            physicsObjects[PhysicsLayers::Dynamic][i]->Update();
-        }
-    }
-
-    for (size_t i = 0; i < physicsObjects[PhysicsLayers::Static].size(); i++) {
-        if (physicsObjects[PhysicsLayers::Static][i]->GetAlive()) {
-            physicsObjects[PhysicsLayers::Static][i]->Update();
-        }
-    }
-
-    for (size_t i = 0; i < physicsObjects[PhysicsLayers::Trigger].size(); i++) {
-        if (physicsObjects[PhysicsLayers::Trigger][i]->GetAlive()) {
-            physicsObjects[PhysicsLayers::Trigger][i]->Update();
-        }
-    }
-
     //Check for collisions
     DetectCollisions();
 }
