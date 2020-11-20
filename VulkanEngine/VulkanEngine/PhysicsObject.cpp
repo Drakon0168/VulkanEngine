@@ -89,7 +89,11 @@ void PhysicsObject::ApplyForce(glm::vec3 force, bool applyMass)
 
 #pragma endregion
 
-#pragma region Update
+#pragma region Component
+
+void PhysicsObject::Init()
+{
+}
 
 void PhysicsObject::Update()
 {
@@ -98,6 +102,7 @@ void PhysicsObject::Update()
 			ApplyForce(PhysicsManager::GetInstance()->GetGravity() * PhysicsManager::GetInstance()->GetGravityDirection());
 		}
 
+
 		//Apply acceleration
 		velocity += acceleration * Time::GetDeltaTime();
 		acceleration = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -105,18 +110,24 @@ void PhysicsObject::Update()
 		//Apply velocity
 		transform->Translate(velocity * Time::GetDeltaTime());
 
-		//TODO: remove this once actual collisions are working
-		glm::vec3 position = transform->GetPosition();
-		if (position.y <= 0.5f) {
-			velocity = glm::vec3(velocity.x, velocity.y * -0.8f, velocity.z);
-			transform->SetPosition(glm::vec3(position.x, 0.5f, position.z));
+		if (physicsLayer == PhysicsLayers::Dynamic) {
+			//TODO: remove this once actual collisions are working
+			glm::vec3 position = transform->GetPosition();
+			if (position.y <= 0.5f) {
+				velocity = glm::vec3(velocity.x, velocity.y * -0.8f, velocity.z);
+				transform->SetPosition(glm::vec3(position.x, 0.5f, position.z));
+			}
+		}
+
+		if (DebugInstance->GetDrawHandles()) {
+			DrawHandles();
 		}
 	}
-
-	if (DebugInstance->GetDrawHandles()) {
-		DrawHandles();
-	}
 }
+
+#pragma endregion
+
+#pragma region Debug
 
 void PhysicsObject::DrawHandles()
 {
@@ -126,8 +137,6 @@ void PhysicsObject::DrawHandles()
 	DebugInstance->DrawLine(transform->GetPosition() + velocity, transform->GetPosition() + velocity + acceleration, glm::vec3(1.0f, 0.0f, 0.0f), 0.0f);
 
 	//TODO: Draw collider when this is merged with Physics Branch
-
-	transform->DrawHandles();
 }
 
 #pragma endregion

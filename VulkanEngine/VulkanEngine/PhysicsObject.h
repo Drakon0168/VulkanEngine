@@ -3,7 +3,7 @@
 
 #include "Transform.h"
 
-class PhysicsObject
+class PhysicsObject : public Component
 {
 private:
 	std::shared_ptr<Transform> transform;
@@ -19,7 +19,7 @@ public:
 
 #pragma region Constructor
 
-	PhysicsObject(std::shared_ptr<Transform> transform, PhysicsLayers physicsLayer = PhysicsLayers::Dynamic, float mass = 1.0f, bool affectedByGravity = true, bool alive = false);
+	PhysicsObject(std::shared_ptr<Transform> transform = nullptr, PhysicsLayers physicsLayer = PhysicsLayers::Dynamic, float mass = 1.0f, bool affectedByGravity = true, bool alive = false);
 
 #pragma endregion
 
@@ -98,12 +98,21 @@ public:
 
 #pragma endregion
 
-#pragma region Update
+#pragma region Component
+
+	/// <summary>
+	/// Initializes variables
+	/// </summary>
+	virtual void Init() override;
 
 	/// <summary>
 	/// Updates the velocity and position of the object
 	/// </summary>
-	void Update();
+	virtual void Update() override;
+
+#pragma endregion
+
+#pragma region Debug
 
 	/// <summary>
 	/// Draws the physics object's handles

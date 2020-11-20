@@ -54,11 +54,6 @@ void PhysicsManager::AddPhysicsObject(std::shared_ptr<PhysicsObject> object)
 
 void PhysicsManager::Update()
 {
-    //Update dynamic objects
-    for (size_t i = 0; i < physicsObjects[PhysicsLayers::Dynamic].size(); i++) {
-        physicsObjects[PhysicsLayers::Dynamic][i]->Update();
-    }
-
     //Check for collisions
     DetectCollisions();
 }

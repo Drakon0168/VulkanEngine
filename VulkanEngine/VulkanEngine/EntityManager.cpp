@@ -54,9 +54,7 @@ void EntityManager::Init()
     //  Populate Mesh Lists
     for (std::shared_ptr<Mesh> mesh : meshes) {
         entities[mesh->GetMaterial()].push_back(mesh);
-       
     }
-    std::cout << count;
 }
 
 void EntityManager::LoadMeshes()

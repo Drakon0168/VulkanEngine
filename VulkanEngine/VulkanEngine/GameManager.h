@@ -35,7 +35,14 @@ public:
 
 #pragma region Game Loop
 
+	/// <summary>
+	/// Called before the first update, initializes the gameobjects
+	/// </summary>
 	void Init();
+
+	/// <summary>
+	/// Called once per frame, updates the gameobjects
+	/// </summary>
 	void Update();
 
 #pragma endregion

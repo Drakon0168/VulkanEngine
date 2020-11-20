@@ -7,15 +7,11 @@
 
 #pragma region Constructor
 
-GameObject::GameObject(std::shared_ptr<Mesh> mesh, std::shared_ptr<Transform> transform, std::shared_ptr<PhysicsObject> physicsObject)
+GameObject::GameObject(std::shared_ptr<Mesh> mesh)
 {
 	this->mesh = mesh;
-	this->transform = transform;
-	this->physicsObject = physicsObject;
-
-	if (physicsObject != nullptr) {
-		PhysicsManager::GetInstance()->AddPhysicsObject(physicsObject);
-	}
+	physicsObject = nullptr;
+	transform = nullptr;
 
 	instanceId = -1;
 	active = false;
@@ -27,16 +23,11 @@ GameObject::GameObject(std::shared_ptr<Mesh> mesh, std::shared_ptr<Transform> tr
 
 std::shared_ptr<Transform> GameObject::GetTransform()
 {
-	return transform;
-}
-
-void GameObject::SetTransform(std::shared_ptr<Transform> value)
-{
-	transform = value;
-
-	if (physicsObject != nullptr) {
-		physicsObject->SetTransform(value);
+	if (transform == nullptr) {
+		transform = GetComponent<Transform>();
 	}
+
+	return transform;
 }
 
 std::shared_ptr<PhysicsObject> GameObject::GetPhysicsObject()
@@ -47,6 +38,8 @@ std::shared_ptr<PhysicsObject> GameObject::GetPhysicsObject()
 void GameObject::SetPhysicsObject(std::shared_ptr<PhysicsObject> value)
 {
 	physicsObject = value;
+	AddComponent<PhysicsObject>(value);
+	physicsObject->SetTransform(GetTransform());
 	PhysicsManager::GetInstance()->AddPhysicsObject(physicsObject);
 }
 
@@ -70,6 +63,13 @@ bool GameObject::GetActive()
 	return active;
 }
 
+void GameObject::RemoveComponent(int ID)
+{
+	components[ID]->SetGameObject(nullptr);
+	components[ID]->SetID(-1);
+	components[ID] = nullptr;
+}
+
 #pragma endregion
 
 #pragma region Spawning
@@ -80,22 +80,24 @@ void GameObject::Spawn()
 		transform = std::make_shared<Transform>();
 	}
 
-	if (physicsObject == nullptr) {
-		physicsObject = std::make_shared<PhysicsObject>(transform);
-		PhysicsManager::GetInstance()->AddPhysicsObject(physicsObject);
+	if (physicsObject != nullptr) {
+		physicsObject->SetAlive(true);
 	}
 	
-	// glm::lerp(glm::vec3(), glm::vec3(), 4.0f);
 	instanceId = mesh->AddInstance(transform);
-	physicsObject->SetAlive(true);
 	active = true;
+
+	Init();
 }
 
 void GameObject::Despawn()
 {
+	if (physicsObject != nullptr) {
+		physicsObject->SetAlive(false);
+	}
+
 	mesh->RemoveInstance(instanceId);
 	instanceId = -1;
-	physicsObject->SetAlive(false);
 	active = false;
 }
 
@@ -103,10 +105,17 @@ void GameObject::Despawn()
 
 #pragma region Update
 
+void GameObject::Init()
+{
+	for (int i = 0; i < components.size(); i++) {
+		components[i]->Init();
+	}
+}
+
 void GameObject::Update()
 {
-	if (!physicsObject->GetAlive() && DebugManager::GetInstance()->GetDrawHandles()) {
-		transform->DrawHandles();
+	for (int i = 0; i < components.size(); i++) {
+		components[i]->Update();
 	}
 }
 
