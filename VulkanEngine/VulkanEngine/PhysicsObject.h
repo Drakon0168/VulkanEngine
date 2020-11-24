@@ -15,8 +15,8 @@ private:
 	float mass;
 	glm::vec3 velocity;
 	glm::vec3 acceleration;
-	glm::quat angularVelocity;
-	glm::quat angularAcceleration;
+	AngleAxis angularVelocity;
+	AngleAxis angularAcceleration;
 
 	bool affectedByGravity;
 	bool alive;

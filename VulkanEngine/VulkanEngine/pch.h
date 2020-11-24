@@ -41,6 +41,7 @@
 #include "Component.h"
 
 //Structs
+#include "AngleAxis.h"
 #include "DebugShape.h"
 #include "Light.h"
 #include "QueueFamilyIndices.h"

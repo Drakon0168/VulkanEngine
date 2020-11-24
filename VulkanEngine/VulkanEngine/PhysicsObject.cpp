@@ -47,8 +47,8 @@ PhysicsObject::PhysicsObject(std::shared_ptr<Transform> transform, PhysicsLayers
 
 	velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 	acceleration = glm::vec3(0.0f, 0.0f, 0.0f);
-	angularVelocity = glm::quat(glm::vec3(0, 0, 0));
-	angularAcceleration = glm::quat(glm::vec3(0, 0, 0));
+	angularVelocity = AngleAxis();
+	angularAcceleration = AngleAxis();
 
 	switch (colliderType) {
 	case ColliderTypes::Sphere:
@@ -97,19 +97,19 @@ glm::vec3 PhysicsObject::GetVelocityAtPoint(glm::vec3 point)
 	glm::vec3 direction = point - transform->GetPosition();
 	float distance = glm::length(direction);
 	direction /= distance;
-	float angle = 2 * glm::acos(angularVelocity.w);
-	glm::vec3 axis;
 
-	if (angle != 0) {
-		axis = glm::vec3(angularVelocity.x, angularVelocity.y, angularVelocity.z) / glm::sin(angle / 2);
-	}
-	else { //There is no angular velocity to deal with
+	if (angularVelocity.angle == 0) { //There is no angular velocity to deal with
 		return velocity;
 	}
 
-	glm::vec3 tangentDirection = glm::cross(axis, direction);
-	glm::vec3 pointVelocity = tangentDirection * distance * angle;
+	glm::vec3 pointVelocity = glm::vec3(0, 0, 0);
 
+	glm::vec3 tangentDirection = glm::normalize(glm::cross(angularVelocity.axis, direction));
+	if (!(isnan(tangentDirection.x) || isnan(tangentDirection.y) || isnan(tangentDirection.z))) {
+		pointVelocity = tangentDirection * distance * angularVelocity.angle;
+	}
+
+	//std::cout << "Point Velocity: (" << pointVelocity.x << ", " << pointVelocity.y << ", " << pointVelocity.z << ")" << std::endl;
 	return velocity + pointVelocity;
 }
 
@@ -120,7 +120,7 @@ void PhysicsObject::SetVelocity(glm::vec3 value)
 
 glm::quat PhysicsObject::GetAngularVelocity()
 {
-	return angularVelocity;
+	return angularVelocity.ToQuaternion();
 }
 
 void PhysicsObject::SetAngularVelocity(glm::quat value)
@@ -263,10 +263,10 @@ void PhysicsObject::ApplyForce(glm::vec3 force, glm::vec3 point, bool applyMass)
 void PhysicsObject::ApplyTorque(glm::quat torque, bool applyMass)
 {
 	if (applyMass) {
-		angularAcceleration = glm::mix(angularAcceleration, torque * angularAcceleration, Time::GetDeltaTime() / mass);
+		angularAcceleration += AngleAxis(torque) * (1.0f / mass);
 	}
 	else {
-		angularAcceleration = glm::mix(angularAcceleration, torque * angularAcceleration, Time::GetDeltaTime());
+		angularAcceleration += torque;
 	}
 }
 
@@ -290,14 +290,14 @@ void PhysicsObject::Update()
 		velocity += acceleration * Time::GetDeltaTime();
 		acceleration = glm::vec3(0.0f, 0.0f, 0.0f);
 
-		angularVelocity = angularAcceleration * angularVelocity;//glm::mix(angularVelocity, angularAcceleration * angularVelocity, Time::GetDeltaTime());
-		angularAcceleration = glm::quat(glm::vec3(0, 0, 0));
+		angularVelocity += angularAcceleration * Time::GetDeltaTime();//glm::mix(angularVelocity, angularAcceleration * angularVelocity, Time::GetDeltaTime());
+		std::cout << angularVelocity << std::endl;
+		angularAcceleration = AngleAxis();
 
 		//Apply velocity
 		transform->Translate(velocity * Time::GetDeltaTime());
 
-		glm::quat orientation = transform->GetOrientation();
-		transform->SetOrientation(angularVelocity * orientation/*glm::mix(orientation, angularVelocity * orientation, Time::GetDeltaTime())*/);
+		transform->Rotate((angularVelocity * Time::GetDeltaTime()).ToQuaternion()/*glm::mix(orientation, angularVelocity * orientation, Time::GetDeltaTime())*/);
 	}
 
 	//Update collider

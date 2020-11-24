@@ -170,6 +170,10 @@ void GameManager::Update()
         gameObjects[2]->GetPhysicsObject()->ApplyTorque(glm::angleAxis(-300.0f, glm::vec3(0, 1, 0)), false);
     }
 
+    //TODO: Remove when finished
+    //Make sure axis are correct
+    gameObjects[2]->GetPhysicsObject()->GetVelocityAtPoint(gameObjects[2]->GetTransform()->GetPosition() + glm::vec3(1, 0, 0));
+
     if (InputManager::GetInstance()->GetKeyPressed(Controls::Jump)) {
         gameObjects[2]->GetPhysicsObject()->ApplyForce(glm::vec3(0.0f, 5000.0f, 0.0f));
 

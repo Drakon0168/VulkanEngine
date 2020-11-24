@@ -214,6 +214,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AABBCollider.h" />
+    <ClInclude Include="AngleAxis.h" />
     <ClInclude Include="ARBBCollider.h" />
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="Camera.h" />

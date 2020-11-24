@@ -278,6 +278,9 @@
     <ClInclude Include="ProjectionData.h">
       <Filter>Header Files\Structs</Filter>
     </ClInclude>
+    <ClInclude Include="AngleAxis.h">
+      <Filter>Header Files\Structs</Filter>
+    </ClInclude>
     <ClInclude Include="PhysicsObject.h">
       <Filter>Header Files\GameObjectComponents</Filter>
     </ClInclude>
