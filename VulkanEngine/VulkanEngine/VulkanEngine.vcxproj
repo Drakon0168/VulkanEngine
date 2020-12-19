@@ -199,6 +199,7 @@
     </ClCompile>
     <ClCompile Include="PhysicsManager.cpp" />
     <ClCompile Include="PhysicsObject.cpp" />
+    <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SwapChain.cpp" />
     <ClCompile Include="TextureImages.cpp" />
     <ClCompile Include="Time.cpp" />
@@ -234,6 +235,7 @@
     <ClInclude Include="PhysicsManager.h" />
     <ClInclude Include="PhysicsObject.h" />
     <ClInclude Include="QueueFamilyIndices.h" />
+    <ClInclude Include="Shader.h" />
     <ClInclude Include="SwapChain.h" />
     <ClInclude Include="SwapChainSupportDetails.h" />
     <ClInclude Include="TextureImages.h" />

@@ -11,11 +11,10 @@
 
 #pragma region Memory Management
 
-Material::Material(std::string vertexShaderPath, std::string fragmentShaderPath, bool wireframe, std::vector<std::vector<VkVertexInputAttributeDescription>> attributes, std::vector<VkVertexInputBindingDescription> bindings, std::string materialPath, char type)
+Material::Material(Shader shader, bool wireframe, std::vector<std::vector<VkVertexInputAttributeDescription>> attributes, std::vector<VkVertexInputBindingDescription> bindings, std::string materialPath, char type)
 {
 	this->matPath = materialPath;
-	this->vertexShaderPath = vertexShaderPath;
-	this->fragmentShaderPath = fragmentShaderPath;
+	this->shader = shader;
 	this->wireframe = wireframe;
 	this->type = type;
 
@@ -53,8 +52,8 @@ void Material::Init()
 void Material::CreateGraphicsPipeline()
 {
 	//Read in shader code
-	auto vertexShaderCode = FileManager::ReadFile(vertexShaderPath);
-	auto fragmentShaderCode = FileManager::ReadFile(fragmentShaderPath);
+	auto vertexShaderCode = FileManager::ReadFile(shader.GetVertexPath());
+	auto fragmentShaderCode = FileManager::ReadFile(shader.GetFragmentPath());
 
 	//Create shader module
 	VkShaderModule vertexShaderModule = CreateShaderModule(vertexShaderCode);

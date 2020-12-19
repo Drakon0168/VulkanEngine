@@ -1,13 +1,13 @@
 #pragma once
 #include "pch.h"
 #include "TextureImages.h"
+#include "Shader.h"
 class Material
 {
 
 protected:
 
-	std::string vertexShaderPath;
-	std::string fragmentShaderPath;
+	Shader shader;
 	bool wireframe;
 
 	VkPipelineLayout pipelineLayout;
@@ -28,7 +28,7 @@ public:
 
 #pragma region Memory Management
 
-	Material(std::string vertexShaderPath, std::string fragmentShaderPath, bool wireframe, std::vector<std::vector<VkVertexInputAttributeDescription>> attributes, std::vector<VkVertexInputBindingDescription> bindings, std::string materialPath, char type = ' ');
+	Material(Shader shader, bool wireframe, std::vector<std::vector<VkVertexInputAttributeDescription>> attributes, std::vector<VkVertexInputBindingDescription> bindings, std::string materialPath, char type = ' ');
 
 	/// <summary>
 	/// Creates and allocates Material resources
