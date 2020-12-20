@@ -514,7 +514,6 @@ void SwapChain::UpdateUniformBuffer(uint32_t imageIndex)
 		ubo.lights[i] = *lights[i];
 	}
 
-
 	void* data;
 	vkMapMemory(logicalDevice, uniformBuffers[imageIndex].GetBufferMemory(), 0, sizeof(ubo), 0, &data);
 	memcpy(data, &ubo, sizeof(ubo));

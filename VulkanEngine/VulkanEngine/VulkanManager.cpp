@@ -396,9 +396,7 @@ void VulkanManager::MainLoop()
 void VulkanManager::Draw()
 {
 	uint32_t imageIndex = SwapChain::GetInstance()->BeginDraw();
-
-
-
+	
 	if (imageIndex != -1) {
 		//Re-record command buffer
 		EntityManager::GetInstance()->Draw(imageIndex, SwapChain::GetInstance()->GetCommandBuffer(imageIndex));

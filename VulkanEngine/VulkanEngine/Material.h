@@ -2,9 +2,9 @@
 #include "pch.h"
 #include "TextureImages.h"
 #include "Shader.h"
+
 class Material
 {
-
 protected:
 
 	Shader shader;
@@ -89,6 +89,17 @@ public:
 	/// <returns>The list of the material's descriptor sets</returns>
 	std::vector<VkDescriptorSet> GetDescriptorSets();
 
+	/// <summary>
+	/// Returns the shader being used by this material
+	/// </summary>
+	/// <returns>THe shader that is currently attached to this material</returns>
+	Shader GetShader();
+
+	/// <summary>
+	/// Sets the shader used by this material
+	/// </summary>
+	/// <param name="value">The shader to use</param>
+	void SetShader(Shader value);
 
 	TextureImages* GetTImage();
 #pragma endregion

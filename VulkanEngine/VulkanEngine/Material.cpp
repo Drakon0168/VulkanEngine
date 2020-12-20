@@ -425,6 +425,16 @@ std::vector<VkDescriptorSet> Material::GetDescriptorSets()
 	return descriptorSets;
 }
 
+Shader Material::GetShader()
+{
+	return shader;
+}
+
+void Material::SetShader(Shader value)
+{
+	shader = value;
+}
+
 TextureImages* Material::GetTImage()
 {
 	return tImage;
