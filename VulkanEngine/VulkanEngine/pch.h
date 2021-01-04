@@ -49,6 +49,7 @@
 #include "Vertex.h"
 
 //Enums
+#include "MaterialTypes.h"
 #include "MeshTypes.h"
 #include "Controls.h"
 #include "InputStates.h"

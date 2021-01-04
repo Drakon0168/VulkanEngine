@@ -2,6 +2,8 @@
 
 #include "pch.h"
 
+#include "Buffer.h"
+
 //Forward declaration to get around circular dependency
 class Mesh;
 
@@ -12,11 +14,13 @@ private:
 	std::string vertexPath;
 	size_t textureCount;
 
+	std::vector<std::shared_ptr<Buffer>> resources;
+
 public:
 
 #pragma region Constructor
 
-	Shader(std::string vertexPath = "shaders/frag.spv", std::string fragmentPath = "shaders/vert.spv", size_t textureCount = 0);
+	Shader(std::string vertexPath = "shaders/frag.spv", std::string fragmentPath = "shaders/vert.spv", size_t textureCount = 0, std::vector<std::shared_ptr<Buffer>> resources = std::vector<std::shared_ptr<Buffer>>());
 
 #pragma endregion
 
@@ -56,6 +60,18 @@ public:
 	/// Sets the number of textures that this shader expects
 	/// </summary>
 	void SetTextureCount(size_t value);
+
+	/// <summary>
+	/// Returns the list of buffer resources used by this shader
+	/// </summary>
+	/// <returns>The list of buffers used by the shader</returns>
+	std::vector<std::shared_ptr<Buffer>> GetResources();
+
+	/// <summary>
+	/// Sets the resources that will be used by the shader, this list must be in the order that the shader expects the data to be in based on the vertex attribute description used by the material
+	/// </summary>
+	/// <param name="value">The list of buffers to set resources to</param>
+	void SetResources(std::vector<std::shared_ptr<Buffer>> value);
 
 #pragma endregion
 

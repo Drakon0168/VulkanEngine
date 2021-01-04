@@ -257,6 +257,9 @@
     <ClInclude Include="Shader.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
+    <ClInclude Include="MaterialTypes.h">
+      <Filter>Header Files\Enums</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\BasicShader.frag">

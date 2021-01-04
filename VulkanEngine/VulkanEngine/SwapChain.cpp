@@ -128,6 +128,9 @@ void SwapChain::CreateSwapChainResources()
 	//Initialize the debug manager
 	DebugManager::GetInstance()->Init();
 
+	//Setup shader resources
+	EntityManager::GetInstance()->SetupShaderResources();
+
 	//Create material resources
 	EntityManager::GetInstance()->CreateMaterialResources();
 

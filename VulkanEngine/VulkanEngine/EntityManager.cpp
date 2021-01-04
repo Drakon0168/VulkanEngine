@@ -5,6 +5,7 @@
 #include "VulkanManager.h"
 #include "SwapChain.h"
 #include "Image.h"
+
 #pragma region Singleton
 
 EntityManager* EntityManager::instance = nullptr;
@@ -61,34 +62,35 @@ void EntityManager::LoadMeshes()
 {
     meshes.resize(MeshTypes::MeshTypeCount);
 
-    meshes[MeshTypes::Plane] = std::make_shared<Mesh>(materials[0]);
+    meshes[MeshTypes::Plane] = std::make_shared<Mesh>(materials[MaterialTypes::DefaultMaterial]);
     meshes[MeshTypes::Plane]->GeneratePlane();
 
-    meshes[MeshTypes::Cube] = std::make_shared<Mesh>(materials[1]);
+    meshes[MeshTypes::Cube] = std::make_shared<Mesh>(materials[MaterialTypes::DefaultMaterial]);
     meshes[MeshTypes::Cube]->GenerateCube();
     
-    meshes[MeshTypes::Sphere] = std::make_shared<Mesh>(materials[0]);
+    meshes[MeshTypes::Sphere] = std::make_shared<Mesh>(materials[MaterialTypes::DefaultMaterial]);
     meshes[MeshTypes::Sphere]->GenerateSphere(50);
     
-    meshes[MeshTypes::Model] = std::make_shared<Mesh>(materials[1]);
+    meshes[MeshTypes::Model] = std::make_shared<Mesh>(materials[MaterialTypes::RoomMaterial]);
     meshes[MeshTypes::Model]->LoadModel("models/room.obj");
 
-    meshes[MeshTypes::Skybox] = std::make_shared<Mesh>(materials[2]);
+    meshes[MeshTypes::Skybox] = std::make_shared<Mesh>(materials[MaterialTypes::SkyboxMaterial]);
     meshes[MeshTypes::Skybox]->GenerateCube();
 
-    meshes[MeshTypes::WireCube] = std::make_shared<Mesh>(materials[3]);
+    meshes[MeshTypes::WireCube] = std::make_shared<Mesh>(materials[MaterialTypes::DebugMaterial]);
     meshes[MeshTypes::WireCube]->GenerateCube();
 
-    meshes[MeshTypes::WireSphere] = std::make_shared<Mesh>(materials[3]);
+    meshes[MeshTypes::WireSphere] = std::make_shared<Mesh>(materials[MaterialTypes::DebugMaterial]);
     meshes[MeshTypes::WireSphere]->GenerateSphere(10);
 
-    meshes[MeshTypes::Line] = std::make_shared<Mesh>(materials[3]);
+    meshes[MeshTypes::Line] = std::make_shared<Mesh>(materials[MaterialTypes::DebugMaterial]);
     meshes[MeshTypes::Line]->GenerateLine(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 }
 
 void EntityManager::LoadMaterials()
 {
-    
+    materials.resize(MaterialTypes::MaterialTypeCount);
+
     std::vector<std::vector<VkVertexInputAttributeDescription>> attributeDescriptions;
     attributeDescriptions.push_back(Vertex::GetAttributeDescriptions(0, 0));
     attributeDescriptions.push_back(TransformData::GetAttributeDescriptions(attributeDescriptions[0].size(), 1));
@@ -97,24 +99,45 @@ void EntityManager::LoadMaterials()
     bindingDescriptions.push_back(Vertex::GetBindingDescription(0));
     bindingDescriptions.push_back(TransformData::GetBindingDescription(bindingDescriptions.size()));
 
-    materials.push_back(std::make_shared<Material>(Shader("shaders/vert.spv", "shaders/frag.spv", 1), false, attributeDescriptions, bindingDescriptions, "textures/frog.jpg"));
-    materials.push_back(std::make_shared<Material>(Shader("shaders/vert.spv", "shaders/frag.spv", 1), false, attributeDescriptions, bindingDescriptions, "textures/room.png"));
-    materials.push_back(std::make_shared<Material>(Shader("shaders/SkyVert.spv", "shaders/SkyFrag.spv", 1), false, attributeDescriptions, bindingDescriptions, "textures/Skybox/", 'S'));
+    materials[DefaultMaterial] = std::make_shared<Material>(Shader("shaders/vert.spv", "shaders/frag.spv", 1), false, attributeDescriptions, bindingDescriptions, "textures/frog.jpg");
+    materials[RoomMaterial] = std::make_shared<Material>(Shader("shaders/vert.spv", "shaders/frag.spv", 1), false, attributeDescriptions, bindingDescriptions, "textures/room.png");
+    materials[SkyboxMaterial] = std::make_shared<Material>(Shader("shaders/SkyVert.spv", "shaders/SkyFrag.spv", 1), false, attributeDescriptions, bindingDescriptions, "textures/Skybox/", 'S');
 
-    //TODO: Find a better way of doing this that will work for multiple types of inputs
-    std::vector<VkVertexInputAttributeDescription> attributeDescription(1);
-    attributeDescription[0].binding = 2;
-    attributeDescription[0].location = 8;
-    attributeDescription[0].format = VK_FORMAT_R32G32B32_SFLOAT;
-    attributeDescription[0].offset = 0;
-    attributeDescriptions.push_back(attributeDescription);
+    if (DebugManager::GetInstance()->GetEnableValidationLayers()) {
+        //TODO: Find a better way of doing this that will work for multiple types of inputs
+        std::vector<VkVertexInputAttributeDescription> attributeDescription(1);
+        attributeDescription[0].binding = 2;
+        attributeDescription[0].location = 8;
+        attributeDescription[0].format = VK_FORMAT_R32G32B32_SFLOAT;
+        attributeDescription[0].offset = 0;
+        attributeDescriptions.push_back(attributeDescription);
 
-    VkVertexInputBindingDescription bindingDescription = {};
-    bindingDescription.binding = 2;
-    bindingDescription.stride = sizeof(glm::vec3);
-    bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_INSTANCE;
-    bindingDescriptions.push_back(bindingDescription);
-    materials.push_back(std::make_shared<Material>(Shader("shaders/DebugVert.spv", "shaders/DebugFrag.spv", 1), true, attributeDescriptions, bindingDescriptions, "textures/room.png"));
+        VkVertexInputBindingDescription bindingDescription = {};
+        bindingDescription.binding = 2;
+        bindingDescription.stride = sizeof(glm::vec3);
+        bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_INSTANCE;
+        bindingDescriptions.push_back(bindingDescription);
+        materials[DebugMaterial] = std::make_shared<Material>(Shader("shaders/DebugVert.spv", "shaders/DebugFrag.spv", 1), true, attributeDescriptions, bindingDescriptions, "textures/room.png");
+    }
+}
+
+void EntityManager::SetupShaderResources()
+{
+    for (int i = 0; i < materials.size(); i++) {
+        switch (i)
+        {
+        case MaterialTypes::DebugMaterial:
+            if (DebugManager::GetInstance()->GetEnableValidationLayers()) {
+                for (int j = 0; j < entities[materials[i]].size(); j++) {
+                    std::vector<std::shared_ptr<Buffer>> resources;
+                    resources.push_back(DebugManager::GetInstance()->GetInstanceBuffers()[entities[materials[i]][j]]);
+                    
+                    materials[i]->GetShader().SetResources(resources);
+                }
+            }
+            break;
+        }
+    }
 }
 
 #pragma endregion
@@ -165,6 +188,11 @@ void EntityManager::Draw(uint32_t imageIndex, VkCommandBuffer* commandBuffer)
 
     //Begin Per Material Commands
     for (std::shared_ptr<Material> material : materials) {
+        //If a material has not been set skip over it
+        if (material == nullptr) {
+            continue;
+        }
+
         vkCmdBindPipeline(*commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, material->GetPipeline());//Per material
 
         vkCmdBindDescriptorSets(*commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, material->GetPipelineLayout(), 0, 1, &material->GetDescriptorSets()[imageIndex], 0, nullptr);//Per Material

@@ -59,6 +59,11 @@ public:
 	/// </summary>
 	void LoadMaterials();
 
+	/// <summary>
+	/// Adds all necessary buffers to the shaders that need them
+	/// </summary>
+	void SetupShaderResources();
+
 #pragma endregion
 
 #pragma region Game Loop
