@@ -1,0 +1,15 @@
+{
+	"shaders":
+	[
+		{
+			"type": "none",
+			"stage": "vertex",
+			"shader": "ExVert"
+		},
+		{
+			"type": "none",
+			"stage": "fragment",
+			"shader": "ExFrag"
+		}
+	]	
+}

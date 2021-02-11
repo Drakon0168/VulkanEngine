@@ -1,0 +1,15 @@
+{
+	"shaders":
+	[
+		{
+			"type": "sky",
+			"stage": "vertex",
+			"shader": "SkyVert"
+		},
+		{
+			"type": "sky",
+			"stage": "fragment",
+			"shader": "SkyFrag"
+		}
+	]	
+}

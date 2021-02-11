@@ -190,7 +190,9 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="InputAxis.cpp" />
     <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="MatBinding.cpp" />
     <ClCompile Include="Material.cpp" />
+    <ClCompile Include="MaterialCreation.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -223,8 +225,12 @@
     <ClInclude Include="InputAxis.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="InputStates.h" />
+    <ClInclude Include="json.hpp" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="MatBinding.h" />
     <ClInclude Include="Material.h" />
+    <ClInclude Include="MaterialCreation.h" />
+    <ClInclude Include="MaterialTypes.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshTypes.h" />
     <ClInclude Include="pch.h" />

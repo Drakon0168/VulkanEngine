@@ -9,7 +9,7 @@
 #include "stb/stb_image.h"
 
 #include "Buffer.h"
-
+#include "Material.h"
 void TextureImages::LoadAll() {
 	LoadTexture("textures/room.jpg");
 }
@@ -234,11 +234,17 @@ void TextureImages::Cleanup() {
 }
 
 void TextureImages::CreateTextureImageView() {
-	textureImageView = Image::CreateImageView(*textureImage.GetImage(), VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, mipLevels);
+	textureImageView = Image::CreateImageView(*textureImage.GetImage(), VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, mipLevels, VK_IMAGE_VIEW_TYPE_2D, 1);
+//	Material::ReadMaterial("Materials/Example.mat");
 }
+
+//if skybox, need cube. 
+//inputting cube, need 2d 
+//so things that are not skybox are registering as skybox 
 
 void TextureImages::CreateTextureImageViewCube()
 {
+	//std::cout << " " << "WE'RE MAKIN A CUBE" << " \n";
 	textureImageView = Image::CreateImageView(*textureImage.GetImage(), VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_ASPECT_COLOR_BIT, mipLevels, VK_IMAGE_VIEW_TYPE_CUBE, 6);
 }
 

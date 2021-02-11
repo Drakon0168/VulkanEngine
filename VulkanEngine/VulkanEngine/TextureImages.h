@@ -2,6 +2,7 @@
 
 #include "pch.h"
 #include "Image.h"
+#include "FileManager.h"
 class TextureImages
 {
 private:
@@ -17,9 +18,7 @@ private:
 
 	
 public:
-#pragma region Singleton 
-	//not anymore!
-#pragma endregion
+
 #pragma region Memory Management
 
 	void GenerateMipmaps(VkImage image, VkFormat imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels, uint32_t layers = 1);

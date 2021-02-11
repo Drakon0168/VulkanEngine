@@ -4,14 +4,17 @@
 #include "VulkanManager.h"
 #include "FileManager.h"
 #include "SwapChain.h"
+#include "MaterialTypes.h"
 //#include "TextureImages.h"
+#include "json.hpp"
 
+using json = nlohmann::json;
 #define logicalDevice VulkanManager::GetInstance()->GetLogicalDevice()
 #define swapChainImages SwapChain::GetInstance()->GetImages()
 
 #pragma region Memory Management
 
-Material::Material(std::string vertexShaderPath, std::string fragmentShaderPath, bool wireframe, std::vector<std::vector<VkVertexInputAttributeDescription>> attributes, std::vector<VkVertexInputBindingDescription> bindings, std::string materialPath, char type)
+/*Material::Material(std::string vertexShaderPath, std::string fragmentShaderPath, bool wireframe, std::vector<std::vector<VkVertexInputAttributeDescription>> attributes, std::vector<VkVertexInputBindingDescription> bindings, std::string materialPath, MaterialTypes type)
 {
 	this->matPath = materialPath;
 	this->vertexShaderPath = vertexShaderPath;
@@ -28,12 +31,86 @@ Material::Material(std::string vertexShaderPath, std::string fragmentShaderPath,
 
 	SetupVertexInput(attributes, bindings);
 }
+*/
+
+Material::Material(std::string vertexShaderPath, std::string fragmentShaderPath, bool wireframe, std::vector<std::vector<VkVertexInputAttributeDescription>> attributes, std::vector<VkVertexInputBindingDescription> bindings, std::string materialPath, std::string MATPATH, char type)
+{
+
+	ReadMaterial(MATPATH);
+	//change this, this points to the texture instead of the material.
+
+	this->matPath = materialPath;
+	this->vertexShaderPath =  "shaders/" + vertPath + ".spv"; //vertexShaderPath;
+	this->fragmentShaderPath = "shaders/" + fragPath + ".spv";///fragmentShaderPath;
+	this->wireframe = wireframe;
+	if (shadType == "none") {
+		type = 'none';
+	}
+	else if (shadType == "sky") {
+		type = 'S';
+	}
+	this->type = type;
+
+	pipelineLayout = VkPipelineLayout();
+	pipeline = VkPipeline();
+
+	descriptorPool = VkDescriptorPool();
+	descriptorSetLayout = VkDescriptorSetLayout();
+	descriptorSets = std::vector<VkDescriptorSet>();
+
+	SetupVertexInput(attributes, bindings);
+}
+
+void Material::ReadMaterial(std::string filePath) {
+	std::ifstream ifs(filePath);
+	json jf = json::parse(ifs);
+	auto shaders = jf["shaders"];
+	auto test = shaders[0];
+	auto shType = test["type"];
+	shadType = shType;
+	auto stage1 = test["stage"];
+	std::string shader1 = test["shader"];
+	vertPath = shader1;
+	auto test1 = shaders[1];
+	auto stage2 = test1["stage"];
+	auto shader2 = test1["shader"];
+	fragPath = shader2;
+	//std::cout << " " <<shadType << " \n";
+}
+
+//updated to include the JSON readings
+/*Material::Material(std::string vertexShaderPath, std::string fragmentShaderPath, bool wireframe, std::vector<std::vector<VkVertexInputAttributeDescription>> attributes, std::vector<VkVertexInputBindingDescription> bindings, std::string materialPath, char type, std::string MATPATH)
+{
+
+	this->fragmentShaderPath = fragmentShaderPath;
+	this->wireframe = wireframe;
+	if (shadType == "none") {
+		type = 'none';
+	}
+	else if (shadType == "sky") {
+		type = 'S';
+	}
+	this->type = type;
+	std::cout << " " << type << " \n";
+
+	pipelineLayout = VkPipelineLayout();
+	pipeline = VkPipeline();
+
+	descriptorPool = VkDescriptorPool();
+	descriptorSetLayout = VkDescriptorSetLayout();
+	descriptorSets = std::vector<VkDescriptorSet>();
+
+	SetupVertexInput(attributes, bindings);
+}*/
 
 void Material::Init()
 {
+	
 	if (type == 'S') {
 		tImage->LoadCubeMap(matPath);
 		tImage->CreateTextureImageViewCube();
+		std::cout << " " << "WE'RE MAKIN A FUCKY" << " \n";
+
 	}
 	else {
 		tImage->LoadTexture(matPath);

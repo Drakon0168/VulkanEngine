@@ -99,11 +99,15 @@ void EntityManager::LoadMaterials()
     bindingDescriptions.push_back(Vertex::GetBindingDescription(0));
     bindingDescriptions.push_back(TransformData::GetBindingDescription(bindingDescriptions.size()));
 
-    materials.push_back(std::make_shared<Material>("shaders/vert.spv", "shaders/frag.spv", false, attributeDescriptions, bindingDescriptions, "textures/frog.jpg"));
-    materials.push_back(std::make_shared<Material>("shaders/vert.spv", "shaders/frag.spv", false, attributeDescriptions, bindingDescriptions, "textures/room.png"));
-    materials.push_back(std::make_shared<Material>("shaders/SkyVert.spv", "shaders/SkyFrag.spv", false, attributeDescriptions, bindingDescriptions, "textures/Skybox/", 'S'));
+    materials.push_back(std::make_shared<Material>("shaders/ExVert.spv", "shaders/ExFrag.spv", false, attributeDescriptions, bindingDescriptions, "textures/frog.jpg", "Materials/Example.mat"));
+    materials.push_back(std::make_shared<Material>("shaders/ExVert.spv", "shaders/ExFrag.spv", false, attributeDescriptions, bindingDescriptions, "textures/room.png", "Materials/Example.mat"));
+    materials.push_back(std::make_shared<Material>("shaders/SkyVert.spv", "shaders/SkyFrag.spv", false, attributeDescriptions, bindingDescriptions, "textures/Skybox/", /*'S',*/ "Materials/Skybox.mat"));
 
-    //TODO: Find a better way of doing this that will work for multiple types of inputs
+  /* materials.push_back(std::make_shared<Material>("shaders/vert.spv", "shaders/frag.spv", false, attributeDescriptions, bindingDescriptions, "textures/frog.jpg"));
+    materials.push_back(std::make_shared<Material>("shaders/ExVert.spv", "shaders/ExFrag.spv", false, attributeDescriptions, bindingDescriptions, "textures/room.png"));
+    materials.push_back(std::make_shared<Material>("shaders/SkyVert.spv", "shaders/SkyFrag.spv", false, attributeDescriptions, bindingDescriptions, "textures/Skybox/", 'S'));*/
+    
+    //TODO: Find a better way of doing this that will work for multiple types of inputs.    
     std::vector<VkVertexInputAttributeDescription> attributeDescription(1);
     attributeDescription[0].binding = 2;
     attributeDescription[0].location = 8;
@@ -115,8 +119,10 @@ void EntityManager::LoadMaterials()
     bindingDescription.binding = 2;
     bindingDescription.stride = sizeof(glm::vec3);
     bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_INSTANCE;
-    bindingDescriptions.push_back(bindingDescription);
-    materials.push_back(std::make_shared<Material>("shaders/DebugVert.spv", "shaders/DebugFrag.spv", true, attributeDescriptions, bindingDescriptions, "textures/room.png"));
+    bindingDescriptions.push_back(bindingDescription); 
+    materials.push_back(std::make_shared<Material>("shaders/DebugVert.spv", "shaders/DebugFrag.spv", false, attributeDescriptions, bindingDescriptions, "textures/room.png", "Materials/Debug.mat"));
+
+    //materials.push_back(std::make_shared<Material>("shaders/DebugVert.spv", "shaders/DebugFrag.spv", true, attributeDescriptions, bindingDescriptions, "textures/room.png"));
 }
 
 #pragma endregion

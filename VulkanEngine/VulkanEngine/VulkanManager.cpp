@@ -177,6 +177,7 @@ void VulkanManager::InitVulkan()
 	// IF you init the GUI, you must draw with it. Otherwise, Vulkan will get mad
 	// (There's no point in initializing it if you're not gonna draw anything w/ it)
 	if (shouldInitGui)  GuiManager::GetInstance()->InitImGui();
+
 }
 
 void VulkanManager::CreateInstance()

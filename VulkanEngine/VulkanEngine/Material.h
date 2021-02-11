@@ -21,6 +21,12 @@ protected:
 	std::vector<VkDescriptorSet> descriptorSets;
 	std::string matPath;
 
+	std::string vertPath;
+	std::string fragPath;
+	
+
+	std::string shadType;
+
 	char type;
 
 	TextureImages* tImage = new TextureImages();
@@ -28,7 +34,12 @@ public:
 
 #pragma region Memory Management
 
-	Material(std::string vertexShaderPath, std::string fragmentShaderPath, bool wireframe, std::vector<std::vector<VkVertexInputAttributeDescription>> attributes, std::vector<VkVertexInputBindingDescription> bindings, std::string materialPath, char type = ' ');
+	//Material(std::string vertexShaderPath, std::string fragmentShaderPath, bool wireframe, std::vector<std::vector<VkVertexInputAttributeDescription>> attributes, std::vector<VkVertexInputBindingDescription> bindings, std::string materialPath, MaterialTypes::type = MaterialTypes::Plain);
+
+	Material(std::string vertexShaderPath, std::string fragmentShaderPath, bool wireframe, std::vector<std::vector<VkVertexInputAttributeDescription>> attributes, std::vector<VkVertexInputBindingDescription> bindings, std::string materialPath, std::string MATPATH, char type = ' ');
+
+	//new
+	Material(std::string vertexShaderPath, std::string fragmentShaderPath, bool wireframe, std::vector<std::vector<VkVertexInputAttributeDescription>> attributes, std::vector<VkVertexInputBindingDescription> bindings, std::string materialPath, char type, std::string MATPATH);
 
 	/// <summary>
 	/// Creates and allocates Material resources
@@ -101,6 +112,9 @@ public:
 	/// <param name="code">The contents of a SPIR-V </param>
 	/// <returns>The VkShaderModule created from the code</returns>
 	static VkShaderModule CreateShaderModule(const std::vector<char>& code);
+
+	void ReadMaterial(std::string filePath);
+
 
 #pragma endregion
 };

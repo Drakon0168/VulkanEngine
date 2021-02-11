@@ -37,6 +37,12 @@
     <Filter Include="imgui">
       <UniqueIdentifier>{5042c99a-be94-4eeb-bb37-0b2c77365711}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ResourceReading">
+      <UniqueIdentifier>{a8b8d474-d35d-4deb-8f58-19fabb3f6e56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="JSON">
+      <UniqueIdentifier>{cc39ddac-06d6-47fd-bc93-2cea5d629895}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="VulkanEngine.cpp">
@@ -131,6 +137,12 @@
     </ClCompile>
     <ClCompile Include="GuiManager.cpp">
       <Filter>Source Files\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="MatBinding.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialCreation.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -238,6 +250,18 @@
     </ClInclude>
     <ClInclude Include="DebugShape.h">
       <Filter>Header Files\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="MatBinding.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialCreation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="json.hpp">
+      <Filter>JSON</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -27,6 +27,8 @@ struct Vertex {
 	}
 
 	static std::vector<VkVertexInputAttributeDescription> GetAttributeDescriptions(int offset = 0, int binding = 0) {
+
+		//maybe this  - diff shaders diff color channels on format 
 		//Setup attributes
 		std::vector<VkVertexInputAttributeDescription> attributeDescriptions = std::vector<VkVertexInputAttributeDescription>(4);
 		attributeDescriptions[0].binding = binding;
